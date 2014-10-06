@@ -5,26 +5,22 @@ import java.io.*;
 public class Response {
 
   private final ResponseCode code;
-  private GetRequest request;
+  private final Resource body;
 
-  public Response(ResponseCode code) {
+  public Response(ResponseCode code, Resource body) {
     this.code = code;
+    this.body = body;
   }
 
   public void print(PrintWriter out) {
     addStatusLine(out);
     endHeader(out);
     addBody(out);
-  }
-  public void setBody(GetRequest request) {
-    this.request = request;
+    out.flush();
   }
 
   private void addBody(PrintWriter out) {
-    if(request != null) {
-      request.dumpResource(out);
-    }
-    out.flush();
+    body.dumpResource(out);
   }
 
   private void addStatusLine(PrintWriter out) {

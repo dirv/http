@@ -1,5 +1,4 @@
 package com.danielirvine.http;
-import java.io.*;
 
 public class GetRequest {
 
@@ -12,29 +11,22 @@ public class GetRequest {
     this.publicRoot = publicRoot;
   }
 
-  public boolean targetExists() {
-    String fileName = stripRootDirectory(target);
-    if (fileName.equals("")) {
-      return true;
-    } else {
-      return publicRoot.getFile(fileName) != null;
-    }
+  public Response response() {
+    Resource resource = buildResource();
+    ResponseCode code = resource.getResponseCode();
+    return new Response(code, resource);
   }
 
-  public void dumpResource(PrintWriter out) {
+  private Resource buildResource() {
     String fileName = stripRootDirectory(target);
-    if (!fileName.equals("")) {
-      InputStream reader = publicRoot.getFile(fileName).getReadStream();
-      try {
-        int b;
-        while((b = reader.read()) != -1) {
-          out.write(b);
-        }
-        out.flush();
-      } catch(IOException ex) {
-        System.err.println(ex);
-      }
+    if (fileName.equals("")) {
+      return new RootResource();
     }
+    FileDescriptor file = publicRoot.getFile(fileName);
+    if(file == null) {
+      return new NotFoundResource();
+    }
+    return new FileResource(file);
   }
 
   private String stripRootDirectory(String target) {

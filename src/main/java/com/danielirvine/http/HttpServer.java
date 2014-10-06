@@ -21,15 +21,8 @@ public class HttpServer {
       while ((inputLine = in.readLine()) != null) {
 
         GetRequest getRequest = new GetRequest(inputLine, publicRoot);
-        ResponseCode code = getRequest.targetExists()
-          ? ResponseCode.OK
-          : ResponseCode.NOT_FOUND;
 
-        Response response = new Response(code);
-        if(getRequest.targetExists()) {
-          response.setBody(getRequest);
-        }
-        response.print(out);
+        getRequest.response().print(out);
         clientSocket.close();
         break;
       }
