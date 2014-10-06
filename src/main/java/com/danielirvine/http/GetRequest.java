@@ -3,12 +3,12 @@ package com.danielirvine.http;
 public class GetRequest {
 
   private final String target;
-  private final FileDescriptor publicRoot;
+  private final DirectoryResource root;
 
-  public GetRequest(String requestLine, FileDescriptor publicRoot) {
+  public GetRequest(String requestLine, DirectoryResource root) {
     String[] parts = requestLine.split(" ");
     this.target = parts[1];
-    this.publicRoot = publicRoot;
+    this.root = root;
   }
 
   public Response response() {
@@ -18,18 +18,6 @@ public class GetRequest {
   }
 
   private Resource buildResource() {
-    String fileName = stripRootDirectory(target);
-    if (fileName.equals("")) {
-      return new DirectoryResource(publicRoot);
-    }
-    FileDescriptor file = publicRoot.getFile(fileName);
-    if(file == null) {
-      return new NotFoundResource();
-    }
-    return new FileResource(file);
-  }
-
-  private String stripRootDirectory(String target) {
-    return target.substring(1);
+    return root.findResource(target.split("/"));
   }
 }

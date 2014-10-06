@@ -21,4 +21,17 @@ public class DirectoryResource implements Resource {
       out.write(HttpServer.CRLF);
     }
   }
+
+  public Resource findResource(String[] pathSegments) {
+    if(pathSegments.length == 0) {
+      return this;
+    } else {
+      FileDescriptor child = descriptor.getFile(pathSegments[1]);
+      if(child == null) {
+        return new NotFoundResource();
+      } else {
+        return new FileResource(child);
+      }
+    }
+  }
 }

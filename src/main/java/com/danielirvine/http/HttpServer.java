@@ -12,7 +12,8 @@ public class HttpServer {
     this(socketFactory.apply(port), new FsFileDescriptor(new File(publicRoot)));
   }
 
-  public HttpServer(ServerSocketProxy socket, FileDescriptor publicRoot) {
+  public HttpServer(ServerSocketProxy socket, FileDescriptor rootFile) {
+    DirectoryResource root = new DirectoryResource(rootFile);
     try {
       SocketProxy clientSocket = socket.accept();
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -20,7 +21,7 @@ public class HttpServer {
       String inputLine;
       while ((inputLine = in.readLine()) != null) {
 
-        GetRequest getRequest = new GetRequest(inputLine, publicRoot);
+        GetRequest getRequest = new GetRequest(inputLine, root);
 
         getRequest.response().print(out);
         clientSocket.close();
