@@ -18,11 +18,16 @@ public class HttpServer {
       BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       String inputLine;
       while ((inputLine = in.readLine()) != null) {
-        if(inputLine.startsWith("GET /")) {
+
+        GetRequest getRequest = new GetRequest(inputLine);
+        if(getRequest.getTarget().equals("/")) {
           out.println("HTTP/1.1 200 OK");
-          clientSocket.close();
-          break;
         }
+        else if (getRequest.getTarget().equals("/foobar")) {
+          out.println("HTTP/1.1 404 Not Found");
+        }
+        clientSocket.close();
+        break;
       }
     }
     catch(Exception ex) {

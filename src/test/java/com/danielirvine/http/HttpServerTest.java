@@ -28,4 +28,13 @@ public class HttpServerTest {
     assertEquals("HTTP/1.1 200 OK\n", socket.getOutput());
   }
 
+  @Test
+	public void fourOhFour() {
+
+    String text = "GET /foobar HTTP/1.1\n";
+    InProcessServerSocket socket = new InProcessServerSocket(text);
+    server = new HttpServer(socket);
+    assertEquals("HTTP/1.1 404 Not Found\n", socket.getOutput());
+  }
+
 }
