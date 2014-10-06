@@ -26,14 +26,14 @@ public class HttpServerTest {
 	public void getRequestForRootReturnsOK() {
     createGetRequest("/");
     createServer();
-    assertEquals("HTTP/1.1 200 OK\r\n\r\n", socket.getOutput());
+    assertEquals("HTTP/1.1 200 OK", outputByLine()[0]);
   }
 
   @Test
 	public void fourOhFour() {
     createGetRequest("/foobar");
     createServer();
-    assertEquals("HTTP/1.1 404 Not Found\r\n\r\n", socket.getOutput());
+    assertEquals("HTTP/1.1 404 Not Found", outputByLine()[0]);
   }
 
   @Test
@@ -41,7 +41,9 @@ public class HttpServerTest {
     publicRoot.addFile("testFile", "content");
     createGetRequest("/testFile");
     createServer();
-    assertEquals("HTTP/1.1 200 OK\r\n\r\ncontent", socket.getOutput());
+    assertEquals("HTTP/1.1 200 OK", outputByLine()[0]);
+    assertEquals("", outputByLine()[1]);
+    assertEquals("content", outputByLine()[2]);
   }
 
   private void createGetRequest(String path) {
@@ -51,5 +53,9 @@ public class HttpServerTest {
 
   private void createServer() {
     server = new HttpServer(socket, publicRoot);
+  }
+
+  private String[] outputByLine() {
+    return socket.getOutput().split(HttpServer.CRLF);
   }
 }
