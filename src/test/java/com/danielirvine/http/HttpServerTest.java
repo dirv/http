@@ -21,11 +21,16 @@ public class HttpServerTest {
   }
 
   @Test
-	public void getRequestForRoot() {
+	public void getRequestForRootReturnsOK() {
+    String text = "GET / HTTP/1.1\n";
+    InProcessServerSocket socket = new InProcessServerSocket(text);
+    Function<Integer, ServerSocketProxy> socketFactory = (port) -> {
+      portSpecified = port;
+      return socket;
+    };
 
+    server = new HttpServer(socketFactory, 212);
+    assertEquals("HTTP/1.1 200 OK\n", socket.getOutput());
+  }
 
-    // What would work here?
-    // We need a ServerSocket and a blocking 
-    
-  }   
 }

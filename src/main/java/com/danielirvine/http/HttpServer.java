@@ -8,6 +8,7 @@ import java.net.*;
 public class HttpServer {
 
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory, int port) {
+    // TODO: get rid of this Function interface, possibly just pass in an already constructed socket.
     try {
       ServerSocketProxy socket = socketFactory.apply(port);
       SocketProxy clientSocket = socket.accept();
@@ -15,7 +16,11 @@ public class HttpServer {
       BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       String inputLine;
       while ((inputLine = in.readLine()) != null) {
-        System.out.println(inputLine);
+        if(inputLine.startsWith("GET /")) {
+          out.println("HTTP/1.1 200 OK");
+          clientSocket.close();
+          break;
+        }
       }
     }
     catch(Exception ex) {
@@ -40,7 +45,13 @@ public class HttpServer {
             public OutputStream getOutputStream() throws IOException {
               return clientSocket.getOutputStream();
             }
+            public void close() throws IOException {
+              clientSocket.close();
+            }
           };
+        }
+        public void close() throws IOException {
+          socket.close();
         }
       };
     }
