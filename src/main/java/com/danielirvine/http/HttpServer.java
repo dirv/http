@@ -7,6 +7,8 @@ import java.net.*;
 
 public class HttpServer {
 
+  public static final String CRLF = "\r\n";
+
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory, int port, String publicRoot) {
     this(socketFactory.apply(port), new FsFileDescriptor(new File(publicRoot)));
   }
@@ -21,13 +23,13 @@ public class HttpServer {
 
         GetRequest getRequest = new GetRequest(inputLine, publicRoot);
         if(getRequest.targetExists()) {
-          out.print("HTTP/1.1 200 OK\r\n");
-          out.print("\r\n");
+          addStatusLine(out, 200, "OK");
+          endHeader(out);
           getRequest.dumpResource(out);
         }
         else {
-          out.print("HTTP/1.1 404 Not Found\r\n");
-          out.print("\r\n");
+          addStatusLine(out, 404, "Not Found");
+          endHeader(out);
         }
         out.flush();
         clientSocket.close();
@@ -54,5 +56,13 @@ public class HttpServer {
       System.err.println(ex);
     }
     return null;
+  }
+
+  private void addStatusLine(PrintWriter out, int code, String description) {
+    out.print("HTTP/1.1 " + code + " "  + description + CRLF);
+  }
+
+  private void endHeader(PrintWriter out) {
+    out.print(CRLF);
   }
 }
