@@ -7,4 +7,5 @@ public interface FileDescriptor {
   public String getName();
   public InputStream getReadStream();
   public List<FileDescriptor> getChildren();
+  public boolean exists();
 }

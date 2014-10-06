@@ -54,8 +54,16 @@ public class HttpServerTest {
     publicRoot.addFile("test2", "content");
     createGetRequest("/");
     createServer();
-    assertThat(outputByLine(), hasItem("test1"));
-    assertThat(outputByLine(), hasItem("test2"));
+    assertThat(outputByLine(), hasItem(containsString("test1")));
+    assertThat(outputByLine(), hasItem(containsString("test2")));
+  }
+
+  @Test
+	public void dumpLinksWhenListingDirectory() {
+    publicRoot.addFile("test1", "content");
+    createGetRequest("/");
+    createServer();
+    assertThat(outputByLine(), hasItem("<a href=\"/test1\">test1</a>"));
   }
 
   private void createGetRequest(String path) {

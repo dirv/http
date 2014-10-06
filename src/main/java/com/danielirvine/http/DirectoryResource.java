@@ -17,7 +17,7 @@ public class DirectoryResource implements Resource {
 
   public void dumpResource(PrintWriter out) {
     for(FileDescriptor child : descriptor.getChildren()) {
-      out.write(child.getName());
+      out.write(createLink(child.getName()));
       out.write(HttpServer.CRLF);
     }
   }
@@ -27,11 +27,15 @@ public class DirectoryResource implements Resource {
       return this;
     } else {
       FileDescriptor child = descriptor.getFile(pathSegments[1]);
-      if(child == null) {
-        return new NotFoundResource();
-      } else {
+      if(child.exists()) {
         return new FileResource(child);
+      } else {
+        return new NotFoundResource();
       }
     }
+  }
+
+  private String createLink(String text) {
+    return "<a href=\"/" + text + "\">" + text + "</a>";
   }
 }

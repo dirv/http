@@ -28,7 +28,7 @@ public class InMemoryFileDescriptor implements FileDescriptor {
         return child;
       }
     }
-    return null;
+    return new InMemoryFileDescriptor(null);
   }
 
   public void addFile(String name, String contents) {
@@ -41,5 +41,9 @@ public class InMemoryFileDescriptor implements FileDescriptor {
 
   public List<FileDescriptor> getChildren() {
     return children;
+  }
+
+  public boolean exists() {
+    return name != null;
   }
 }
