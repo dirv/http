@@ -16,6 +16,7 @@ define "http" do
   project.version = VERSION_NUMBER
   project.group = GROUP
   manifest["Implementation-Vendor"] = COPYRIGHT
+  manifest["Main-Class"] = 'com.danielirvine.http.HttpServer'
   compile.with # Add classpath dependencies
   test.compile.with # Add classpath dependencies
   package(:jar)

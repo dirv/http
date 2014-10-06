@@ -12,7 +12,7 @@ public class HttpServerTest {
 
   @Test
   public void opensSocketOnPort() throws Exception {
-    Function<Integer, ServerSocket> socketFactory = (port) -> {
+    Function<Integer, ServerSocketProxy> socketFactory = (port) -> {
       portSpecified = port;
       return null;
     };
@@ -20,4 +20,12 @@ public class HttpServerTest {
     assertEquals(212, portSpecified);
   }
 
+  @Test
+	public void getRequestForRoot() {
+
+
+    // What would work here?
+    // We need a ServerSocket and a blocking 
+    
+  }   
 }
