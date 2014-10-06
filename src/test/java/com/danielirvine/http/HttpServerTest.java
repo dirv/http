@@ -8,6 +8,8 @@ import java.util.function.*;
 public class HttpServerTest {
 
   private HttpServer server;
+  private InProcessServerSocket socket;
+  private final InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
   private int portSpecified = 0;
 
   @Test
@@ -22,21 +24,24 @@ public class HttpServerTest {
 
   @Test
 	public void getRequestForRootReturnsOK() {
-    String text = "GET / HTTP/1.1\n";
-    InProcessServerSocket socket = new InProcessServerSocket(text);
-    InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
-    server = new HttpServer(socket, publicRoot);
+    createGetRequest("/");
+    createServer();
     assertEquals("HTTP/1.1 200 OK\n", socket.getOutput());
   }
 
   @Test
 	public void fourOhFour() {
-
-    String text = "GET /foobar HTTP/1.1\n";
-    InProcessServerSocket socket = new InProcessServerSocket(text);
-    InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
-    server = new HttpServer(socket, publicRoot);
+    createGetRequest("/foobar");
+    createServer();
     assertEquals("HTTP/1.1 404 Not Found\n", socket.getOutput());
   }
 
+  private void createGetRequest(String path) {
+    String requestLine = "GET " + path + " HTTP/1.1\n";
+    socket = new InProcessServerSocket(requestLine);
+  }
+
+  private void createServer() {
+    server = new HttpServer(socket, publicRoot);
+  }
 }
