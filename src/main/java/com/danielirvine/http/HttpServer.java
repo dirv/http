@@ -29,31 +29,13 @@ public class HttpServer {
   }
 
   public static void main(String[] args) {
+
     new HttpServer(HttpServer::createSocket, new ArgumentParser(args).getInt("p", 5000));
   }
 
   private static ServerSocketProxy createSocket(int port) {
     try {
-      return new ServerSocketProxy() {
-        ServerSocket socket = new ServerSocket(port);
-        public SocketProxy accept() throws IOException {
-          Socket clientSocket = socket.accept();
-          return new SocketProxy() {
-            public InputStream getInputStream() throws IOException {
-              return clientSocket.getInputStream();
-            }
-            public OutputStream getOutputStream() throws IOException {
-              return clientSocket.getOutputStream();
-            }
-            public void close() throws IOException {
-              clientSocket.close();
-            }
-          };
-        }
-        public void close() throws IOException {
-          socket.close();
-        }
-      };
+      return new NetServerSocket(port);
     }
     catch(IOException ex) {
       System.err.println(ex);
