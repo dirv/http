@@ -23,12 +23,12 @@ public class HttpServer {
 
         GetRequest getRequest = new GetRequest(inputLine, publicRoot);
         if(getRequest.targetExists()) {
-          addStatusLine(out, 200, "OK");
+          addStatusLine(out, ResponseCode.OK);
           endHeader(out);
           getRequest.dumpResource(out);
         }
         else {
-          addStatusLine(out, 404, "Not Found");
+          addStatusLine(out, ResponseCode.NOT_FOUND);
           endHeader(out);
         }
         out.flush();
@@ -58,8 +58,8 @@ public class HttpServer {
     return null;
   }
 
-  private void addStatusLine(PrintWriter out, int code, String description) {
-    out.print("HTTP/1.1 " + code + " "  + description + CRLF);
+  private void addStatusLine(PrintWriter out, ResponseCode responseCode) {
+    out.print("HTTP/1.1 " + responseCode + CRLF);
   }
 
   private void endHeader(PrintWriter out) {
