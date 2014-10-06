@@ -8,9 +8,11 @@ import java.net.*;
 public class HttpServer {
 
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory, int port) {
-    // TODO: get rid of this Function interface, possibly just pass in an already constructed socket.
+    this(socketFactory.apply(port));
+  }
+
+  public HttpServer(ServerSocketProxy socket) {
     try {
-      ServerSocketProxy socket = socketFactory.apply(port);
       SocketProxy clientSocket = socket.accept();
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
       BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -29,7 +31,6 @@ public class HttpServer {
   }
 
   public static void main(String[] args) {
-
     new HttpServer(HttpServer::createSocket, new ArgumentParser(args).getInt("p", 5000));
   }
 

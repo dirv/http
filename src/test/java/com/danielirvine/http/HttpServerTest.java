@@ -24,12 +24,7 @@ public class HttpServerTest {
 	public void getRequestForRootReturnsOK() {
     String text = "GET / HTTP/1.1\n";
     InProcessServerSocket socket = new InProcessServerSocket(text);
-    Function<Integer, ServerSocketProxy> socketFactory = (port) -> {
-      portSpecified = port;
-      return socket;
-    };
-
-    server = new HttpServer(socketFactory, 212);
+    server = new HttpServer(socket);
     assertEquals("HTTP/1.1 200 OK\n", socket.getOutput());
   }
 
