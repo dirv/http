@@ -1,18 +1,21 @@
 package com.danielirvine.http;
 
+import java.io.*;
 import java.util.*;
 
 public class InMemoryFileDescriptor implements FileDescriptor {
   private final String name;
+  private final String contents;
   private final List<FileDescriptor> children;
 
   public InMemoryFileDescriptor(String name) {
-    this(name, new ArrayList<FileDescriptor>());
+    this(name, null);
   }
 
-  public InMemoryFileDescriptor(String name, List<FileDescriptor> children) {
+  public InMemoryFileDescriptor(String name, String contents) {
     this.name = name;
-    this.children = children;
+    this.children = new ArrayList<FileDescriptor>();
+    this.contents = contents;
   }
 
   public String getName() {
@@ -26,5 +29,13 @@ public class InMemoryFileDescriptor implements FileDescriptor {
       }
     }
     return null;
+  }
+
+  public void addFile(String name, String contents) {
+    children.add(new InMemoryFileDescriptor(name, contents));
+  }
+
+  public InputStream getReadStream() {
+    return new ByteArrayInputStream(contents.getBytes());
   }
 }

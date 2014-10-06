@@ -19,4 +19,12 @@ public class FsFileDescriptor implements FileDescriptor {
     File child = new File(file, name);
     return child.exists() ? new FsFileDescriptor(child) : null;
   }
+
+  public InputStream getReadStream() {
+    try {
+      return new FileInputStream(file);
+    } catch(FileNotFoundException ex) {
+      return null;
+    }
+  }
 }

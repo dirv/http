@@ -36,6 +36,14 @@ public class HttpServerTest {
     assertEquals("HTTP/1.1 404 Not Found\n", socket.getOutput());
   }
 
+  @Test
+	public void fileContents() {
+    publicRoot.addFile("testFile", "content");
+    createGetRequest("/testFile");
+    createServer();
+    assertEquals("HTTP/1.1 200 OK\ncontent", socket.getOutput());
+  }
+
   private void createGetRequest(String path) {
     String requestLine = "GET " + path + " HTTP/1.1\n";
     socket = new InProcessServerSocket(requestLine);

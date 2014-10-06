@@ -22,6 +22,7 @@ public class HttpServer {
         GetRequest getRequest = new GetRequest(inputLine, publicRoot);
         if(getRequest.targetExists()) {
           out.println("HTTP/1.1 200 OK");
+          getRequest.dumpResource(out);
         }
         else {
           out.println("HTTP/1.1 404 Not Found");

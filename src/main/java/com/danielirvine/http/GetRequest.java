@@ -1,4 +1,5 @@
 package com.danielirvine.http;
+import java.io.*;
 
 public class GetRequest {
 
@@ -17,6 +18,22 @@ public class GetRequest {
       return true;
     } else {
       return publicRoot.getFile(fileName) != null;
+    }
+  }
+
+  public void dumpResource(PrintWriter out) {
+    String fileName = stripRootDirectory(target);
+    if (!fileName.equals("")) {
+      InputStream reader = publicRoot.getFile(fileName).getReadStream();
+      try {
+        int b;
+        while((b = reader.read()) != -1) {
+          out.write(b);
+        }
+        out.flush();
+      } catch(IOException ex) {
+        System.err.println(ex);
+      }
     }
   }
 
