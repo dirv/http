@@ -10,6 +10,13 @@ class FileResource implements Resource {
     this.descriptor = descriptor;
   }
 
+  public Resource applyRange(Range range) {
+    if (range.shouldIgnore()) {
+      return this;
+    }
+    return new PartialFileResource(descriptor, range);
+  }
+
   public ResponseCode getResponseCode() {
     return ResponseCode.OK;
   }

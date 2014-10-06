@@ -31,6 +31,10 @@ public class InMemoryFileDescriptor implements FileDescriptor {
     return new InMemoryFileDescriptor(null);
   }
 
+  public long length() {
+    return contents.length();
+  }
+
   public void addFile(String name, String contents) {
     children.add(new InMemoryFileDescriptor(name, contents));
   }

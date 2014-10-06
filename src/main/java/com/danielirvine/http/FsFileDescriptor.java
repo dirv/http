@@ -40,6 +40,10 @@ public class FsFileDescriptor implements FileDescriptor {
       .collect(toList());
   }
 
+  public long length() {
+    return file.length();
+  }
+
   private FileDescriptor getFile(File file) {
     return new FsFileDescriptor(file);
   }

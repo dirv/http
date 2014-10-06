@@ -2,10 +2,10 @@ package com.danielirvine.http;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 import java.net.*;
 import java.util.function.*;
 import java.util.*;
-import static org.hamcrest.CoreMatchers.*;
 
 public class HttpServerTest {
 
