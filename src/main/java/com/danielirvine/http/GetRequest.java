@@ -20,7 +20,7 @@ public class GetRequest {
   private Resource buildResource() {
     String fileName = stripRootDirectory(target);
     if (fileName.equals("")) {
-      return new RootResource();
+      return new DirectoryResource(publicRoot);
     }
     FileDescriptor file = publicRoot.getFile(fileName);
     if(file == null) {

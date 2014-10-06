@@ -1,6 +1,7 @@
 package com.danielirvine.http;
 import java.io.*;
-import java.util.stream.*;
+import static java.util.stream.Stream.*;
+import java.util.*;
 import static java.util.stream.Collectors.*;
 
 public class FsFileDescriptor implements FileDescriptor {
@@ -17,7 +18,7 @@ public class FsFileDescriptor implements FileDescriptor {
 
   public FileDescriptor getFile(String name) {
     File child = new File(file, name);
-    return child.exists() ? new FsFileDescriptor(child) : null;
+    return child.exists() ? getFile(file) : null;
   }
 
   public InputStream getReadStream() {
@@ -26,5 +27,16 @@ public class FsFileDescriptor implements FileDescriptor {
     } catch(FileNotFoundException ex) {
       return null;
     }
+  }
+
+  public List<FileDescriptor> getChildren() {
+    return of(file.listFiles())
+      .filter(File::isFile)
+      .map(this::getFile)
+      .collect(toList());
+  }
+
+  private FileDescriptor getFile(File file) {
+    return new FsFileDescriptor(file);
   }
 }

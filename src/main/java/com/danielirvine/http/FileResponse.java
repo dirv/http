@@ -21,7 +21,6 @@ class FileResource implements Resource {
       while((b = reader.read()) != -1) {
         out.write(b);
       }
-      out.flush();
     } catch(IOException ex) {
       System.err.println(ex);
     }

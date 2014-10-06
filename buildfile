@@ -20,4 +20,6 @@ define "http" do
   compile.with # Add classpath dependencies
   test.compile.with # Add classpath dependencies
   package(:jar)
+  compile.options.target = '1.8'
+  compile.options.source = '1.8'
 end

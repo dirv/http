@@ -4,6 +4,8 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import java.net.*;
 import java.util.function.*;
+import java.util.*;
+import static org.hamcrest.CoreMatchers.*;
 
 public class HttpServerTest {
 
@@ -26,14 +28,14 @@ public class HttpServerTest {
 	public void getRequestForRootReturnsOK() {
     createGetRequest("/");
     createServer();
-    assertEquals("HTTP/1.1 200 OK", outputByLine()[0]);
+    assertEquals("HTTP/1.1 200 OK", outputByLine().get(0));
   }
 
   @Test
 	public void fourOhFour() {
     createGetRequest("/foobar");
     createServer();
-    assertEquals("HTTP/1.1 404 Not Found", outputByLine()[0]);
+    assertEquals("HTTP/1.1 404 Not Found", outputByLine().get(0));
   }
 
   @Test
@@ -41,9 +43,19 @@ public class HttpServerTest {
     publicRoot.addFile("testFile", "content");
     createGetRequest("/testFile");
     createServer();
-    assertEquals("HTTP/1.1 200 OK", outputByLine()[0]);
-    assertEquals("", outputByLine()[1]);
-    assertEquals("content", outputByLine()[2]);
+    assertEquals("HTTP/1.1 200 OK", outputByLine().get(0));
+    assertEquals("", outputByLine().get(1));
+    assertEquals("content", outputByLine().get(2));
+  }
+
+  @Test
+  public void directoryListing() {
+    publicRoot.addFile("test1", "content");
+    publicRoot.addFile("test2", "content");
+    createGetRequest("/");
+    createServer();
+    assertThat(outputByLine(), hasItem("test1"));
+    assertThat(outputByLine(), hasItem("test2"));
   }
 
   private void createGetRequest(String path) {
@@ -55,7 +67,7 @@ public class HttpServerTest {
     server = new HttpServer(socket, publicRoot);
   }
 
-  private String[] outputByLine() {
-    return socket.getOutput().split(HttpServer.CRLF);
+  private List<String> outputByLine() {
+    return Arrays.asList(socket.getOutput().split(HttpServer.CRLF));
   }
 }

@@ -38,4 +38,8 @@ public class InMemoryFileDescriptor implements FileDescriptor {
   public InputStream getReadStream() {
     return new ByteArrayInputStream(contents.getBytes());
   }
+
+  public List<FileDescriptor> getChildren() {
+    return children;
+  }
 }
