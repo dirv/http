@@ -1,7 +1,7 @@
 package com.danielirvine.http;
 
 public enum ResponseCode {
-  
+
   OK(200, "OK"),
   NOT_FOUND(404, "Not Found");
 

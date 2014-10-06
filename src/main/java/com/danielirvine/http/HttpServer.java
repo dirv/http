@@ -1,9 +1,8 @@
 package com.danielirvine.http;
 
-import java.net.*;
-import java.util.function.*;
 import java.io.*;
 import java.net.*;
+import java.util.function.*;
 
 public class HttpServer {
 
@@ -22,16 +21,15 @@ public class HttpServer {
       while ((inputLine = in.readLine()) != null) {
 
         GetRequest getRequest = new GetRequest(inputLine, publicRoot);
+        ResponseCode code = getRequest.targetExists()
+          ? ResponseCode.OK
+          : ResponseCode.NOT_FOUND;
+
+        Response response = new Response(code);
         if(getRequest.targetExists()) {
-          addStatusLine(out, ResponseCode.OK);
-          endHeader(out);
-          getRequest.dumpResource(out);
+          response.setBody(getRequest);
         }
-        else {
-          addStatusLine(out, ResponseCode.NOT_FOUND);
-          endHeader(out);
-        }
-        out.flush();
+        response.print(out);
         clientSocket.close();
         break;
       }
@@ -58,11 +56,4 @@ public class HttpServer {
     return null;
   }
 
-  private void addStatusLine(PrintWriter out, ResponseCode responseCode) {
-    out.print("HTTP/1.1 " + responseCode + CRLF);
-  }
-
-  private void endHeader(PrintWriter out) {
-    out.print(CRLF);
-  }
 }
