@@ -16,7 +16,7 @@ public class HttpServerTest {
       portSpecified = port;
       return null;
     };
-    server = new HttpServer(socketFactory, 212);
+    server = new HttpServer(socketFactory, 212, ".");
     assertEquals(212, portSpecified);
   }
 
@@ -24,7 +24,8 @@ public class HttpServerTest {
 	public void getRequestForRootReturnsOK() {
     String text = "GET / HTTP/1.1\n";
     InProcessServerSocket socket = new InProcessServerSocket(text);
-    server = new HttpServer(socket);
+    InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
+    server = new HttpServer(socket, publicRoot);
     assertEquals("HTTP/1.1 200 OK\n", socket.getOutput());
   }
 
@@ -33,7 +34,8 @@ public class HttpServerTest {
 
     String text = "GET /foobar HTTP/1.1\n";
     InProcessServerSocket socket = new InProcessServerSocket(text);
-    server = new HttpServer(socket);
+    InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
+    server = new HttpServer(socket, publicRoot);
     assertEquals("HTTP/1.1 404 Not Found\n", socket.getOutput());
   }
 

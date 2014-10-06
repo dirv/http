@@ -7,11 +7,11 @@ import java.net.*;
 
 public class HttpServer {
 
-  public HttpServer(Function<Integer, ServerSocketProxy> socketFactory, int port) {
-    this(socketFactory.apply(port));
+  public HttpServer(Function<Integer, ServerSocketProxy> socketFactory, int port, String publicRoot) {
+    this(socketFactory.apply(port), new FsFileDescriptor(new File(publicRoot)));
   }
 
-  public HttpServer(ServerSocketProxy socket) {
+  public HttpServer(ServerSocketProxy socket, FileDescriptor publicRoot) {
     try {
       SocketProxy clientSocket = socket.accept();
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -19,11 +19,11 @@ public class HttpServer {
       String inputLine;
       while ((inputLine = in.readLine()) != null) {
 
-        GetRequest getRequest = new GetRequest(inputLine);
-        if(getRequest.getTarget().equals("/")) {
+        GetRequest getRequest = new GetRequest(inputLine, publicRoot);
+        if(getRequest.targetExists()) {
           out.println("HTTP/1.1 200 OK");
         }
-        else if (getRequest.getTarget().equals("/foobar")) {
+        else {
           out.println("HTTP/1.1 404 Not Found");
         }
         clientSocket.close();
@@ -36,7 +36,10 @@ public class HttpServer {
   }
 
   public static void main(String[] args) {
-    new HttpServer(HttpServer::createSocket, new ArgumentParser(args).getInt("p", 5000));
+    ArgumentParser parser = new ArgumentParser(args);
+    new HttpServer(HttpServer::createSocket,
+        parser.getInt("p", 5000),
+        parser.getString("d", ""));
   }
 
   private static ServerSocketProxy createSocket(int port) {
