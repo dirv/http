@@ -1,5 +1,6 @@
 package com.danielirvine.http;
 import java.io.*;
+import java.nio.file.*;
 import static java.util.stream.Stream.*;
 import java.util.*;
 import static java.util.stream.Collectors.*;
@@ -42,6 +43,14 @@ public class FsFileDescriptor implements FileDescriptor {
 
   public long length() {
     return file.length();
+  }
+
+  public String contentType() {
+    try {
+    return Files.probeContentType(file.toPath());
+    } catch(IOException ex) {
+      return "text/plain";
+    }
   }
 
   private FileDescriptor getFile(File file) {

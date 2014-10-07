@@ -17,10 +17,19 @@ public class HeadersTest {
   private GetRequest request;
   private Response response;
 
+
+  @Test
+	public void sendsContentTypeForJpeg() {
+    rootDirectory.addFile("test.jpeg", "unknown");
+    request = buildRequestWithHeader("test.jpeg", "");
+    response = request.response();
+    assertThat(headers(), hasItem(containsString("Content-type: image/jpeg")));
+  }
+
   @Test
 	public void rangeShowsMultipartByteRangesHeader() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    request = buildRequestWithHeader("Range: bytes=0-10,-5");
+    request = buildRequestWithHeader("alphabet", "Range: bytes=0-10,-5");
     response = request.response();
     assertThat(headers(), hasItem(containsString("Content-type: multipart/byteranges; boundary=")));
   }
@@ -28,7 +37,7 @@ public class HeadersTest {
   @Test
 	public void rangeShowsOriginalContentPart() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    request = buildRequestWithHeader("Range: bytes=-5");
+    request = buildRequestWithHeader("alphabet", "Range: bytes=-5");
     response = request.response();
     assertThat(headers(), hasItem(containsString("Content-type: text/plain")));
     assertThat(headers(), hasItem(containsString("Content-Length: 5")));
@@ -37,13 +46,13 @@ public class HeadersTest {
   @Test
 	public void rangeShowsByteRange() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    request = buildRequestWithHeader("Range: bytes=-5");
+    request = buildRequestWithHeader("alphabet", "Range: bytes=-5");
     response = request.response();
     assertThat(headers(), hasItem(containsString("Content-range: bytes 21-25/26")));
   }
 
-  private GetRequest buildRequestWithHeader(String header) {
-    String request = "GET /alphabet HTTP/1.1" + HttpServer.CRLF;
+  private GetRequest buildRequestWithHeader(String resource, String header) {
+    String request = "GET /" + resource + " HTTP/1.1" + HttpServer.CRLF;
     request += header + HttpServer.CRLF;
     try {
       return new GetRequest(new StringBufferInputStream(request), root);

@@ -47,6 +47,17 @@ public class InMemoryFileDescriptor implements FileDescriptor {
     return children;
   }
 
+  public String contentType() {
+    int extIndex = name.lastIndexOf(".");
+    if(extIndex != -1) {
+      String ext = name.substring(extIndex+1);
+      if (ext.equals("jpeg")) {
+        return "image/jpeg";
+      }
+    }
+    return "text/plain";
+  }
+
   public boolean exists() {
     return name != null;
   }

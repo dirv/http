@@ -9,4 +9,5 @@ public interface FileDescriptor {
   public List<FileDescriptor> getChildren();
   public long length();
   public boolean exists();
+  public String contentType();
 }

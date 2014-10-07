@@ -33,7 +33,8 @@ class FileResource implements Resource {
   }
 
   public List<Header> getHeaders() {
-    return asList();
+    List<Header> headers = new ArrayList<Header>();
+    headers.add(new ContentTypeHeader(descriptor));
+    return headers;
   }
-
 }

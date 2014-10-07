@@ -27,7 +27,7 @@ public class PartialFileResource implements Resource {
       try {
         for(FixedRangeSpecifier range : ranges) {
           if(isMultipart()) {
-            addHeader(out, ContentTypeHeader.TEXT_PLAIN);
+            addHeader(out, new ContentTypeHeader(descriptor));
             addHeader(out, range.getContentRangeHeader());
           }
           reader.skip(range.getLow() - curPos);
@@ -52,7 +52,7 @@ public class PartialFileResource implements Resource {
     if(isMultipart()) {
       headers.add(ContentTypeHeader.MULTIPART_BYTE_RANGES);
     } else {
-      headers.add(ContentTypeHeader.TEXT_PLAIN);
+      headers.add(new ContentTypeHeader(descriptor));
       headers.add(ranges.get(0).getContentRangeHeader());
       headers.add(getContentLengthHeader());
     }

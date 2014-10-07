@@ -31,7 +31,6 @@ public class Response {
 
   private void addHeaders(PrintWriter out) {
     for(Header h : body.getHeaders()) {
-      System.out.println(h.toString());
       out.print(h + HttpServer.CRLF);
     }
   }
