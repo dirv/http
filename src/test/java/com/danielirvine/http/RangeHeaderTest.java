@@ -80,8 +80,7 @@ public class RangeHeaderTest {
 
 
   private void setRangeOnFile(String rangeHeader) {
-    RangeHeader range = new RangeHeader(rangeHeader);
-    partial = file.applyRange(range);
+    partial = new RangeHeader(rangeHeader).apply(file);
   }
 
   private String dumpResource() {

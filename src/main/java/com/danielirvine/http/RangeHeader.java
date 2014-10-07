@@ -12,7 +12,7 @@ public class RangeHeader implements Header {
   private static final Pattern rangePattern = Pattern.compile("(?:(\\d+)\\-(\\d*))|(?:\\-(\\d*))");
 
   private List<RangeSpecifier> byteRanges = new ArrayList<RangeSpecifier>();
-  private boolean hasError = false;
+  private boolean isValid = true;
 
   public RangeHeader(String header) {
     Matcher m = headerPattern.matcher(header);
@@ -21,8 +21,12 @@ public class RangeHeader implements Header {
     }
   }
 
-  public boolean shouldIgnore() {
-    return byteRanges.size() == 0 || hasError;
+  public Resource apply(Resource resource) {
+    return shouldApply() ? resource.applyRange(this) : resource;
+  }
+
+  private boolean shouldApply() {
+    return byteRanges.size() != 0 && isValid;
   }
 
   public List<FixedRangeSpecifier> fixForFileLength(long fileLength) {
@@ -37,7 +41,7 @@ public class RangeHeader implements Header {
     for(String range : allRanges) {
       processRange(range);
     }
-    hasError = byteRanges.size() != allRanges.length;
+    isValid = byteRanges.size() == allRanges.length;
   }
 
   private void processRange(String range) {

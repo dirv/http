@@ -13,9 +13,6 @@ class FileResource implements Resource {
   }
 
   public Resource applyRange(RangeHeader range) {
-    if (range.shouldIgnore()) {
-      return this;
-    }
     return new PartialFileResource(descriptor, range);
   }
 

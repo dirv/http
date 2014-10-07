@@ -16,6 +16,10 @@ public class PartialFileResource implements Resource {
     this.ranges = range.fixForFileLength(descriptor.length());
   }
 
+  public Resource applyRange(RangeHeader range) {
+    return this;
+  }
+
   public void dumpResource(PrintWriter out) {
     if(isSatisfiable()) {
       InputStream reader = descriptor.getReadStream();

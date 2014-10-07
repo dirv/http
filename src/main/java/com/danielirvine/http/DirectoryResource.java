@@ -40,6 +40,10 @@ public class DirectoryResource implements Resource {
     return asList();
   }
 
+  public Resource applyRange(RangeHeader range) {
+    return this;
+  }
+
   private String createLink(String text) {
     return "<a href=\"/" + text + "\">" + text + "</a>";
   }

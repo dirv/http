@@ -17,4 +17,8 @@ class NotFoundResource implements Resource {
   public List<Header> getHeaders() {
     return asList();
   }
+
+  public Resource applyRange(RangeHeader range) {
+    return this;
+  }
 }

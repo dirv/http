@@ -17,8 +17,9 @@ public class GetRequest {
   public Response response() {
     Resource resource = buildResource();
     for(RangeHeader h : headers) {
-      resource = ((FileResource)resource).applyRange(h);
+      resource = h.apply(resource);
     }
+    // TODO: possibly push this code into Response
     ResponseCode code = resource.getResponseCode();
     return new Response(code, resource);
   }

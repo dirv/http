@@ -7,4 +7,5 @@ interface Resource {
   ResponseCode getResponseCode();
   void dumpResource(PrintWriter out);
   List<Header> getHeaders();
+  Resource applyRange(RangeHeader range);
 }
