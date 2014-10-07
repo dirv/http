@@ -26,6 +26,8 @@ public class PartialFileResource implements Resource {
       long curPos = 0;
       try {
         for(FixedRangeSpecifier range : ranges) {
+          addHeader(out, ContentTypeHeader.TEXT_PLAIN);
+          addHeader(out, range.getContentRangeHeader());
           reader.skip(range.getLow() - curPos);
           long high = range.getHigh();
           int b;
@@ -49,6 +51,9 @@ public class PartialFileResource implements Resource {
       : asList();
   }
 
+  private void addHeader(PrintWriter out, Header h) {
+    out.write(h.toString() + HttpServer.CRLF);
+  }
   private boolean isSatisfiable() {
     return ranges.size() > 0;
   }

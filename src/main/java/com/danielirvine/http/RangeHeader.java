@@ -81,17 +81,23 @@ public class RangeHeader implements Header {
   private class ByteRange implements RangeSpecifier, FixedRangeSpecifier {
     private final long low;
     private final Long high;
+    private final long fileLength;
 
     public ByteRange(long low, Long high) {
+      this(low, high, 0);
+    }
+
+    public ByteRange(long low, Long high, long fileLength) {
       this.low = low;
       this.high = high;
+      this.fileLength = fileLength;
     }
 
     public FixedRangeSpecifier fixForFileLength(long fileLength) {
       if (high == null || high > fileLength) {
-        return new ByteRange(low, fileLength);
+        return new ByteRange(low, fileLength-1, fileLength);
       }
-      return this;
+      return new ByteRange(low, high, fileLength);
     }
 
     public long getLow() {
@@ -105,6 +111,15 @@ public class RangeHeader implements Header {
     public boolean isSatisfiable() {
       return high >= low;
     }
+
+    public Header getContentRangeHeader() {
+      return new Header() {
+        @Override
+        public String toString() {
+          return "Content-range: bytes " + low + "-" + high + "/" + fileLength;
+        }
+      };
+    }
   }
 
   private class Suffix implements RangeSpecifier {
@@ -115,7 +130,9 @@ public class RangeHeader implements Header {
     }
 
     public FixedRangeSpecifier fixForFileLength(long fileLength) {
-      return new ByteRange(fileLength-length, fileLength-1);
+      long low = fileLength - length;
+      if (low < 0) low = 0;
+      return new ByteRange(low, fileLength-1, fileLength);
     }
   }
 }

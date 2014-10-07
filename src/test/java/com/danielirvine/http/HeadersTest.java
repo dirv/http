@@ -18,11 +18,27 @@ public class HeadersTest {
   private Response response;
 
   @Test
-	public void handlesRangeHeader() {
+	public void rangeShowsMultipartByteRangesHeader() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
     request = buildRequestWithHeader("Range: bytes=-5");
     response = request.response();
     assertThat(headers(), hasItem(containsString("Content-type: multipart/byteranges; boundary=")));
+  }
+
+  @Test
+	public void rangeShowsOriginalContentPart() {
+    rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
+    request = buildRequestWithHeader("Range: bytes=-5");
+    response = request.response();
+    assertThat(headers(), hasItem(containsString("Content-type: text/plain")));
+  }
+
+  @Test
+	public void rangeShowsByteRange() {
+    rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
+    request = buildRequestWithHeader("Range: bytes=-5");
+    response = request.response();
+    assertThat(headers(), hasItem(containsString("Content-range: bytes 21-25/26")));
   }
 
   private GetRequest buildRequestWithHeader(String header) {

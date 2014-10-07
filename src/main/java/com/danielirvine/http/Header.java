@@ -15,9 +15,11 @@ class ContentTypeHeader implements Header {
   public final static ContentTypeHeader MULTIPART_BYTE_RANGES = new ContentTypeHeader(
       "multipart",
       "byteranges",
-      new String[] {"boundary=BREAK"});
+      "boundary=BREAK");
 
-  public ContentTypeHeader(String type, String subtype, String[] parameters) {
+  public final static ContentTypeHeader TEXT_PLAIN = new ContentTypeHeader("text", "plain");
+
+  public ContentTypeHeader(String type, String subtype, String... parameters) {
     this.type = type;
     this.subtype = subtype;
     this.parameters = parameters;
