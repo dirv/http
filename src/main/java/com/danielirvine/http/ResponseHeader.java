@@ -30,6 +30,8 @@ class ContentTypeHeader extends ResponseHeader {
       "multipart/byteranges",
       "boundary=BREAK");
 
+  public final static ContentTypeHeader TEXT_PLAIN = new ContentTypeHeader("text/plain");
+
   public ContentTypeHeader(FileDescriptor descriptor) {
     this(descriptor.contentType());
   }

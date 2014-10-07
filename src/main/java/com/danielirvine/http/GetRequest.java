@@ -1,11 +1,13 @@
 package com.danielirvine.http;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 public class GetRequest {
 
-  private String target;
+  private String path;
+  private String query;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
   private final DirectoryResource root;
 
@@ -25,7 +27,10 @@ public class GetRequest {
   }
 
   private Resource buildResource() {
-    return root.findResource(target.split("/"));
+    if(query != null) {
+      return new QueryResource(buildVariables());
+    }
+    return root.findResource(path.split("/"));
   }
 
   private void parseRequest(InputStream request) throws IOException {
@@ -36,9 +41,33 @@ public class GetRequest {
 
   private void readRequestLine(BufferedReader in) throws IOException {
     String requestLine = in.readLine();
-    System.out.println(requestLine);
     String[] parts = requestLine.split(" ");
-    this.target = parts[1];
+    int queryIndex = parts[1].indexOf("?");
+    if(queryIndex == -1) {
+      path = parts[1];
+    } else {
+      path = parts[1].substring(0, queryIndex);
+      query = parts[1].substring(queryIndex+1);
+    }
+  }
+
+  private Map<String, String> buildVariables() {
+    Map<String, String> variables = new HashMap<String, String>();
+    String[] keyValues = query.split("&");
+    for(String keyValue : keyValues) {
+      String[] parts = keyValue.split("=");
+      variables.put(parts[0], decode(parts[1]));
+    }
+    return variables;
+  }
+
+  private static String decode(String pathString) {
+    try {
+      return URLDecoder.decode(pathString, "UTF-8");
+    }
+    catch(UnsupportedEncodingException ex) {
+      return pathString;
+    }
   }
 
   private void readHeaders(BufferedReader in) throws IOException {

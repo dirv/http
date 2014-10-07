@@ -28,6 +28,13 @@ public class HttpServerTest {
   }
 
   @Test
+	public void decodesUrlParameters() {
+    createGetRequest("/parameters?hi=%20%3C%2C");
+    createServer();
+    assertThat(socket.getOutput(0), containsString("hi =  <,"));
+  }
+
+  @Test
 	public void servesMultipleRequests() {
     createGetRequest("/", "/");
     createServer();

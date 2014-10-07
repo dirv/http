@@ -1,7 +1,9 @@
+* Mime.types - can this go in the JAR
+* Remove use of BufferedReader
+* More tests for Content-Length (return this for directory resource)
 * Possibly split ByteRange out into FixedByteRange and ByteRange.
 * Naming of Range, RangeSpecifier, FixedRangeSpecifier, ByterRange and Suffix
 * Batching of read requests on InputStream--possibly in 1K batches
-* FileResource needs a Content-Type
 * PartialFileResource needs a ResponseContentPart(Content-type, Content-range, content)
 * So maybe instead of dumpResource, have a ResponseContent:
     HeaderResponseContent

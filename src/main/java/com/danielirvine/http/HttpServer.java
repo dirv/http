@@ -39,7 +39,7 @@ public class HttpServer {
       return new NetServerSocket(port);
     }
     catch(IOException ex) {
-      System.err.println(ex);
+      ex.printStackTrace();
     }
     return null;
   }
