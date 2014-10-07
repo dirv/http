@@ -108,6 +108,10 @@ public class RangeHeader implements RequestHeader {
       return high;
     }
 
+    public long length() {
+      return high - low + 1;
+    }
+
     public boolean isSatisfiable() {
       return high >= low;
     }

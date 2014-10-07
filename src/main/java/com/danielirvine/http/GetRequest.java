@@ -44,6 +44,8 @@ public class GetRequest {
     String headerString = null;
     while((headerString = in.readLine()) != null) {
       headers.add(buildHeader(headerString));
+      // TODO: fix this break
+      if (headerString.equals("")) break;
     }
   }
 

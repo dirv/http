@@ -20,7 +20,7 @@ public class HeadersTest {
   @Test
 	public void rangeShowsMultipartByteRangesHeader() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    request = buildRequestWithHeader("Range: bytes=-5");
+    request = buildRequestWithHeader("Range: bytes=0-10,-5");
     response = request.response();
     assertThat(headers(), hasItem(containsString("Content-type: multipart/byteranges; boundary=")));
   }

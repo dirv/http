@@ -26,8 +26,10 @@ public class PartialFileResource implements Resource {
       long curPos = 0;
       try {
         for(FixedRangeSpecifier range : ranges) {
-          addHeader(out, ContentTypeHeader.TEXT_PLAIN);
-          addHeader(out, range.getContentRangeHeader());
+          if(isMultipart()) {
+            addHeader(out, ContentTypeHeader.TEXT_PLAIN);
+            addHeader(out, range.getContentRangeHeader());
+          }
           reader.skip(range.getLow() - curPos);
           long high = range.getHigh();
           int b;
@@ -46,15 +48,36 @@ public class PartialFileResource implements Resource {
   }
 
   public List<Header> getHeaders() {
-    return isSatisfiable()
-      ? asList(ContentTypeHeader.MULTIPART_BYTE_RANGES)
-      : asList();
+    List<Header> headers = new ArrayList<Header>();
+    if(isMultipart()) {
+      headers.add(ContentTypeHeader.MULTIPART_BYTE_RANGES);
+    } else {
+      headers.add(ContentTypeHeader.TEXT_PLAIN);
+      headers.add(ranges.get(0).getContentRangeHeader());
+      headers.add(getContentLengthHeader());
+    }
+    return headers;
   }
 
   private void addHeader(PrintWriter out, Header h) {
     out.write(h.toString() + HttpServer.CRLF);
   }
+
+  private boolean isMultipart() {
+    return isSatisfiable() && ranges.size() > 1;
+  }
+
   private boolean isSatisfiable() {
     return ranges.size() > 0;
+  }
+
+  private Header getContentLengthHeader() {
+    return new Header() {
+      @Override
+      public String toString() {
+        long length = isSatisfiable() ? ranges.get(0).length() : descriptor.length();
+        return "Content-Length: " + length;
+      }
+    };
   }
 }
