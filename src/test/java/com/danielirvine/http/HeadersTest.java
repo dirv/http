@@ -31,6 +31,7 @@ public class HeadersTest {
     request = buildRequestWithHeader("Range: bytes=-5");
     response = request.response();
     assertThat(headers(), hasItem(containsString("Content-type: text/plain")));
+    assertThat(headers(), hasItem(containsString("Content-Length: 5")));
   }
 
   @Test
