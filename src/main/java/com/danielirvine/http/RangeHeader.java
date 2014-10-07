@@ -116,13 +116,8 @@ public class RangeHeader implements RequestHeader {
       return high >= low;
     }
 
-    public Header getContentRangeHeader() {
-      return new Header() {
-        @Override
-        public String toString() {
-          return "Content-range: bytes " + low + "-" + high + "/" + fileLength;
-        }
-      };
+    public ResponseHeader toHeader() {
+      return new ContentRangeHeader(low, high, fileLength);
     }
   }
 

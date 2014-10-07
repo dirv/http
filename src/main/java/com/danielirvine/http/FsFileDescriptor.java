@@ -47,7 +47,7 @@ public class FsFileDescriptor implements FileDescriptor {
 
   public String contentType() {
     try {
-    return Files.probeContentType(file.toPath());
+      return Files.probeContentType(file.toPath());
     } catch(IOException ex) {
       return "text/plain";
     }

@@ -11,10 +11,10 @@ class NotFoundResource implements Resource {
     return ResponseCode.NOT_FOUND;
   }
 
-  public void dumpResource(PrintWriter out) {
+  public void dumpResource(Writer out) {
   }
 
-  public List<Header> getHeaders() {
+  public List<ResponseHeader> getHeaders() {
     return asList();
   }
 

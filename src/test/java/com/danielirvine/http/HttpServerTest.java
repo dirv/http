@@ -44,8 +44,7 @@ public class HttpServerTest {
     createGetRequest("/testFile");
     createServer();
     assertEquals("HTTP/1.1 200 OK", outputByLine().get(0));
-    assertEquals("", outputByLine().get(1));
-    assertEquals("content", outputByLine().get(2));
+    assertThat(outputByLine(), hasItem(containsString("content")));
   }
 
   @Test

@@ -16,7 +16,7 @@ public class HttpServer {
     DirectoryResource root = new DirectoryResource(rootFile);
     try {
       SocketProxy clientSocket = socket.accept();
-      PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+      Writer out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
       GetRequest getRequest = new GetRequest(clientSocket.getInputStream(), root);
       getRequest.response().print(out);
       clientSocket.close();

@@ -20,7 +20,7 @@ class FileResource implements Resource {
     return ResponseCode.OK;
   }
 
-  public void dumpResource(PrintWriter out) {
+  public void dumpResource(Writer out) {
     try {
       InputStream reader = descriptor.getReadStream();
       int b;
@@ -32,9 +32,10 @@ class FileResource implements Resource {
     }
   }
 
-  public List<Header> getHeaders() {
-    List<Header> headers = new ArrayList<Header>();
+  public List<ResponseHeader> getHeaders() {
+    List<ResponseHeader> headers = new ArrayList<ResponseHeader>();
     headers.add(new ContentTypeHeader(descriptor));
+    headers.add(new ContentLengthHeader(descriptor));
     return headers;
   }
 }

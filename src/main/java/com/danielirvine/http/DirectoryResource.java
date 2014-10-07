@@ -16,10 +16,13 @@ public class DirectoryResource implements Resource {
     return ResponseCode.OK;
   }
 
-  public void dumpResource(PrintWriter out) {
-    for(FileDescriptor child : descriptor.getChildren()) {
-      out.write(createLink(child.getName()));
-      out.write(HttpServer.CRLF);
+  public void dumpResource(Writer out) {
+    try{
+      for(FileDescriptor child : descriptor.getChildren()) {
+        out.write(createLink(child.getName()));
+        out.write(HttpServer.CRLF);
+      }
+    } catch(IOException ex) {
     }
   }
 
@@ -36,7 +39,7 @@ public class DirectoryResource implements Resource {
     }
   }
 
-  public List<Header> getHeaders() {
+  public List<ResponseHeader> getHeaders() {
     return asList();
   }
 

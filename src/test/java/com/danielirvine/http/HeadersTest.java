@@ -27,6 +27,14 @@ public class HeadersTest {
   }
 
   @Test
+	public void sendsContentLengthForJpeg() {
+    rootDirectory.addFile("test.jpeg", "unknown");
+    request = buildRequestWithHeader("test.jpeg", "");
+    response = request.response();
+    assertThat(headers(), hasItem(containsString("Content-Length: 7")));
+  }
+
+  @Test
 	public void rangeShowsMultipartByteRangesHeader() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
     request = buildRequestWithHeader("alphabet", "Range: bytes=0-10,-5");
@@ -63,8 +71,11 @@ public class HeadersTest {
 
   private List<String> headers() {
     StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    response.print(pw);
+    try{
+    response.print(sw);
+    } catch(IOException ex)
+    {
+    }
     return Arrays.asList(sw.toString().split(HttpServer.CRLF));
   }
 }

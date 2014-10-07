@@ -5,7 +5,7 @@ import java.util.*;
 
 interface Resource {
   ResponseCode getResponseCode();
-  void dumpResource(PrintWriter out);
-  List<Header> getHeaders();
+  void dumpResource(Writer out);
+  List<ResponseHeader> getHeaders();
   Resource applyRange(RangeHeader range);
 }

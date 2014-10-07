@@ -20,7 +20,7 @@ public class PartialFileResource implements Resource {
     return this;
   }
 
-  public void dumpResource(PrintWriter out) {
+  public void dumpResource(Writer out) {
     if(isSatisfiable()) {
       InputStream reader = descriptor.getReadStream();
       long curPos = 0;
@@ -28,7 +28,7 @@ public class PartialFileResource implements Resource {
         for(FixedRangeSpecifier range : ranges) {
           if(isMultipart()) {
             addHeader(out, new ContentTypeHeader(descriptor));
-            addHeader(out, range.getContentRangeHeader());
+            addHeader(out, range.toHeader());
           }
           reader.skip(range.getLow() - curPos);
           long high = range.getHigh();
@@ -47,19 +47,19 @@ public class PartialFileResource implements Resource {
     return isSatisfiable() ? ResponseCode.PARTIAL : ResponseCode.UNSATISFIABLE;
   }
 
-  public List<Header> getHeaders() {
-    List<Header> headers = new ArrayList<Header>();
+  public List<ResponseHeader> getHeaders() {
+    List<ResponseHeader> headers = new ArrayList<ResponseHeader>();
     if(isMultipart()) {
       headers.add(ContentTypeHeader.MULTIPART_BYTE_RANGES);
     } else {
       headers.add(new ContentTypeHeader(descriptor));
-      headers.add(ranges.get(0).getContentRangeHeader());
+      headers.add(ranges.get(0).toHeader());
       headers.add(getContentLengthHeader());
     }
     return headers;
   }
 
-  private void addHeader(PrintWriter out, Header h) {
+  private void addHeader(Writer out, ResponseHeader h) throws IOException {
     out.write(h.toString() + HttpServer.CRLF);
   }
 
@@ -71,13 +71,8 @@ public class PartialFileResource implements Resource {
     return ranges.size() > 0;
   }
 
-  private Header getContentLengthHeader() {
-    return new Header() {
-      @Override
-      public String toString() {
-        long length = isSatisfiable() ? ranges.get(0).length() : descriptor.length();
-        return "Content-Length: " + length;
-      }
-    };
+  private ResponseHeader getContentLengthHeader() {
+    long length = isSatisfiable() ? ranges.get(0).length() : descriptor.length();
+    return new ContentLengthHeader(length);
   }
 }
