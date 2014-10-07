@@ -16,11 +16,11 @@ public class DirectoryResource implements Resource {
     return ResponseCode.OK;
   }
 
-  public void dumpResource(Writer out) {
+  public void dumpResource(OutputStream out) {
     try{
       for(FileDescriptor child : descriptor.getChildren()) {
-        out.write(createLink(child.getName()));
-        out.write(HttpServer.CRLF);
+        out.write(createLink(child.getName()).getBytes());
+        out.write(HttpServer.CRLF.getBytes());
       }
     } catch(IOException ex) {
     }

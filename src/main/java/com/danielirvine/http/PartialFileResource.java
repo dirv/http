@@ -20,7 +20,7 @@ public class PartialFileResource implements Resource {
     return this;
   }
 
-  public void dumpResource(Writer out) {
+  public void dumpResource(OutputStream out) {
     if(isSatisfiable()) {
       InputStream reader = descriptor.getReadStream();
       long curPos = 0;
@@ -59,8 +59,8 @@ public class PartialFileResource implements Resource {
     return headers;
   }
 
-  private void addHeader(Writer out, ResponseHeader h) throws IOException {
-    out.write(h.toString() + HttpServer.CRLF);
+  private void addHeader(OutputStream out, ResponseHeader h) throws IOException {
+    out.write((h.toString() + HttpServer.CRLF).getBytes());
   }
 
   private boolean isMultipart() {

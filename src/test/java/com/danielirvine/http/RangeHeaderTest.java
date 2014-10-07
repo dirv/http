@@ -84,10 +84,9 @@ public class RangeHeaderTest {
   }
 
   private List<String> dumpResource() {
-    StringWriter sw = new StringWriter();
-    PrintWriter out = new PrintWriter(sw);
-    partial.dumpResource(out);
-    return Arrays.asList(sw.toString().split(HttpServer.CRLF));
+    ByteArrayOutputStream s = new ByteArrayOutputStream();
+    partial.dumpResource(s);
+    return Arrays.asList(s.toString().split(HttpServer.CRLF));
   }
 
   private ResponseCode responseCode() {

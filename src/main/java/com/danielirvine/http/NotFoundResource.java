@@ -11,7 +11,7 @@ class NotFoundResource implements Resource {
     return ResponseCode.NOT_FOUND;
   }
 
-  public void dumpResource(Writer out) {
+  public void dumpResource(OutputStream out) {
   }
 
   public List<ResponseHeader> getHeaders() {

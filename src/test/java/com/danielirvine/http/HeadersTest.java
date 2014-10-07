@@ -70,12 +70,12 @@ public class HeadersTest {
   }
 
   private List<String> headers() {
-    StringWriter sw = new StringWriter();
+    ByteArrayOutputStream s = new ByteArrayOutputStream();
     try{
-    response.print(sw);
+      response.print(s);
     } catch(IOException ex)
     {
     }
-    return Arrays.asList(sw.toString().split(HttpServer.CRLF));
+    return Arrays.asList(s.toString().split(HttpServer.CRLF));
   }
 }

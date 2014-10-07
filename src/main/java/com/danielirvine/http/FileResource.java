@@ -20,7 +20,7 @@ class FileResource implements Resource {
     return ResponseCode.OK;
   }
 
-  public void dumpResource(Writer out) {
+  public void dumpResource(OutputStream out) {
     try {
       InputStream reader = descriptor.getReadStream();
       int b;

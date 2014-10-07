@@ -17,9 +17,8 @@ public class HttpServer {
     try {
       while(socket.hasData()) {
         SocketProxy clientSocket = socket.accept();
-        Writer out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         GetRequest getRequest = new GetRequest(clientSocket.getInputStream(), root);
-        getRequest.response().print(out);
+        getRequest.response().print(clientSocket.getOutputStream());
         clientSocket.close();
       }
     }

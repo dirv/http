@@ -13,7 +13,7 @@ public class Response {
     this.body = body;
   }
 
-  public void print(Writer out) throws IOException {
+  public void print(OutputStream out) throws IOException {
     addStatusLine(out);
     addHeaders(out);
     endHeader(out);
@@ -21,21 +21,21 @@ public class Response {
     out.flush();
   }
 
-  private void addBody(Writer out) {
+  private void addBody(OutputStream out) {
     body.dumpResource(out);
   }
 
-  private void addStatusLine(Writer out) throws IOException {
-    out.write("HTTP/1.1 " + code + HttpServer.CRLF);
+  private void addStatusLine(OutputStream out) throws IOException {
+    out.write(("HTTP/1.1 " + code + HttpServer.CRLF).getBytes());
   }
 
-  private void addHeaders(Writer out) throws IOException {
+  private void addHeaders(OutputStream out) throws IOException {
     for(ResponseHeader h : body.getHeaders()) {
-      out.write(h + HttpServer.CRLF);
+      out.write((h + HttpServer.CRLF).getBytes());
     }
   }
 
-  private void endHeader(Writer out) throws IOException {
-    out.write(HttpServer.CRLF);
+  private void endHeader(OutputStream out) throws IOException {
+    out.write(HttpServer.CRLF.getBytes());
   }
 }
