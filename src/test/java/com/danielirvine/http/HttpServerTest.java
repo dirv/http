@@ -6,6 +6,9 @@ import static org.hamcrest.CoreMatchers.*;
 import java.net.*;
 import java.util.function.*;
 import java.util.*;
+import java.util.stream.*;
+import static java.util.stream.Stream.*;
+import static java.util.stream.Collectors.*;
 
 public class HttpServerTest {
 
@@ -18,10 +21,18 @@ public class HttpServerTest {
   public void opensSocketOnPort() throws Exception {
     Function<Integer, ServerSocketProxy> socketFactory = (port) -> {
       portSpecified = port;
-      return null;
+      return new InProcessServerSocket(new String[0]);
     };
     server = new HttpServer(socketFactory, 212, ".");
     assertEquals(212, portSpecified);
+  }
+
+  @Test
+	public void servesMultipleRequests() {
+    createGetRequest("/", "/");
+    createServer();
+    assertThat(socket.getOutput(0), containsString("HTTP/1.1 200 OK"));
+    assertThat(socket.getOutput(1), containsString("HTTP/1.1 200 OK"));
   }
 
   @Test
@@ -65,9 +76,16 @@ public class HttpServerTest {
     assertThat(outputByLine(), hasItem("<a href=\"/test1\">test1</a>"));
   }
 
-  private void createGetRequest(String path) {
-    String requestLine = "GET " + path + " HTTP/1.1\n";
-    socket = new InProcessServerSocket(requestLine);
+  private void createGetRequest(String... paths) {
+    String[] requests = new String[paths.length];
+    for(int i = 0; i < paths.length; ++i){
+      requests[i] = createGetRequestFromPath(paths[i]);
+    }
+    socket = new InProcessServerSocket(requests);
+  }
+
+  private static String createGetRequestFromPath(String path) {
+    return "GET " + path + " HTTP/1.1" + HttpServer.CRLF;
   }
 
   private void createServer() {
@@ -75,6 +93,6 @@ public class HttpServerTest {
   }
 
   private List<String> outputByLine() {
-    return Arrays.asList(socket.getOutput().split(HttpServer.CRLF));
+    return Arrays.asList(socket.getOutput(0).split(HttpServer.CRLF));
   }
 }

@@ -15,11 +15,13 @@ public class HttpServer {
   public HttpServer(ServerSocketProxy socket, FileDescriptor rootFile) {
     DirectoryResource root = new DirectoryResource(rootFile);
     try {
-      SocketProxy clientSocket = socket.accept();
-      Writer out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-      GetRequest getRequest = new GetRequest(clientSocket.getInputStream(), root);
-      getRequest.response().print(out);
-      clientSocket.close();
+      while(socket.hasData()) {
+        SocketProxy clientSocket = socket.accept();
+        Writer out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+        GetRequest getRequest = new GetRequest(clientSocket.getInputStream(), root);
+        getRequest.response().print(out);
+        clientSocket.close();
+      }
     }
     catch(Exception ex) {
       ex.printStackTrace();

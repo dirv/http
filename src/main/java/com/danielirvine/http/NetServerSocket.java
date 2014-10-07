@@ -29,6 +29,10 @@ public class NetServerSocket implements ServerSocketProxy {
     };
   }
 
+  public boolean hasData() {
+    return true;
+  }
+
   public void close() throws IOException {
     socket.close();
   }
