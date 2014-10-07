@@ -10,10 +10,9 @@ public class PartialFileResource implements Resource {
   private final FileDescriptor descriptor;
   private final List<FixedRangeSpecifier> ranges;
 
-  public PartialFileResource(FileDescriptor descriptor, Range range) {
+  public PartialFileResource(FileDescriptor descriptor, RangeHeader range) {
     this.descriptor = descriptor;
-    this.ranges = range
-      .fixForFileLength(descriptor.length());
+    this.ranges = range.fixForFileLength(descriptor.length());
   }
 
   public void dumpResource(PrintWriter out) {
@@ -23,7 +22,6 @@ public class PartialFileResource implements Resource {
       try {
         for(FixedRangeSpecifier range : ranges) {
           reader.skip(range.getLow() - curPos);
-          // TODO: read in batches
           long high = range.getHigh();
           int b;
           while((b = reader.read()) != -1 && curPos++ <= high) {

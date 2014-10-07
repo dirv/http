@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.*;
 import static java.util.stream.Stream.*;
 import java.util.stream.*;
 
-public class Range {
+public class RangeHeader {
 
   private static final Pattern headerPattern = Pattern.compile("bytes=([\\d\\-]*(?:,[\\d\\-]*)*)");
   private static final Pattern rangePattern = Pattern.compile("(?:(\\d+)\\-(\\d*))|(?:\\-(\\d*))");

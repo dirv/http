@@ -10,7 +10,7 @@ class FileResource implements Resource {
     this.descriptor = descriptor;
   }
 
-  public Resource applyRange(Range range) {
+  public Resource applyRange(RangeHeader range) {
     if (range.shouldIgnore()) {
       return this;
     }

@@ -1,0 +1,13 @@
+* Possibly split ByteRange out into FixedByteRange and ByteRange.
+* Naming of Range, RangeSpecifier, FixedRangeSpecifier, ByterRange and Suffix
+* Batching of read requests on InputStream--possibly in 1K batches
+* FileResource needs a Content-Type
+* PartialFileResource needs a ResponseContentPart(Content-type, Content-range, content)
+* So maybe instead of dumpResource, have a ResponseContent:
+    HeaderResponseContent
+    BinaryResponseContent
+    HtmlResponseContent
+    ResponseContentPart.
+* Need to decide if headers get special treatment. Rather than a tree of resources, it could just be a
+  a list--lots of headers followed by content.
+  That's hard to say without having done all the other headers. They don't necessarily belong to the Resource.
