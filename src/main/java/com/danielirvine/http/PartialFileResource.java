@@ -36,7 +36,7 @@ public class PartialFileResource implements Resource {
           }
         }
       } catch(IOException ex) {
-        System.err.println(ex);
+        ex.printStackTrace();
       }
     }
   }

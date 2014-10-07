@@ -28,7 +28,7 @@ class FileResource implements Resource {
         out.write(b);
       }
     } catch(IOException ex) {
-      System.err.println(ex);
+      ex.printStackTrace();
     }
   }
 

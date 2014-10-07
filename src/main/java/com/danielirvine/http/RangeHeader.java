@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.*;
 import static java.util.stream.Stream.*;
 import java.util.stream.*;
 
-public class RangeHeader implements Header {
+public class RangeHeader implements RequestHeader {
 
   private static final Pattern headerPattern = Pattern.compile("bytes=([\\d\\-]*(?:,[\\d\\-]*)*)");
   private static final Pattern rangePattern = Pattern.compile("(?:(\\d+)\\-(\\d*))|(?:\\-(\\d*))");

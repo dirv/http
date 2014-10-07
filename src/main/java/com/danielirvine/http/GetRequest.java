@@ -6,7 +6,7 @@ import java.util.*;
 public class GetRequest {
 
   private String target;
-  private List<RangeHeader> headers = new ArrayList<RangeHeader>();
+  private List<RequestHeader> headers = new ArrayList<RequestHeader>();
   private final DirectoryResource root;
 
   public GetRequest(InputStream request, DirectoryResource root) throws IOException {
@@ -16,7 +16,7 @@ public class GetRequest {
 
   public Response response() {
     Resource resource = buildResource();
-    for(RangeHeader h : headers) {
+    for(RequestHeader h : headers) {
       resource = h.apply(resource);
     }
     // TODO: possibly push this code into Response
@@ -47,8 +47,13 @@ public class GetRequest {
     }
   }
 
-  private RangeHeader buildHeader(String headerString) {
-    String[] parts = headerString.split(": ");
-    return new RangeHeader(parts[1]);
+  private RequestHeader buildHeader(String headerString) {
+    String[] parts = headerString.split(":");
+    if(parts[0].equals("Range")) {
+      return new RangeHeader(parts[1].trim());
+    }
+    else {
+      return new UnknownRequestHeader();
+    }
   }
 }

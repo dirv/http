@@ -22,7 +22,7 @@ public class HttpServer {
       clientSocket.close();
     }
     catch(Exception ex) {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
   }
 
