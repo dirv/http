@@ -35,7 +35,6 @@ public class GetRequest {
 
   private void readRequestLine(BufferedReader in) throws IOException {
     String requestLine = in.readLine();
-    System.out.println(requestLine);
     String[] parts = requestLine.split(" ");
     this.target = parts[1];
   }
@@ -43,7 +42,6 @@ public class GetRequest {
   private void readHeaders(BufferedReader in) throws IOException {
     String headerString = null;
     while((headerString = in.readLine()) != null) {
-      System.out.println(headerString);
       headers.add(buildHeader(headerString));
     }
   }

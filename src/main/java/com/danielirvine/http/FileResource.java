@@ -1,6 +1,8 @@
 package com.danielirvine.http;
 
 import java.io.*;
+import java.util.*;
+import static java.util.Arrays.*;
 
 class FileResource implements Resource {
 
@@ -32,4 +34,9 @@ class FileResource implements Resource {
       System.err.println(ex);
     }
   }
+
+  public List<Header> getHeaders() {
+    return asList();
+  }
+
 }

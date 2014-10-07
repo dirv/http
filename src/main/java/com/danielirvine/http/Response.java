@@ -15,6 +15,7 @@ public class Response {
 
   public void print(PrintWriter out) {
     addStatusLine(out);
+    addHeaders(out);
     endHeader(out);
     addBody(out);
     out.flush();
@@ -26,6 +27,12 @@ public class Response {
 
   private void addStatusLine(PrintWriter out) {
     out.print("HTTP/1.1 " + code + HttpServer.CRLF);
+  }
+
+  private void addHeaders(PrintWriter out) {
+    for(Header h : body.getHeaders()) {
+      out.print(h + HttpServer.CRLF);
+    }
   }
 
   private void endHeader(PrintWriter out) {

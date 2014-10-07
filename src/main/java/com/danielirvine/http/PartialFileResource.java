@@ -4,6 +4,7 @@ import java.io.*;
 import static java.util.stream.Stream.*;
 import java.util.stream.*;
 import java.util.*;
+import static java.util.Arrays.*;
 
 public class PartialFileResource implements Resource {
 
@@ -36,6 +37,12 @@ public class PartialFileResource implements Resource {
 
   public ResponseCode getResponseCode() {
     return isSatisfiable() ? ResponseCode.PARTIAL : ResponseCode.UNSATISFIABLE;
+  }
+
+  public List<Header> getHeaders() {
+    return isSatisfiable()
+      ? asList(ContentTypeHeader.MULTIPART_BYTE_RANGES)
+      : asList();
   }
 
   private boolean isSatisfiable() {

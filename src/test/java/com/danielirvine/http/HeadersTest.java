@@ -19,7 +19,6 @@ public class HeadersTest {
 
   @Test
 	public void handlesRangeHeader() {
-
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
     request = buildRequestWithHeader("Range: bytes=-5");
     response = request.response();

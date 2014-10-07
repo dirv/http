@@ -2,6 +2,7 @@ package com.danielirvine.http;
 
 import java.io.*;
 import java.util.*;
+import static java.util.Arrays.*;
 
 public class DirectoryResource implements Resource {
 
@@ -33,6 +34,10 @@ public class DirectoryResource implements Resource {
         return new NotFoundResource();
       }
     }
+  }
+
+  public List<Header> getHeaders() {
+    return asList();
   }
 
   private String createLink(String text) {

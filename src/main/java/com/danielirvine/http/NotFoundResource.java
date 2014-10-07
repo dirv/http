@@ -1,6 +1,9 @@
 package com.danielirvine.http;
 
 import java.io.*;
+import java.util.*;
+import static java.util.Arrays.*;
+
 
 class NotFoundResource implements Resource {
 
@@ -9,5 +12,9 @@ class NotFoundResource implements Resource {
   }
 
   public void dumpResource(PrintWriter out) {
+  }
+
+  public List<Header> getHeaders() {
+    return asList();
   }
 }
