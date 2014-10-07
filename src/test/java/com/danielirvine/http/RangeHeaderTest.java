@@ -9,8 +9,8 @@ import java.io.*;
 public class RangeHeaderTest {
 
   private static final String content = "abcdefghijklmnopqrstuvwxyz";
-  private final RangeHeader range = new RangeHeader();
   private final FileResource file = new FileResource(new InMemoryFileDescriptor("test", content));
+  private RangeHeader range;
   private Resource partial;
 
   @Test
@@ -80,8 +80,7 @@ public class RangeHeaderTest {
 
 
   private void setRangeOnFile(String rangeHeader) {
-    RangeHeader range = new RangeHeader();
-    range.processHeader(rangeHeader);
+    RangeHeader range = new RangeHeader(rangeHeader);
     partial = file.applyRange(range);
   }
 

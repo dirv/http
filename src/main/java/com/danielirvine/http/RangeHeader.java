@@ -14,7 +14,7 @@ public class RangeHeader {
   private List<RangeSpecifier> byteRanges = new ArrayList<RangeSpecifier>();
   private boolean hasError = false;
 
-  public void processHeader(String header) {
+  public RangeHeader(String header) {
     Matcher m = headerPattern.matcher(header);
     if (m.matches()) {
       processRanges(m.group(1).split(","));
