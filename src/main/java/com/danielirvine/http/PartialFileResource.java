@@ -1,8 +1,5 @@
 package com.danielirvine.http;
 
-import java.io.*;
-import static java.util.stream.Stream.*;
-import java.util.stream.*;
 import java.util.*;
 import static java.util.Arrays.*;
 
