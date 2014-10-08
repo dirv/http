@@ -11,10 +11,12 @@ public class Request {
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
   private final DirectoryResource root;
   private final UrlRedirects redirects;
+  private final Authorizor authorizor;
 
-  public Request(InputStream request, DirectoryResource root, UrlRedirects redirects) throws IOException {
+  public Request(InputStream request, DirectoryResource root, UrlRedirects redirects, Authorizor authorizor) throws IOException {
     this.root = root;
     this.redirects = redirects;
+    this.authorizor = authorizor;
     parseRequest(request);
   }
 
@@ -33,6 +35,9 @@ public class Request {
     }
     if(redirects.hasRedirect(path)) {
       return new RedirectResource(redirects.redirect(path));
+    }
+    if(authorizor.requiresAuthorization(path)) {
+      return new UnauthorizedResource(path);
     }
     return root.findResource(path.split("/"));
   }

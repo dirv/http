@@ -16,8 +16,10 @@ public class HttpServerTest {
   private HttpServer server;
   private InProcessServerSocket socket;
   private final InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
+  private final StringBufferInputStream empty = new StringBufferInputStream("");
   private int portSpecified = 0;
   private String redirects = "";
+  private String authTable = "";
 
   @Test
   public void opensSocketOnPort() throws Exception {
@@ -25,7 +27,7 @@ public class HttpServerTest {
       portSpecified = port;
       return new InProcessServerSocket(new String[0]);
     };
-    server = new HttpServer(socketFactory, 212, ".", new StringBufferInputStream(""));
+    server = new HttpServer(socketFactory, 212, ".", empty, empty);
     assertEquals(212, portSpecified);
   }
 
@@ -95,6 +97,15 @@ public class HttpServerTest {
     assertThat(outputByLine(), hasItem(containsString("/b")));
   }
 
+  @Test
+	public void promptsForAuthorization() {
+    authTable = "/a:admin:xs";
+    createGetRequest("/a");
+    createServer();
+    assertEquals("HTTP/1.1 401 Unauthorized", outputByLine().get(0));
+    assertThat(outputByLine(), hasItem(containsString("WWW-Authenticate: Basic realm=\"/a\"")));
+  }
+
   private void createGetRequest(String... paths) {
     String[] requests = new String[paths.length];
     for(int i = 0; i < paths.length; ++i){
@@ -109,7 +120,8 @@ public class HttpServerTest {
 
   private void createServer() {
     StringBufferInputStream redirectStream = new StringBufferInputStream(redirects);
-    server = new HttpServer(socket, publicRoot, redirectStream);
+    StringBufferInputStream authStream = new StringBufferInputStream(authTable);
+    server = new HttpServer(socket, publicRoot, redirectStream, authStream);
   }
 
   private List<String> outputByLine() {
