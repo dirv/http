@@ -27,7 +27,7 @@ class DirectoryResource implements Resource {
       if(child.exists()) {
         return new FileResource(child);
       } else {
-        return new NotFoundResource();
+        return null; // TODO - get rid of this call
       }
     }
   }

@@ -3,14 +3,13 @@ package com.danielirvine.http;
 import java.io.*;
 import java.net.*;
 import java.util.function.*;
+import static java.util.Arrays.*;
 
 public class HttpServer {
 
   public static final String CRLF = "\r\n";
   public static final String PROTOCOL_VERSION = "HTTP/1.1";
-  private final DirectoryResource root;
-  private final UrlRedirects redirects;
-  private final Authorizor authorizor;
+  private final Responder responder;
 
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory,
       int port,
@@ -27,9 +26,17 @@ public class HttpServer {
       FileDescriptor rootFile,
       InputStream redirectsStream,
       InputStream authStream) {
-    root = new DirectoryResource(rootFile);
-    redirects = new UrlRedirects(redirectsStream);
-    authorizor = new Authorizor(authStream);
+    DirectoryResource root = new DirectoryResource(rootFile);
+    UrlRedirects redirects = new UrlRedirects(redirectsStream);
+    Authorizor authorizor = new Authorizor(authStream);
+
+    responder = new Responder(asList(
+          new UnauthorizedResponseContributor(authorizor),
+          new RedirectResponseContributor(redirects),
+          new QueryResponseContributor(),
+          new ResourceResponseContributor(root),
+          new NotFoundResponseContributor()));
+
     while(socket.hasData()) {
       try(SocketProxy clientSocket = socket.accept()) {
         handleIncomingRequest(clientSocket);
@@ -52,8 +59,8 @@ public class HttpServer {
   }
 
   private void handleIncomingRequest(SocketProxy socket) throws IOException {
-    Request request = new Request(socket.getInputStream(), root, redirects, authorizor);
-    Response response = request.response();
+    Request request = new Request(socket.getInputStream());
+    Response response = responder.response(request);
     response.write(socket.getOutputStream());
   }
 

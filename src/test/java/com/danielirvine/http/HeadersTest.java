@@ -14,8 +14,6 @@ public class HeadersTest {
 
   private final InMemoryFileDescriptor rootDirectory = new InMemoryFileDescriptor("/");
   private final DirectoryResource root = new DirectoryResource(rootDirectory);
-  private final UrlRedirects urlRedirects = new UrlRedirects(new StringBufferInputStream(""));
-  private final Authorizor authorizor = new Authorizor(new StringBufferInputStream(""));
   private Request request;
   private Response response;
 
@@ -23,32 +21,28 @@ public class HeadersTest {
   @Test
 	public void sendsContentTypeForJpeg() {
     rootDirectory.addFile("test.jpeg", "unknown");
-    request = buildRequestWithHeader("test.jpeg", "");
-    response = request.response();
+    buildRequestWithHeader("test.jpeg", "");
     assertThat(headers(), hasItem(containsString("Content-type: image/jpeg")));
   }
 
   @Test
 	public void sendsContentLengthForJpeg() {
     rootDirectory.addFile("test.jpeg", "unknown");
-    request = buildRequestWithHeader("test.jpeg", "");
-    response = request.response();
+    buildRequestWithHeader("test.jpeg", "");
     assertThat(headers(), hasItem(containsString("Content-Length: 7")));
   }
 
   @Test
 	public void rangeShowsMultipartByteRangesHeader() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    request = buildRequestWithHeader("alphabet", "Range: bytes=0-10,-5");
-    response = request.response();
+    buildRequestWithHeader("alphabet", "Range: bytes=0-10,-5");
     assertThat(headers(), hasItem(containsString("Content-type: multipart/byteranges; boundary=")));
   }
 
   @Test
 	public void rangeShowsOriginalContentPart() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    request = buildRequestWithHeader("alphabet", "Range: bytes=-5");
-    response = request.response();
+    buildRequestWithHeader("alphabet", "Range: bytes=-5");
     assertThat(headers(), hasItem(containsString("Content-type: text/plain")));
     assertThat(headers(), hasItem(containsString("Content-Length: 5")));
   }
@@ -56,18 +50,17 @@ public class HeadersTest {
   @Test
 	public void rangeShowsByteRange() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    request = buildRequestWithHeader("alphabet", "Range: bytes=-5");
-    response = request.response();
+    buildRequestWithHeader("alphabet", "Range: bytes=-5");
     assertThat(headers(), hasItem(containsString("Content-range: bytes 21-25/26")));
   }
 
-  private Request buildRequestWithHeader(String resource, String header) {
-    String request = "GET /" + resource + " HTTP/1.1" + HttpServer.CRLF;
-    request += header + HttpServer.CRLF;
+  private void buildRequestWithHeader(String resource, String header) {
+    String requestString = "GET /" + resource + " HTTP/1.1" + HttpServer.CRLF;
+    requestString += header + HttpServer.CRLF;
     try {
-      return new Request(new StringBufferInputStream(request), root, urlRedirects, authorizor);
+      Request request = new Request(new StringBufferInputStream(requestString));
+      response = new ResourceResponseContributor(root).response(request);
     } catch(IOException ex) {
-      return null;
     }
   }
 

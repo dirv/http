@@ -1,7 +1,6 @@
 package com.danielirvine.http;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 public class Request {
@@ -9,37 +8,25 @@ public class Request {
   private String path;
   private String query;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
-  private final DirectoryResource root;
-  private final UrlRedirects redirects;
-  private final Authorizor authorizor;
 
-  public Request(InputStream request, DirectoryResource root, UrlRedirects redirects, Authorizor authorizor) throws IOException {
-    this.root = root;
-    this.redirects = redirects;
-    this.authorizor = authorizor;
+  public Request(InputStream request) throws IOException {
     parseRequest(request);
   }
 
-  public Response response() {
-    Resource resource = buildResource();
-    // TODO: possibly these headers should apply to the response
-    for(RequestHeader h : headers) {
-      resource = h.apply(resource);
-    }
-    return resource.toResponse();
+  public boolean hasQuery() {
+    return query != null;
   }
 
-  private Resource buildResource() {
-    if(query != null) {
-      return new QueryResource(buildVariables());
-    }
-    if(redirects.hasRedirect(path)) {
-      return new RedirectResource(redirects.redirect(path));
-    }
-    if(authorizor.requiresAuthorization(path)) {
-      return new UnauthorizedResource(path);
-    }
-    return root.findResource(path.split("/"));
+  public String getQuery() {
+    return query;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public List<RequestHeader> getHeaders() {
+    return headers;
   }
 
   private void parseRequest(InputStream request) throws IOException {
@@ -60,16 +47,6 @@ public class Request {
     }
   }
 
-  private Map<String, String> buildVariables() {
-    Map<String, String> variables = new HashMap<String, String>();
-    String[] keyValues = query.split("&");
-    for(String keyValue : keyValues) {
-      String[] parts = keyValue.split("=");
-      variables.put(parts[0], parts[1]);
-    }
-    return variables;
-  }
-
   private void readHeaders(BufferedReader in) throws IOException {
     String headerString = null;
     while((headerString = in.readLine()) != null) {
@@ -81,6 +58,7 @@ public class Request {
 
   private RequestHeader buildHeader(String headerString) {
     String[] parts = headerString.split(":");
+    // TODO: parse this using a map
     if(parts[0].equals("Range")) {
       return new RangeHeader(parts[1].trim());
     }
