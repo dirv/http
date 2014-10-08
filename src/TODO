@@ -1,4 +1,8 @@
 
+* Directory listings for directories with no files
+* Html for directory listings
+* File sizes for directory entries
 * Redirects - currently requires full URL
+* Redirect - redirect code
 * Mime.types - can this go in the JAR
 * More tests for Content-Length (return this for directory resource)
