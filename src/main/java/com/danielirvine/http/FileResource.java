@@ -17,13 +17,10 @@ class FileResource implements Resource {
   }
 
   public Response toResponse() {
-    // TODO: need to kill this stream somehow.
-    // Introduce a Streamable interface.
-    InputStream in = new BufferedInputStream(descriptor.getReadStream());
     return new Response(
         ResponseCode.OK,
         new HeadedContent(getHeaders(),
-          asList(new StreamContent(0, descriptor.length(), in))));
+          asList(new SinglePartContent(descriptor, new FixedRange(descriptor)))));
   }
 
   private List<ResponseHeader> getHeaders() {

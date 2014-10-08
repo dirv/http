@@ -3,7 +3,7 @@ package com.danielirvine.http;
 import java.util.*;
 import static java.util.Arrays.*;
 
-public class PartialFileResource implements Resource {
+class PartialFileResource implements Resource {
 
   private final FileDescriptor descriptor;
   private final List<FixedRange> ranges;

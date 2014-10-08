@@ -11,6 +11,10 @@ class FixedRange {
   private final long previousPosition;
   private final long totalLength;
 
+  public FixedRange(FileDescriptor descriptor) {
+    this(0, 0, descriptor.length(), descriptor.length());
+  }
+
   public FixedRange(long previousPosition, long start, long end, long totalLength) {
     this.previousPosition = previousPosition;
     this.start = start;
