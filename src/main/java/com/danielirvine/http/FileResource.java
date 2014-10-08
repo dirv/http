@@ -16,26 +16,19 @@ class FileResource implements Resource {
     return new PartialFileResource(descriptor, range);
   }
 
-  public ResponseCode getResponseCode() {
-    return ResponseCode.OK;
+  public Response toResponse() {
+    // TODO: need to kill this stream somehow.
+    // Introduce a Streamable interface.
+    InputStream in = new BufferedInputStream(descriptor.getReadStream());
+    return new Response(
+        ResponseCode.OK,
+        new HeadedContent(getHeaders(),
+          asList(new StreamContent(0, descriptor.length(), in))));
   }
 
-  public void dumpResource(OutputStream out) {
-    try {
-      InputStream reader = descriptor.getReadStream();
-      int b;
-      while((b = reader.read()) != -1) {
-        out.write(b);
-      }
-    } catch(IOException ex) {
-      ex.printStackTrace();
-    }
-  }
-
-  public List<ResponseHeader> getHeaders() {
-    List<ResponseHeader> headers = new ArrayList<ResponseHeader>();
-    headers.add(new ContentTypeHeader(descriptor));
-    headers.add(new ContentLengthHeader(descriptor));
-    return headers;
+  private List<ResponseHeader> getHeaders() {
+    return asList(
+        new ContentTypeHeader(descriptor),
+        new ContentLengthHeader(descriptor));
   }
 }

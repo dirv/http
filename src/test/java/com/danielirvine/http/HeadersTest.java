@@ -14,7 +14,7 @@ public class HeadersTest {
 
   private final InMemoryFileDescriptor rootDirectory = new InMemoryFileDescriptor("/");
   private final DirectoryResource root = new DirectoryResource(rootDirectory);
-  private GetRequest request;
+  private Request request;
   private Response response;
 
 
@@ -59,11 +59,11 @@ public class HeadersTest {
     assertThat(headers(), hasItem(containsString("Content-range: bytes 21-25/26")));
   }
 
-  private GetRequest buildRequestWithHeader(String resource, String header) {
+  private Request buildRequestWithHeader(String resource, String header) {
     String request = "GET /" + resource + " HTTP/1.1" + HttpServer.CRLF;
     request += header + HttpServer.CRLF;
     try {
-      return new GetRequest(new StringBufferInputStream(request), root);
+      return new Request(new StringBufferInputStream(request), root);
     } catch(IOException ex) {
       return null;
     }
@@ -72,7 +72,7 @@ public class HeadersTest {
   private List<String> headers() {
     ByteArrayOutputStream s = new ByteArrayOutputStream();
     try{
-      response.print(s);
+      response.write(s);
     } catch(IOException ex)
     {
     }

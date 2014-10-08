@@ -20,47 +20,38 @@ public class PartialFileResource implements Resource {
     return this;
   }
 
-  public void dumpResource(OutputStream out) {
+  public Response toResponse() {
     if(isSatisfiable()) {
-      InputStream reader = descriptor.getReadStream();
-      long curPos = 0;
-      try {
-        for(FixedRangeSpecifier range : ranges) {
-          if(isMultipart()) {
-            addHeader(out, new ContentTypeHeader(descriptor));
-            addHeader(out, range.toHeader());
-          }
-          reader.skip(range.getLow() - curPos);
-          long high = range.getHigh();
-          int b;
-          while((b = reader.read()) != -1 && curPos++ <= high) {
-            out.write(b);
-          }
-        }
-      } catch(IOException ex) {
-        ex.printStackTrace();
-      }
-    }
-  }
-
-  public ResponseCode getResponseCode() {
-    return isSatisfiable() ? ResponseCode.PARTIAL : ResponseCode.UNSATISFIABLE;
-  }
-
-  public List<ResponseHeader> getHeaders() {
-    List<ResponseHeader> headers = new ArrayList<ResponseHeader>();
-    if(isMultipart()) {
-      headers.add(ContentTypeHeader.MULTIPART_BYTE_RANGES);
+    return new Response(ResponseCode.PARTIAL,
+        getContent());
     } else {
-      headers.add(new ContentTypeHeader(descriptor));
-      headers.add(ranges.get(0).toHeader());
-      headers.add(getContentLengthHeader());
+      return new Response(ResponseCode.UNSATISFIABLE,
+          new PlainTextHeadedContent(
+            asList(new StringContent("Range request unsatisfiable"))));
     }
-    return headers;
   }
 
-  private void addHeader(OutputStream out, ResponseHeader h) throws IOException {
-    out.write((h.toString() + HttpServer.CRLF).getBytes());
+  private HeadedContent getContent() {
+    if(isMultipart()) {
+      return new HeadedContent(
+          asList(ContentTypeHeader.MULTIPART_BYTE_RANGES),
+          asList(new PartialHeadedContent(descriptor, ranges)));
+    } else {
+      // TODO: closing of the stream
+      InputStream in = new BufferedInputStream(descriptor.getReadStream());
+      FixedRangeSpecifier range = ranges.get(0);
+      return new HeadedContent(
+          getHeaders(range),
+          asList(new StreamContent(range.getLow(), range.length(), in)));
+    }
+  }
+
+  public List<ResponseHeader> getHeaders(FixedRangeSpecifier range) {
+    List<ResponseHeader> headers = new ArrayList<ResponseHeader>();
+    headers.add(new ContentTypeHeader(descriptor));
+    headers.add(range.toHeader());
+    headers.add(new ContentLengthHeader(range.length()));
+    return headers;
   }
 
   private boolean isMultipart() {
@@ -69,10 +60,5 @@ public class PartialFileResource implements Resource {
 
   private boolean isSatisfiable() {
     return ranges.size() > 0;
-  }
-
-  private ResponseHeader getContentLengthHeader() {
-    long length = isSatisfiable() ? ranges.get(0).length() : descriptor.length();
-    return new ContentLengthHeader(length);
   }
 }

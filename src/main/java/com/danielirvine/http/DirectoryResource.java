@@ -1,10 +1,12 @@
 package com.danielirvine.http;
 
-import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 import static java.util.Arrays.*;
+import static java.util.stream.Stream.*;
+import static java.util.stream.Collectors.*;
 
-public class DirectoryResource implements Resource {
+class DirectoryResource implements Resource {
 
   private final FileDescriptor descriptor;
 
@@ -12,18 +14,9 @@ public class DirectoryResource implements Resource {
     this.descriptor = descriptor;
   }
 
-  public ResponseCode getResponseCode() {
-    return ResponseCode.OK;
-  }
-
-  public void dumpResource(OutputStream out) {
-    try{
-      for(FileDescriptor child : descriptor.getChildren()) {
-        out.write(createLink(child.getName()).getBytes());
-        out.write(HttpServer.CRLF.getBytes());
-      }
-    } catch(IOException ex) {
-    }
+  public Response toResponse() {
+    return new Response(ResponseCode.OK,
+        new PlainTextHeadedContent(generateLinks()));
   }
 
   public Resource findResource(String[] pathSegments) {
@@ -39,15 +32,19 @@ public class DirectoryResource implements Resource {
     }
   }
 
-  public List<ResponseHeader> getHeaders() {
-    return asList();
-  }
-
   public Resource applyRange(RangeHeader range) {
     return this;
   }
 
-  private String createLink(String text) {
-    return "<a href=\"/" + text + "\">" + text + "</a>";
+  private List<Content> generateLinks() {
+    return descriptor.getChildren()
+      .stream()
+      .map(this::createLink)
+      .collect(toList());
+  }
+
+  private LinkContent createLink(FileDescriptor child) {
+    String text = child.getName();
+    return new LinkContent(text, text);
   }
 }

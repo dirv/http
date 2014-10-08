@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 
 interface Resource {
-  ResponseCode getResponseCode();
-  void dumpResource(OutputStream out);
-  List<ResponseHeader> getHeaders();
+  Response toResponse();
   Resource applyRange(RangeHeader range);
 }

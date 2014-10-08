@@ -1,41 +1,32 @@
 package com.danielirvine.http;
 
 import java.io.*;
-import java.util.*;
 
 public class Response {
 
   private final ResponseCode code;
-  private final Resource body;
+  private final HeadedContent body;
 
-  public Response(ResponseCode code, Resource body) {
+  public Response(ResponseCode code, HeadedContent body) {
     this.code = code;
     this.body = body;
   }
 
-  public void print(OutputStream out) throws IOException {
-    addStatusLine(out);
-    addHeaders(out);
-    endHeader(out);
-    addBody(out);
-    out.flush();
+  public ResponseCode getResponseCode() {
+    return code;
   }
 
-  private void addBody(OutputStream out) {
-    body.dumpResource(out);
-  }
-
-  private void addStatusLine(OutputStream out) throws IOException {
-    out.write(("HTTP/1.1 " + code + HttpServer.CRLF).getBytes());
-  }
-
-  private void addHeaders(OutputStream out) throws IOException {
-    for(ResponseHeader h : body.getHeaders()) {
-      out.write((h + HttpServer.CRLF).getBytes());
+  public void write(OutputStream out) throws IOException {
+    try(PrintStream p = new PrintStream(out)) {
+      writeStatusLine(p);
+      body.write(p);
     }
   }
 
-  private void endHeader(OutputStream out) throws IOException {
-    out.write(HttpServer.CRLF.getBytes());
+  private void writeStatusLine(PrintStream out) {
+    out.print(HttpServer.PROTOCOL_VERSION);
+    out.print(" ");
+    out.print(code);
+    out.print(HttpServer.CRLF);
   }
 }

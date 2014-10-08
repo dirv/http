@@ -85,12 +85,15 @@ public class RangeHeaderTest {
 
   private List<String> dumpResource() {
     ByteArrayOutputStream s = new ByteArrayOutputStream();
-    partial.dumpResource(s);
+    try{
+    partial.toResponse().write(s);
+    } catch(IOException ex) {
+    }
     return Arrays.asList(s.toString().split(HttpServer.CRLF));
   }
 
   private ResponseCode responseCode() {
-    return partial.getResponseCode();
+    return partial.toResponse().getResponseCode();
   }
 }
 

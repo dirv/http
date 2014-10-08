@@ -1,6 +1,9 @@
 package com.danielirvine.http;
 import java.util.*;
-import java.io.*;
+import java.util.stream.*;
+import static java.util.Arrays.*;
+import static java.util.stream.Stream.*;
+import static java.util.stream.Collectors.*;
 
 class QueryResource implements Resource {
 
@@ -11,44 +14,25 @@ class QueryResource implements Resource {
     this.variables = variables;
   }
 
+  public Response toResponse() {
+    return new Response(ResponseCode.OK, new PlainTextHeadedContent(generateContent()));
+  }
+
   public Resource applyRange(RangeHeader range) {
     // TODO: Could actually apply a range at this point since
     // the content has been generated (or at least could be)
     return this;
   }
 
-  public void dumpResource(OutputStream out) {
-    ensureContentIsGenerated();
-    try {
-      out.write(content.getBytes());
-    } catch(IOException ex) {
-    }
+  private List<Content> generateContent() {
+    return variables.entrySet()
+      .stream()
+      .map(this::toQueryVariableContent)
+      .collect(toList());
   }
 
-  private void generateContent() {
-    content = "";
-    for(Map.Entry<String, String> variable : variables.entrySet()) {
-      content += variable.getKey() + " = " + variable.getValue();
-      content += HttpServer.CRLF;
-    }
-  }
-
-  public List<ResponseHeader> getHeaders() {
-    ensureContentIsGenerated();
-    List<ResponseHeader> headers = new ArrayList<ResponseHeader>();
-    headers.add(ContentTypeHeader.TEXT_PLAIN);
-    headers.add(new ContentLengthHeader(content.length()));
-    return headers;
-  }
-
-  public ResponseCode getResponseCode() {
-    return ResponseCode.OK;
-  }
-
-  private void ensureContentIsGenerated() {
-    if (content == null) {
-      generateContent();
-    }
+  private QueryVariableContent toQueryVariableContent(Map.Entry<String, String> variable) {
+    return new QueryVariableContent(variable.getKey(), variable.getValue());
   }
 }
 

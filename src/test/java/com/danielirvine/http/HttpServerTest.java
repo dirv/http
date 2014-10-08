@@ -80,7 +80,7 @@ public class HttpServerTest {
     publicRoot.addFile("test1", "content");
     createGetRequest("/");
     createServer();
-    assertThat(outputByLine(), hasItem("<a href=\"/test1\">test1</a>"));
+    assertThat(outputByLine(), hasItem(containsString("<a href=\"/test1\">test1</a>")));
   }
 
   private void createGetRequest(String... paths) {

@@ -1,21 +1,13 @@
 package com.danielirvine.http;
 
-import java.io.*;
-import java.util.*;
 import static java.util.Arrays.*;
-
 
 class NotFoundResource implements Resource {
 
-  public ResponseCode getResponseCode() {
-    return ResponseCode.NOT_FOUND;
-  }
-
-  public void dumpResource(OutputStream out) {
-  }
-
-  public List<ResponseHeader> getHeaders() {
-    return asList();
+  public Response toResponse() {
+    return new Response(ResponseCode.NOT_FOUND,
+        new PlainTextHeadedContent(
+          asList(new StringContent("404 Not Found"))));
   }
 
   public Resource applyRange(RangeHeader range) {

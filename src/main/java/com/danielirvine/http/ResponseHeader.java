@@ -1,5 +1,6 @@
 package com.danielirvine.http;
 
+import java.io.*;
 import java.util.*;
 
 public class ResponseHeader {
@@ -12,6 +13,11 @@ public class ResponseHeader {
     this.header = header;
     this.value = value;
     this.parameters = parameters;
+  }
+
+  public void write(PrintStream out) {
+    out.print(toString());
+    out.print(HttpServer.CRLF);
   }
 
   @Override

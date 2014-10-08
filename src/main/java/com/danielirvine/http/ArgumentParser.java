@@ -11,11 +11,11 @@ public class ArgumentParser {
     this.args = args;
   }
 
-  public int getInt(String flag, int defaultValue) {
+  public int get(String flag, int defaultValue) {
     return get(flag, defaultValue, s -> Integer.parseInt(s));
   }
 
-  public String getString(String flag, String defaultValue) {
+  public String get(String flag, String defaultValue) {
     return get(flag, defaultValue, s -> s);
   }
 

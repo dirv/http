@@ -4,26 +4,25 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class GetRequest {
+public class Request {
 
   private String path;
   private String query;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
   private final DirectoryResource root;
 
-  public GetRequest(InputStream request, DirectoryResource root) throws IOException {
+  public Request(InputStream request, DirectoryResource root) throws IOException {
     this.root = root;
     parseRequest(request);
   }
 
   public Response response() {
     Resource resource = buildResource();
+    // TODO: possibly these headers should apply to the response
     for(RequestHeader h : headers) {
       resource = h.apply(resource);
     }
-    // TODO: possibly push this code into Response
-    ResponseCode code = resource.getResponseCode();
-    return new Response(code, resource);
+    return resource.toResponse();
   }
 
   private Resource buildResource() {
@@ -56,18 +55,9 @@ public class GetRequest {
     String[] keyValues = query.split("&");
     for(String keyValue : keyValues) {
       String[] parts = keyValue.split("=");
-      variables.put(parts[0], decode(parts[1]));
+      variables.put(parts[0], parts[1]);
     }
     return variables;
-  }
-
-  private static String decode(String pathString) {
-    try {
-      return URLDecoder.decode(pathString, "UTF-8");
-    }
-    catch(UnsupportedEncodingException ex) {
-      return pathString;
-    }
   }
 
   private void readHeaders(BufferedReader in) throws IOException {
