@@ -10,9 +10,11 @@ public class Request {
   private String query;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
   private final DirectoryResource root;
+  private final UrlRedirects redirects;
 
-  public Request(InputStream request, DirectoryResource root) throws IOException {
+  public Request(InputStream request, DirectoryResource root, UrlRedirects redirects) throws IOException {
     this.root = root;
+    this.redirects = redirects;
     parseRequest(request);
   }
 
@@ -28,6 +30,9 @@ public class Request {
   private Resource buildResource() {
     if(query != null) {
       return new QueryResource(buildVariables());
+    }
+    if(redirects.hasRedirect(path)) {
+      return new RedirectResource(redirects.redirect(path));
     }
     return root.findResource(path.split("/"));
   }

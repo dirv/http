@@ -3,6 +3,7 @@ package com.danielirvine.http;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import java.io.*;
 import java.net.*;
 import java.util.function.*;
 import java.util.*;
@@ -16,6 +17,7 @@ public class HttpServerTest {
   private InProcessServerSocket socket;
   private final InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
   private int portSpecified = 0;
+  private String redirects = "";
 
   @Test
   public void opensSocketOnPort() throws Exception {
@@ -23,7 +25,7 @@ public class HttpServerTest {
       portSpecified = port;
       return new InProcessServerSocket(new String[0]);
     };
-    server = new HttpServer(socketFactory, 212, ".");
+    server = new HttpServer(socketFactory, 212, ".", new StringBufferInputStream(""));
     assertEquals(212, portSpecified);
   }
 
@@ -83,6 +85,16 @@ public class HttpServerTest {
     assertThat(outputByLine(), hasItem(containsString("<a href=\"/test1\">test1</a>")));
   }
 
+  @Test
+	public void redirects() {
+    redirects = "/a => /b";
+    publicRoot.addFile("b", "hello");
+    createGetRequest("/a");
+    createServer();
+    assertEquals("HTTP/1.1 301 Moved Permanently", outputByLine().get(0));
+    assertThat(outputByLine(), hasItem(containsString("/b")));
+  }
+
   private void createGetRequest(String... paths) {
     String[] requests = new String[paths.length];
     for(int i = 0; i < paths.length; ++i){
@@ -96,7 +108,8 @@ public class HttpServerTest {
   }
 
   private void createServer() {
-    server = new HttpServer(socket, publicRoot);
+    StringBufferInputStream redirectStream = new StringBufferInputStream(redirects);
+    server = new HttpServer(socket, publicRoot, redirectStream);
   }
 
   private List<String> outputByLine() {

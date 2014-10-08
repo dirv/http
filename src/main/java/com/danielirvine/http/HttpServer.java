@@ -9,13 +9,15 @@ public class HttpServer {
   public static final String CRLF = "\r\n";
   public static final String PROTOCOL_VERSION = "HTTP/1.1";
   private final DirectoryResource root;
+  private final UrlRedirects redirects;
 
-  public HttpServer(Function<Integer, ServerSocketProxy> socketFactory, int port, String publicRoot) {
-    this(socketFactory.apply(port), new FsFileDescriptor(new File(publicRoot)));
+  public HttpServer(Function<Integer, ServerSocketProxy> socketFactory, int port, String publicRoot, InputStream redirectStream) {
+    this(socketFactory.apply(port), new FsFileDescriptor(new File(publicRoot)), redirectStream);
   }
 
-  public HttpServer(ServerSocketProxy socket, FileDescriptor rootFile) {
+  public HttpServer(ServerSocketProxy socket, FileDescriptor rootFile, InputStream redirectsStream) {
     root = new DirectoryResource(rootFile);
+    redirects = new UrlRedirects(redirectsStream);
     while(socket.hasData()) {
       try(SocketProxy clientSocket = socket.accept()) {
         handleIncomingRequest(clientSocket);
@@ -27,11 +29,16 @@ public class HttpServer {
 
   public static void main(String[] args) {
     ArgumentParser parser = new ArgumentParser(args);
-    new HttpServer(HttpServer::createSocket, parser.get("p", 5000), parser.get("d", ""));
+
+    InputStream redirectStream = HttpServer.class.getResourceAsStream("/redirects.txt");
+    new HttpServer(HttpServer::createSocket,
+        parser.get("p", 5000),
+        parser.get("d", ""),
+        redirectStream);
   }
 
   private void handleIncomingRequest(SocketProxy socket) throws IOException {
-    Request request = new Request(socket.getInputStream(), root);
+    Request request = new Request(socket.getInputStream(), root, redirects);
     Response response = request.response();
     response.write(socket.getOutputStream());
   }
