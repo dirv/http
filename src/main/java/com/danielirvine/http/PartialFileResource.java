@@ -9,11 +9,11 @@ import static java.util.Arrays.*;
 public class PartialFileResource implements Resource {
 
   private final FileDescriptor descriptor;
-  private final List<FixedRangeSpecifier> ranges;
+  private final List<FixedRange> ranges;
 
   public PartialFileResource(FileDescriptor descriptor, RangeHeader range) {
     this.descriptor = descriptor;
-    this.ranges = range.fixForFileLength(descriptor.length());
+    this.ranges = range.fix(descriptor.length());
   }
 
   public Resource applyRange(RangeHeader range) {
@@ -37,21 +37,15 @@ public class PartialFileResource implements Resource {
           asList(ContentTypeHeader.MULTIPART_BYTE_RANGES),
           asList(new PartialHeadedContent(descriptor, ranges)));
     } else {
-      // TODO: closing of the stream
+      // TODO: closing of the stream: push this into PartialHeadedContent
       InputStream in = new BufferedInputStream(descriptor.getReadStream());
-      FixedRangeSpecifier range = ranges.get(0);
+      FixedRange range = ranges.get(0);
       return new HeadedContent(
-          getHeaders(range),
-          asList(new StreamContent(range.getLow(), range.length(), in)));
+          asList(new ContentTypeHeader(descriptor),
+            new ContentLengthHeader(range.length()),
+            range.getHeader()),
+          asList(range.toContent(in)));
     }
-  }
-
-  public List<ResponseHeader> getHeaders(FixedRangeSpecifier range) {
-    List<ResponseHeader> headers = new ArrayList<ResponseHeader>();
-    headers.add(new ContentTypeHeader(descriptor));
-    headers.add(range.toHeader());
-    headers.add(new ContentLengthHeader(range.length()));
-    return headers;
   }
 
   private boolean isMultipart() {

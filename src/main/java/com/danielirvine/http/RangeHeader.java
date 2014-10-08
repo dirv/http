@@ -11,7 +11,7 @@ public class RangeHeader implements RequestHeader {
   private static final Pattern headerPattern = Pattern.compile("bytes=([\\d\\-]*(?:,[\\d\\-]*)*)");
   private static final Pattern rangePattern = Pattern.compile("(?:(\\d+)\\-(\\d*))|(?:\\-(\\d*))");
 
-  private List<RangeSpecifier> byteRanges = new ArrayList<RangeSpecifier>();
+  private List<Range> ranges = new ArrayList<Range>();
   private boolean isValid = true;
 
   public RangeHeader(String header) {
@@ -26,22 +26,28 @@ public class RangeHeader implements RequestHeader {
   }
 
   private boolean shouldApply() {
-    return byteRanges.size() != 0 && isValid;
+    return ranges.size() != 0 && isValid;
   }
 
-  public List<FixedRangeSpecifier> fixForFileLength(long fileLength) {
-    return byteRanges
-      .stream()
-      .map(r->r.fixForFileLength(fileLength))
-      .filter(FixedRangeSpecifier::isSatisfiable)
-      .collect(toList());
+  public List<FixedRange> fix(long fileLength) {
+    long curPos = 0;
+
+    List<FixedRange> specifiers = new ArrayList<FixedRange>();
+    for(Range s : ranges) {
+      FixedRange specifier = s.fix(curPos, fileLength);
+      if(specifier.isSatisfiable()) {
+        curPos += specifier.length() + 1;
+        specifiers.add(specifier);
+      }
+    }
+    return specifiers;
   }
 
   private void processRanges(String[] allRanges) {
     for(String range : allRanges) {
       processRange(range);
     }
-    isValid = byteRanges.size() == allRanges.length;
+    isValid = ranges.size() == allRanges.length;
   }
 
   private void processRange(String range) {
@@ -49,7 +55,7 @@ public class RangeHeader implements RequestHeader {
     if(rm.matches()) {
       String start = rm.group(1);
       if(start == null) {
-        processSuffixSize(rm.group(3));
+        processSuffixRangeSize(rm.group(3));
       }
       else {
         processByteRange(start, rm.group(2));
@@ -66,72 +72,46 @@ public class RangeHeader implements RequestHeader {
         return;
       }
     }
-    byteRanges.add(new ByteRange(low, high));
+    ranges.add(new ByteRange(low, high));
   }
 
-  private void processSuffixSize(String suffixString) {
+  private void processSuffixRangeSize(String suffixString) {
     long suffix = Long.parseLong(suffixString);
-    byteRanges.add(new Suffix(suffix));
+    ranges.add(new SuffixRange(suffix));
   }
 
-  public interface RangeSpecifier {
-    public FixedRangeSpecifier fixForFileLength(long fileLength);
+  public interface Range {
+    public FixedRange fix(long previousPosition, long fileLength);
   }
 
-  private class ByteRange implements RangeSpecifier, FixedRangeSpecifier {
+  private class ByteRange implements Range {
     private final long low;
     private final Long high;
-    private final long fileLength;
 
     public ByteRange(long low, Long high) {
-      this(low, high, 0);
-    }
-
-    public ByteRange(long low, Long high, long fileLength) {
       this.low = low;
       this.high = high;
-      this.fileLength = fileLength;
     }
 
-    public FixedRangeSpecifier fixForFileLength(long fileLength) {
+    public FixedRange fix(long previousPosition, long fileLength) {
       if (high == null || high > fileLength) {
-        return new ByteRange(low, fileLength-1, fileLength);
+        return new FixedRange(previousPosition, low, fileLength-1, fileLength);
       }
-      return new ByteRange(low, high, fileLength);
-    }
-
-    public long getLow() {
-      return low;
-    }
-
-    public long getHigh() {
-      return high;
-    }
-
-    public long length() {
-      return high - low + 1;
-    }
-
-    public boolean isSatisfiable() {
-      return high >= low;
-    }
-
-    public ResponseHeader toHeader() {
-      return new ContentRangeHeader(low, high, fileLength);
+      return new FixedRange(previousPosition, low, high, fileLength);
     }
   }
 
-  private class Suffix implements RangeSpecifier {
+  private class SuffixRange implements Range {
     private final long length;
 
-    public Suffix(long length) {
+    public SuffixRange(long length) {
       this.length = length;
     }
 
-    public FixedRangeSpecifier fixForFileLength(long fileLength) {
+    public FixedRange fix(long previousPosition, long fileLength) {
       long low = fileLength - length;
       if (low < 0) low = 0;
-      return new ByteRange(low, fileLength-1, fileLength);
+      return new FixedRange(previousPosition, low, fileLength-1, fileLength);
     }
   }
 }
