@@ -1,7 +1,6 @@
 package com.danielirvine.http;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 import java.util.function.*;
 import static java.util.Arrays.*;

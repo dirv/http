@@ -2,7 +2,6 @@ package com.danielirvine.http;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.*;
 
 class HeadedContent implements Content {
 

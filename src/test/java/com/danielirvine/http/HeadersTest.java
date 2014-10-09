@@ -6,9 +6,6 @@ import static org.hamcrest.CoreMatchers.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.*;
-import static java.util.stream.Stream.*;
-import static java.util.stream.Collectors.*;
 
 public class HeadersTest {
 

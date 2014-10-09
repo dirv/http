@@ -2,9 +2,6 @@ package com.danielirvine.http;
 
 import java.util.regex.*;
 import java.util.*;
-import static java.util.stream.Collectors.*;
-import static java.util.stream.Stream.*;
-import java.util.stream.*;
 
 public class RangeHeader extends RequestHeader {
 

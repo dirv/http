@@ -1,8 +1,6 @@
 package com.danielirvine.http;
 
 import java.io.*;
-import java.util.*;
-import static java.util.stream.Stream.*;
 
 class FixedRange {
 

@@ -1,7 +1,6 @@
 package com.danielirvine.http;
 
 import java.io.*;
-import java.util.*;
 
 public class ResponseHeader {
 

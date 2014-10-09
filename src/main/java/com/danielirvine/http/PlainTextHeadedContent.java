@@ -1,7 +1,6 @@
 package com.danielirvine.http;
 
 import java.util.*;
-import java.util.stream.*;
 import static java.util.Arrays.*;
 
 class PlainTextHeadedContent extends HeadedContent {

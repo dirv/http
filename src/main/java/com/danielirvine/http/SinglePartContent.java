@@ -1,9 +1,6 @@
 package com.danielirvine.http;
 
 import java.io.*;
-import java.util.*;
-import java.util.stream.*;
-import static java.util.Arrays.*;
 
 class SinglePartContent implements Content {
 

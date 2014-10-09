@@ -3,7 +3,6 @@ package com.danielirvine.http;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import java.util.*;
 import static java.util.Arrays.*;
 
 public class AuthorizerTest {

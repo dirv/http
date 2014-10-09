@@ -2,14 +2,7 @@ package com.danielirvine.http;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import java.io.*;
-import java.net.*;
-import java.util.function.*;
 import java.util.*;
-import java.util.stream.*;
-import static java.util.stream.Stream.*;
-import static java.util.stream.Collectors.*;
 
 public class UnauthorizedResponseContributorTest extends ResponseContributorTest {
 

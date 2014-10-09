@@ -1,6 +1,5 @@
 package com.danielirvine.http;
 
-import java.lang.*;
 import java.util.function.*;
 
 public class ArgumentParser {
