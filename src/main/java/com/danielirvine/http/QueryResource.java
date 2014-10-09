@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.*;
 import static java.util.stream.Collectors.*;
 
-class QueryResource implements Resource {
+public class QueryResource implements Resource {
 
   private final Map<String, String> variables;
 

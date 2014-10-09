@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.danielirvine.http.contributors.DeleteResponseContributor;
+
 public class DeleteResponseContributorTest extends RequestTest {
 
   private final InMemoryFileDescriptor directory = new InMemoryFileDescriptor("/");

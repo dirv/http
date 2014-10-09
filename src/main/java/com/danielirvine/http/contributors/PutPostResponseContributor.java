@@ -1,8 +1,10 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
 import java.util.*;
 
-class PutPostResponseContributor implements ResponseContributor {
+import com.danielirvine.http.*;
+
+public class PutPostResponseContributor implements ResponseContributor {
 
   private final DirectoryResource root;
   private final List<String> writeablePaths;

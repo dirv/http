@@ -1,10 +1,13 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
 import java.util.*;
+
+import com.danielirvine.http.*;
+
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
 
-class LogsResponseContributor extends PathMatchingResponseContributor {
+public class LogsResponseContributor extends PathMatchingResponseContributor {
 
   private final Logger logger;
 

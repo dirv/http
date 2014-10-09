@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import static java.util.stream.Collectors.*;
 
-class DirectoryResource implements Resource {
+public class DirectoryResource implements Resource {
 
   private final FileDescriptor descriptor;
 

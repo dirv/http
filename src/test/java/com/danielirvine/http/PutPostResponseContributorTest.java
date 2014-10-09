@@ -2,6 +2,8 @@ package com.danielirvine.http;
 
 import org.junit.*;
 
+import com.danielirvine.http.contributors.PutPostResponseContributor;
+
 import static org.junit.Assert.*;
 
 import java.util.*;

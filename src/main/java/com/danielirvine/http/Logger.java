@@ -2,7 +2,7 @@ package com.danielirvine.http;
 
 import java.util.*;
 
-class Logger {
+public class Logger {
 
   private final List<Request> requests = new ArrayList<Request>();
 

@@ -1,8 +1,10 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
 import java.util.List;
 
-class DeleteResponseContributor implements ResponseContributor {
+import com.danielirvine.http.*;
+
+public class DeleteResponseContributor implements ResponseContributor {
 
   private final DirectoryResource root;
   private final List<String> writeables;

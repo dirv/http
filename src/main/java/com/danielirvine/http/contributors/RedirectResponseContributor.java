@@ -1,6 +1,8 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
-class RedirectResponseContributor implements ResponseContributor {
+import com.danielirvine.http.*;
+
+public class RedirectResponseContributor implements ResponseContributor {
 
   private final UrlRedirects redirects;
 

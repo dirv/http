@@ -1,6 +1,8 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
-class UnauthorizedResponseContributor implements ResponseContributor {
+import com.danielirvine.http.*;
+
+public class UnauthorizedResponseContributor implements ResponseContributor {
 
   private final Authorizer authorizer;
 

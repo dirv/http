@@ -1,6 +1,8 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
 import java.util.*;
+
+import com.danielirvine.http.Request;
 
 abstract class PathMatchingResponseContributor implements ResponseContributor {
 

@@ -1,8 +1,10 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
 import java.util.*;
 
-class QueryResponseContributor implements ResponseContributor {
+import com.danielirvine.http.*;
+
+public class QueryResponseContributor implements ResponseContributor {
 
   @Override
   public boolean canRespond(Request request) {

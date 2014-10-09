@@ -1,7 +1,11 @@
 package com.danielirvine.http;
 
 import org.junit.*;
+
+import com.danielirvine.http.contributors.UnauthorizedResponseContributor;
+
 import static org.junit.Assert.*;
+
 import java.util.*;
 
 public class UnauthorizedResponseContributorTest extends RequestTest {

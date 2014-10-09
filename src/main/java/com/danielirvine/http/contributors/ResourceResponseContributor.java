@@ -1,6 +1,8 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
-class ResourceResponseContributor implements ResponseContributor {
+import com.danielirvine.http.*;
+
+public class ResourceResponseContributor implements ResponseContributor {
 
   private final DirectoryResource root;
 

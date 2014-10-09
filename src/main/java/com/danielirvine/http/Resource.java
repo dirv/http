@@ -2,7 +2,7 @@ package com.danielirvine.http;
 
 import java.io.*;
 
-interface Resource {
+public interface Resource {
   Response toResponse();
   Resource applyRange(RangeHeader range);
   void write(Reader in);

@@ -3,7 +3,7 @@ package com.danielirvine.http;
 import java.util.*;
 import static java.util.Arrays.*;
 
-class HtmlHeadedContent extends HeadedContent {
+public class HtmlHeadedContent extends HeadedContent {
 
   public HtmlHeadedContent(List<Content> content) {
     super(generateHeaders(content), content);

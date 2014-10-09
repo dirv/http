@@ -1,8 +1,10 @@
-package com.danielirvine.http;
+package com.danielirvine.http.contributors;
 
 import java.util.*;
 
-class WriteableResponseContributor extends PathMatchingResponseContributor {
+import com.danielirvine.http.*;
+
+public class WriteableResponseContributor extends PathMatchingResponseContributor {
 
   public WriteableResponseContributor(List<String> writeablePaths) {
     super(writeablePaths);

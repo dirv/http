@@ -4,6 +4,9 @@ import static java.util.Arrays.asList;
 
 import java.util.*;
 
+import com.danielirvine.http.contributors.*;
+
+
 class Responder {
 
   private final List<ResponseContributor> contributors;

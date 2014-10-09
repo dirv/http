@@ -1,6 +1,9 @@
 package com.danielirvine.http;
 
 import org.junit.*;
+
+import com.danielirvine.http.contributors.ResourceResponseContributor;
+
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
