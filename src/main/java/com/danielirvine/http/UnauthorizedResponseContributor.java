@@ -25,7 +25,7 @@ class UnauthorizedResponseContributor implements ResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     String realm = request.getPath();
     return new ErrorResponse(ResponseCode.UNAUTHORIZED,
         new ResponseHeader("WWW-Authenticate",

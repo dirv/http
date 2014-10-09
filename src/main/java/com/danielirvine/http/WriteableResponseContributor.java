@@ -9,7 +9,7 @@ class WriteableResponseContributor extends PathMatchingResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     return new EmptyResponse(ResponseCode.OK);
   }
 }

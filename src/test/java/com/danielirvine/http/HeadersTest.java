@@ -60,13 +60,13 @@ public class HeadersTest extends RequestTest {
 
   private void buildRequestWithHeader(String resource) {
     startRequest("GET " + resource + " HTTP/1.1");
-    response = new ResourceResponseContributor(root).response(buildRequest());
+    response = new ResourceResponseContributor(root).respond(buildRequest());
   }
 
   private void buildRequestWithHeader(String resource, String name, String value) {
     startRequest("GET " + resource + " HTTP/1.1");
     addHeader(name, value);
-    response = new ResourceResponseContributor(root).response(buildRequest());
+    response = new ResourceResponseContributor(root).respond(buildRequest());
   }
 
   private List<String> headers() {

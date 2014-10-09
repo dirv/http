@@ -10,7 +10,7 @@ class NotFoundResponseContributor implements ResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     return notFoundResponse;
   }
 }

@@ -14,7 +14,7 @@ class LogsResponseContributor extends PathMatchingResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     return new Response(ResponseCode.OK,
         new PlainTextHeadedContent(logContent()));
   }

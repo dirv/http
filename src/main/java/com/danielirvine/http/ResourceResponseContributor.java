@@ -14,7 +14,7 @@ class ResourceResponseContributor implements ResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     Resource resource = root.findResource(request.getPath().split("/"));
     for(RequestHeader h : request.getHeaders()) {
       resource = h.apply(resource);

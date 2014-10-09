@@ -15,6 +15,6 @@ class Responder {
       .filter(c->c.canRespond(request))
       .findFirst()
       .get()
-      .response(request);
+      .respond(request);
   }
 }

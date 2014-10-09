@@ -34,7 +34,7 @@ public class PutPostResponseContributorTest extends RequestTest {
   @Test
 	public void returnsOk() {
     startRequest("POST /a HTTP/1.1");
-    assertEquals(ResponseCode.OK, contributor.response(buildRequest()).getResponseCode());
+    assertEquals(ResponseCode.OK, contributor.respond(buildRequest()).getResponseCode());
   }
   
   @Test
@@ -42,7 +42,7 @@ public class PutPostResponseContributorTest extends RequestTest {
     startRequest("POST /a HTTP/1.1");
     addHeader("Content-Length", "5");
     addData("Hello");
-    contributor.response(buildRequest());
+    contributor.respond(buildRequest());
     assertTrue(directory.getFile("a").exists());
     assertEquals("Hello", readStream(directory.getFile("a").getReadStream()));
   }

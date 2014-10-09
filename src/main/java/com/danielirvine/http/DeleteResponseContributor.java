@@ -18,7 +18,7 @@ class DeleteResponseContributor implements ResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     if(!writeables.contains(request.getPath())){
       return new ErrorResponse(ResponseCode.METHOD_NOT_ALLOWED);
     }

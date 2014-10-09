@@ -14,7 +14,7 @@ class RedirectResponseContributor implements ResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     return new ErrorResponse(ResponseCode.MOVED_PERMANENTLY,
           new ResponseHeader("Location", redirects.redirect(request.getPath())));
   }

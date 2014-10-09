@@ -10,7 +10,7 @@ class QueryResponseContributor implements ResponseContributor {
   }
 
   @Override
-  public Response response(Request request) {
+  public Response respond(Request request) {
     return new QueryResource(buildVariables(request)).toResponse();
   }
 
