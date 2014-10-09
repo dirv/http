@@ -4,7 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import java.util.*;
 
-public class UnauthorizedResponseContributorTest extends ResponseContributorTest {
+public class UnauthorizedResponseContributorTest extends RequestTest {
 
   private final Base64.Encoder encoder = Base64.getEncoder();
   private UnauthorizedResponseContributor unauthContributor = new UnauthorizedResponseContributor(AuthorizerTest.AUTHORIZER);

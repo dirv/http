@@ -4,10 +4,9 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-import java.io.*;
 import java.util.*;
 
-public class PutPostResponseContributorTest extends ResponseContributorTest {
+public class PutPostResponseContributorTest extends RequestTest {
 
   private final InMemoryFileDescriptor directory = new InMemoryFileDescriptor("/");
   private final DirectoryResource root = new DirectoryResource(directory);
@@ -41,21 +40,10 @@ public class PutPostResponseContributorTest extends ResponseContributorTest {
   @Test
   public void savesAResource() {
     startRequest("POST /a HTTP/1.1");
+    addHeader("Content-Length", "5");
     addData("Hello");
     contributor.response(buildRequest());
     assertTrue(directory.getFile("a").exists());
     assertEquals("Hello", readStream(directory.getFile("a").getReadStream()));
-  }
-  
-  private String readStream(InputStream s) {
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    try {
-    int b;
-    while((b = s.read()) != -1) {
-      out.write(b);
-    }
-    } catch (IOException ex) {
-    }
-    return out.toString();
   }
 }

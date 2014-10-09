@@ -2,6 +2,7 @@ package com.danielirvine.http;
 
 import java.io.*;
 import java.util.*;
+
 import static java.util.Arrays.*;
 
 class PartialFileResource implements Resource {
@@ -29,9 +30,15 @@ class PartialFileResource implements Resource {
     }
   }
 
+  @Override
   public void write(Reader in) {
   }
 
+
+  @Override
+  public void delete() {
+  }
+  
   private boolean isSatisfiable() {
     return ranges.size() > 0;
   }

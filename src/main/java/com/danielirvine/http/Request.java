@@ -13,6 +13,7 @@ public class Request {
   private String requestLine;
   private final Reader in;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
+  private long contentLength;
 
   public Request(BufferedReader in) throws IOException {
     this.in = in;
@@ -70,7 +71,28 @@ public class Request {
   }
 
   public Reader getDataStream() {
-    return in;
+    return new Reader() {
+      
+      private long curPos;
+
+      @Override
+      public int read(char[] cbuf, int off, int len) throws IOException {
+        long dataLeft = contentLength - curPos;
+        
+        if ((long)len > dataLeft) {
+          in.read(cbuf, off, (int)dataLeft);
+          return -1;
+        } else {
+          curPos += len;
+          return in.read(cbuf, off, len);
+        }
+      }
+
+      @Override
+      public void close() throws IOException {
+        in.close();
+      }
+    };
   }
 
   private void readRequestLine(BufferedReader in) throws IOException {
@@ -95,5 +117,13 @@ public class Request {
 
   public static boolean isNullOrBlank(String param) {
     return param == null || param.trim().length() == 0;
+  }
+
+  public void setContentLength(long length) {
+    this.contentLength = length;
+  }
+
+  public boolean isDelete() {
+    return verb.equals("DELETE");
   }
 }

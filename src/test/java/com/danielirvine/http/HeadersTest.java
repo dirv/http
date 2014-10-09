@@ -7,38 +7,37 @@ import static org.hamcrest.CoreMatchers.*;
 import java.io.*;
 import java.util.*;
 
-public class HeadersTest {
+public class HeadersTest extends RequestTest {
 
   private final InMemoryFileDescriptor rootDirectory = new InMemoryFileDescriptor("/");
   private final DirectoryResource root = new DirectoryResource(rootDirectory);
   private Response response;
 
-
   @Test
 	public void sendsContentTypeForJpeg() {
     rootDirectory.addFile("test.jpeg", "unknown");
-    buildRequestWithHeader("test.jpeg", "");
+    buildRequestWithHeader("/test.jpeg");
     assertThat(headers(), hasItem(containsString("Content-type: image/jpeg")));
   }
 
   @Test
 	public void sendsContentLengthForJpeg() {
     rootDirectory.addFile("test.jpeg", "unknown");
-    buildRequestWithHeader("test.jpeg", "");
+    buildRequestWithHeader("/test.jpeg");
     assertThat(headers(), hasItem(containsString("Content-Length: 7")));
   }
 
   @Test
 	public void rangeShowsMultipartByteRangesHeader() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    buildRequestWithHeader("alphabet", "Range: bytes=0-10,-5");
+    buildRequestWithHeader("/alphabet", "Range", "bytes=0-10,-5");
     assertThat(headers(), hasItem(containsString("Content-type: multipart/byteranges; boundary=")));
   }
 
   @Test
 	public void rangeShowsOriginalContentPart() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    buildRequestWithHeader("alphabet", "Range: bytes=-5");
+    buildRequestWithHeader("/alphabet", "Range", "bytes=-5");
     assertThat(headers(), hasItem(containsString("Content-type: text/plain")));
     assertThat(headers(), hasItem(containsString("Content-Length: 5")));
   }
@@ -46,18 +45,28 @@ public class HeadersTest {
   @Test
 	public void rangeShowsByteRange() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
-    buildRequestWithHeader("alphabet", "Range: bytes=-5");
+    buildRequestWithHeader("/alphabet", "Range", "bytes=-5");
     assertThat(headers(), hasItem(containsString("Content-range: bytes 21-25/26")));
   }
 
-  private void buildRequestWithHeader(String resource, String header) {
-    String requestString = "GET /" + resource + " HTTP/1.1" + HttpServer.CRLF;
-    requestString += header + HttpServer.CRLF;
-    try {
-      Request request = new Request(new BufferedReader(new StringReader(requestString)));
-      response = new ResourceResponseContributor(root).response(request);
-    } catch(IOException ex) {
-    }
+  @Test
+  public void doesNotReadContentWithoutContentLengthHeader() {
+    startRequest("POST /a HTTP/1.1");
+    addHeader("Content-Length", "5");
+    addData("Hello, world!");
+    assertEquals("Hello", readStream(buildRequest().getDataStream()));
+
+  }
+
+  private void buildRequestWithHeader(String resource) {
+    startRequest("GET " + resource + " HTTP/1.1");
+    response = new ResourceResponseContributor(root).response(buildRequest());
+  }
+
+  private void buildRequestWithHeader(String resource, String name, String value) {
+    startRequest("GET " + resource + " HTTP/1.1");
+    addHeader(name, value);
+    response = new ResourceResponseContributor(root).response(buildRequest());
   }
 
   private List<String> headers() {

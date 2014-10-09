@@ -6,4 +6,5 @@ interface Resource {
   Response toResponse();
   Resource applyRange(RangeHeader range);
   void write(Reader in);
+  void delete();
 }

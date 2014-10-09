@@ -21,9 +21,6 @@ class QueryResource implements Resource {
     return this;
   }
 
-  public void write(Reader in) {
-  }
-
   private List<Content> generateContent() {
     return variables.entrySet()
       .stream()
@@ -33,6 +30,14 @@ class QueryResource implements Resource {
 
   private QueryVariableContent toQueryVariableContent(Map.Entry<String, String> variable) {
     return new QueryVariableContent(variable.getKey(), variable.getValue());
+  }
+
+  @Override
+  public void write(Reader in) {
+  }
+
+  @Override
+  public void delete() {
   }
 }
 

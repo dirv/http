@@ -40,6 +40,7 @@ public class HttpServer {
           new RedirectResponseContributor(redirects),
           new QueryResponseContributor(),
           new LogsResponseContributor(logger),
+          new DeleteResponseContributor(root, writeablePaths),
           new PutPostResponseContributor(root, writeablePaths),
           new ResourceResponseContributor(root),
           new WriteableResponseContributor(writeablePaths),

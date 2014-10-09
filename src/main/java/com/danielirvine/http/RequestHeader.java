@@ -12,6 +12,7 @@ public class RequestHeader {
   static {
     builders.put("Range", (v, r) -> new RangeHeader(v));
     builders.put("Authorization", (v, r) -> new AuthorizationHeader(v, r));
+    builders.put("Content-Length", (v, r) -> new RequestContentLengthHeader(v, r));
     defaultBuilder = (v, r) -> new UnknownRequestHeader();
   }
 

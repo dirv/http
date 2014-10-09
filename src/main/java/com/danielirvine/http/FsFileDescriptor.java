@@ -73,6 +73,10 @@ public class FsFileDescriptor implements FileDescriptor {
     }
   }
 
+  public void delete() {
+    file.delete();
+  }
+
   private FileDescriptor getFile(File file) {
     return new FsFileDescriptor(file);
   }

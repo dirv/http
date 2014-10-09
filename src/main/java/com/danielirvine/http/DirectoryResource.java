@@ -50,7 +50,13 @@ class DirectoryResource implements Resource {
     return this;
   }
 
+  @Override
   public void write(Reader in) {
+    return;
+  }
+
+  @Override
+  public void delete() {
     return;
   }
 

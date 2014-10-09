@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 
 public class InMemoryFileDescriptor implements FileDescriptor {
-  private final String name;
+  private String name;
   private String contents;
   private final List<FileDescriptor> children;
 
@@ -80,5 +80,9 @@ public class InMemoryFileDescriptor implements FileDescriptor {
       throw new RuntimeException(ex);
     }
     contents = out.toString(); 
+  }
+  
+  public void delete() {
+    name = "";
   }
 }

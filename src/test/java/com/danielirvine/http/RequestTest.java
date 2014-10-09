@@ -2,7 +2,7 @@ package com.danielirvine.http;
 
 import java.io.*;
 
-public abstract class ResponseContributorTest {
+public abstract class RequestTest {
   private String requestContent;
 
   protected void startRequest(String requestLine) {
@@ -27,5 +27,29 @@ public abstract class ResponseContributorTest {
     } catch(Exception ex) {
       return null;
     }
+  }
+  
+  protected String readStream(Reader s) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try {
+      int b;
+      while((b = s.read()) != -1) {
+        out.write(b);
+      }
+    } catch (IOException ex) {
+    }
+    return out.toString();
+  }
+  
+  protected String readStream(InputStream s) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try {
+      int b;
+      while((b = s.read()) != -1) {
+        out.write(b);
+      }
+    } catch (IOException ex) {
+    }
+    return out.toString();
   }
 }

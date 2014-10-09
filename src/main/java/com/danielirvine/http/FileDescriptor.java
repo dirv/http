@@ -12,4 +12,5 @@ public interface FileDescriptor {
   public boolean exists();
   public String contentType();
   public void write(Reader in);
+  public void delete();
 }
