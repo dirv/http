@@ -94,7 +94,7 @@ public class HttpServerTest {
     publicRoot.addFile("b", "hello");
     createGetRequest("/a");
     createServer();
-    assertEquals("HTTP/1.1 301 Moved Permanently", outputByLine().get(0));
+    assertEquals("HTTP/1.1 301 Moved permanently", outputByLine().get(0));
     assertThat(outputByLine(), hasItem(containsString("/b")));
   }
 

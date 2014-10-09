@@ -15,11 +15,15 @@ public abstract class ResponseContributorTest {
     requestContent += value;
     requestContent += HttpServer.CRLF;
   }
+  
+  protected void addData(String content) {
+    requestContent += HttpServer.CRLF;
+    requestContent += content;
+  }
 
   protected Request buildRequest() {
-    requestContent += HttpServer.CRLF;
     try {
-    return new Request(new StringBufferInputStream(requestContent));
+      return new Request(new BufferedReader(new StringReader(requestContent)));
     } catch(Exception ex) {
       return null;
     }

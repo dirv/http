@@ -58,7 +58,7 @@ public class HeadersTest {
     String requestString = "GET /" + resource + " HTTP/1.1" + HttpServer.CRLF;
     requestString += header + HttpServer.CRLF;
     try {
-      Request request = new Request(new StringBufferInputStream(requestString));
+      Request request = new Request(new BufferedReader(new InputStreamReader(new StringBufferInputStream(requestString))));
       response = new ResourceResponseContributor(root).response(request);
     } catch(IOException ex) {
     }

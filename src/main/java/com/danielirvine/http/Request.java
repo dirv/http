@@ -11,10 +11,13 @@ public class Request {
   private String verb;
   private String password;
   private String requestLine;
+  private final Reader in;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
 
-  public Request(InputStream request) throws IOException {
-    parseRequest(request);
+  public Request(BufferedReader in) throws IOException {
+    this.in = in;
+    readRequestLine(in);
+    readHeaders(in);
   }
 
   public boolean isPut() {
@@ -66,10 +69,8 @@ public class Request {
     return headers;
   }
 
-  private void parseRequest(InputStream request) throws IOException {
-    BufferedReader in = new BufferedReader(new InputStreamReader(request));
-    readRequestLine(in);
-    readHeaders(in);
+  public Reader getDataStream() {
+    return in;
   }
 
   private void readRequestLine(BufferedReader in) throws IOException {

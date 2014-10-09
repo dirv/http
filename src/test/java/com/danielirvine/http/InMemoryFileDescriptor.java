@@ -1,11 +1,12 @@
 package com.danielirvine.http;
 
 import java.io.*;
+
 import java.util.*;
 
 public class InMemoryFileDescriptor implements FileDescriptor {
   private final String name;
-  private final String contents;
+  private String contents;
   private final List<FileDescriptor> children;
 
   public InMemoryFileDescriptor(String name) {
@@ -29,6 +30,12 @@ public class InMemoryFileDescriptor implements FileDescriptor {
       }
     }
     return new InMemoryFileDescriptor(null);
+  }
+
+  public FileDescriptor createFile(String name) {
+    InMemoryFileDescriptor descriptor = new InMemoryFileDescriptor(name);
+    children.add(descriptor);
+    return descriptor;
   }
 
   public long length() {
@@ -62,7 +69,16 @@ public class InMemoryFileDescriptor implements FileDescriptor {
     return name != null;
   }
 
-  public boolean canWrite() {
-    return true;
+  public void write(Reader in) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    int currentByte;
+    try {
+      while ((currentByte = in.read()) != -1) {
+        out.write(currentByte);
+      }
+    } catch(IOException ex) {
+      throw new RuntimeException(ex);
+    }
+    contents = out.toString(); 
   }
 }

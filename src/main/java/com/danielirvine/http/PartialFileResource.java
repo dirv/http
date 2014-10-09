@@ -1,5 +1,6 @@
 package com.danielirvine.http;
 
+import java.io.*;
 import java.util.*;
 import static java.util.Arrays.*;
 
@@ -28,8 +29,7 @@ class PartialFileResource implements Resource {
     }
   }
 
-  public boolean canWrite() {
-    return false;
+  public void write(Reader in) {
   }
 
   private boolean isSatisfiable() {

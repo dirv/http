@@ -41,7 +41,7 @@ public class HttpServer {
           new RedirectResponseContributor(redirects),
           new QueryResponseContributor(),
           new LogsResponseContributor(logger),
-          new PutPostResponseContributor(root),
+          new PutPostResponseContributor(root, writeablePaths),
           new ResourceResponseContributor(root),
           new WriteableResponseContributor(writeablePaths),
           new NotFoundResponseContributor()));
@@ -79,10 +79,16 @@ public class HttpServer {
   }
 
   private void handleIncomingRequest(SocketProxy socket) throws IOException {
-    Request request = new Request(socket.getInputStream());
-    logger.log(request);
-    Response response = responder.response(request);
-    response.write(socket.getOutputStream());
+    try(InputStream in = socket.getInputStream()) {
+      try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+        Request request = new Request(reader);
+        logger.log(request);
+        Response response = responder.response(request);
+        try(OutputStream output = socket.getOutputStream()) {
+          response.write(output);
+        }
+      }
+    }
   }
 
   private static ServerSocketProxy createSocket(int port) {

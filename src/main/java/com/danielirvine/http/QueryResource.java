@@ -1,4 +1,5 @@
 package com.danielirvine.http;
+import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 import static java.util.Arrays.*;
@@ -24,8 +25,7 @@ class QueryResource implements Resource {
     return this;
   }
 
-  public boolean canWrite() {
-    return false;
+  public void write(Reader in) {
   }
 
   private List<Content> generateContent() {

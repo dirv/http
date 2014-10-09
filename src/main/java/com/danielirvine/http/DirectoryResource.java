@@ -1,5 +1,6 @@
 package com.danielirvine.http;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 import static java.util.Arrays.*;
@@ -19,6 +20,14 @@ class DirectoryResource implements Resource {
         new PlainTextHeadedContent(generateLinks()));
   }
 
+  public boolean hasResource(String[] pathSegments) {
+    if(pathSegments.length == 0) {
+      return false;
+    }
+    FileDescriptor child = descriptor.getFile(pathSegments[1]);
+    return child.exists();
+  }
+
   public Resource findResource(String[] pathSegments) {
     if(pathSegments.length == 0) {
       return this;
@@ -32,12 +41,20 @@ class DirectoryResource implements Resource {
     }
   }
 
-  public boolean canWrite() {
-    return descriptor.canWrite();
+  public Resource findOrCreateResource(String[] pathSegments) {
+    if (hasResource(pathSegments)) {
+      return findResource(pathSegments);
+    } else {
+      return new FileResource(descriptor.createFile(pathSegments[1]));
+    }
   }
 
   public Resource applyRange(RangeHeader range) {
     return this;
+  }
+
+  public void write(Reader in) {
+    return;
   }
 
   private List<Content> generateLinks() {

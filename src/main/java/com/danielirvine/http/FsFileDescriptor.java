@@ -1,6 +1,7 @@
 package com.danielirvine.http;
 import java.io.*;
 import java.nio.file.*;
+import static java.nio.file.StandardCopyOption.*;
 import static java.util.stream.Stream.*;
 import java.util.*;
 import static java.util.stream.Collectors.*;
@@ -20,6 +21,10 @@ public class FsFileDescriptor implements FileDescriptor {
   public FileDescriptor getFile(String name) {
     File child = new File(file, name);
     return getFile(child);
+  }
+
+  public FileDescriptor createFile(String name) {
+    return getFile(name);
   }
 
   public boolean exists() {
@@ -45,15 +50,26 @@ public class FsFileDescriptor implements FileDescriptor {
     return file.length();
   }
 
-  public boolean canWrite() {
-    return file.canWrite();
-  }
-
   public String contentType() {
     try {
       return Files.probeContentType(file.toPath());
     } catch(IOException ex) {
       return "text/plain";
+    }
+  }
+
+  public void write(Reader in) {
+    try {
+      File temp = File.createTempFile("http", ".tmp");
+      try(BufferedWriter out = new BufferedWriter(new FileWriter(temp))){
+        int currentByte;
+        while((currentByte = in.read()) != -1) {
+          out.write(currentByte);
+        }
+      }
+      Files.move(temp.toPath(), file.toPath(), new CopyOption[]{REPLACE_EXISTING, ATOMIC_MOVE});
+    } catch(IOException ex) {
+      throw new RuntimeException(ex);
     }
   }
 
