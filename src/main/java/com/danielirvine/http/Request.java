@@ -69,23 +69,11 @@ public class Request {
   private void readHeaders(BufferedReader in) throws IOException {
     String headerString = null;
     while(!isNullOrBlank((headerString = in.readLine()))) {
-      headers.add(buildHeader(headerString));
+      headers.add(RequestHeader.build(this, headerString));
     }
   }
 
   public static boolean isNullOrBlank(String param) {
     return param == null || param.trim().length() == 0;
-  }
-
-  private RequestHeader buildHeader(String headerString) {
-    String[] parts = headerString.split(":");
-    // TODO: parse this using a map
-    if(parts[0].equals("Range")) {
-      return new RangeHeader(parts[1].trim());
-    } else if (parts[0].equals("Authorization")) {
-      return new AuthorizationHeader(parts[1].trim(), this);
-    } else {
-      return new UnknownRequestHeader();
-    }
   }
 }
