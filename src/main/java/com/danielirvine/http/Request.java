@@ -13,7 +13,7 @@ public class Request {
   private String requestLine;
   private final Reader in;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
-  private long contentLength;
+  long contentLength;
 
   public Request(BufferedReader in) throws IOException {
     this.in = in;
@@ -71,28 +71,7 @@ public class Request {
   }
 
   public Reader getDataStream() {
-    return new Reader() {
-      
-      private long curPos;
-
-      @Override
-      public int read(char[] cbuf, int off, int len) throws IOException {
-        long dataLeft = contentLength - curPos;
-        
-        if ((long)len > dataLeft) {
-          in.read(cbuf, off, (int)dataLeft);
-          return -1;
-        } else {
-          curPos += len;
-          return in.read(cbuf, off, len);
-        }
-      }
-
-      @Override
-      public void close() throws IOException {
-        in.close();
-      }
-    };
+    return new CappedLengthReader(in, contentLength);
   }
 
   private void readRequestLine(BufferedReader in) throws IOException {
