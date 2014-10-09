@@ -9,6 +9,7 @@ public class Request {
   private String query;
   private String user;
   private String password;
+  private String requestLine;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
 
   public Request(InputStream request) throws IOException {
@@ -39,6 +40,10 @@ public class Request {
     return password;
   }
 
+  public String getRequestLine() {
+    return requestLine;
+  }
+
   public void setCredentials(String user, String password) {
     this.user = user;
     this.password = password;
@@ -55,7 +60,7 @@ public class Request {
   }
 
   private void readRequestLine(BufferedReader in) throws IOException {
-    String requestLine = in.readLine();
+    requestLine = in.readLine();
     String[] parts = requestLine.split(" ");
     int queryIndex = parts[1].indexOf("?");
     if(queryIndex == -1) {
