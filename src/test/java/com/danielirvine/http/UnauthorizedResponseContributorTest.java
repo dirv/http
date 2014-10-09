@@ -20,14 +20,24 @@ public class UnauthorizedResponseContributorTest {
   @Test
 	public void authorizesCorrectUser() {
     startRequest("GET /a HTTP/1.1");
-    String credentials = "admin:" + AuthorizerTest.PLAIN_TEXT_PASSWORD;
-    addHeader("Authorization",
-        "Basic " + encoder.encodeToString(credentials.getBytes()));
+    addAuthHeader("admin", AuthorizerTest.PLAIN_TEXT_PASSWORD);
     assertFalse(unauthContributor.canRespond(buildRequest()));
   }
 
+  @Test
+	public void doesNotAuthorizeBadPassword() {
+    startRequest("GET /a HTTP/1.1");
+    addAuthHeader("admin", "oops");
+    assertTrue(unauthContributor.canRespond(buildRequest()));
+  }
   private void startRequest(String requestLine) {
     requestContent = requestLine + HttpServer.CRLF;
+  }
+
+  private void addAuthHeader(String user, String password) {
+    String credentials = user + ":" + password;
+    String encoded = encoder.encodeToString(credentials.getBytes());
+    addHeader("Authorization", "Basic " + encoded);
   }
 
   private void addHeader(String name, String value) {

@@ -12,12 +12,8 @@ class AuthorizationHeader implements RequestHeader {
     Matcher m = basicPattern.matcher(header);
     if (m.matches()) {
       String[] parts = decode(m.group(1)).split(":");
-      apply(request, parts[0], parts[1]);
+      request.setCredentials(parts[0], parts[1]);
     }
-  }
-
-  private static void apply(Request request, String user, String password) {
-    request.setCredentials(user, password);
   }
 
   @Override
