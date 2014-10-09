@@ -4,6 +4,7 @@ import org.junit.*;
 
 import com.danielirvine.http.contributors.ResourceResponseContributor;
 import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.responses.Response;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;

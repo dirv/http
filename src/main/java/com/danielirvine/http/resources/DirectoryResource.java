@@ -4,12 +4,12 @@ import java.io.*;
 import java.util.*;
 
 import com.danielirvine.http.FileDescriptor;
-import com.danielirvine.http.Response;
-import com.danielirvine.http.ResponseCode;
 import com.danielirvine.http.content.Content;
 import com.danielirvine.http.content.HtmlHeadedContent;
 import com.danielirvine.http.content.LinkContent;
-import com.danielirvine.http.headers.request.RangeHeader;
+import com.danielirvine.http.ranges.Range;
+import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 import static java.util.stream.Collectors.*;
 
@@ -55,7 +55,7 @@ public class DirectoryResource implements Resource {
     }
   }
 
-  public Resource applyRange(RangeHeader range) {
+  public Resource applyRange(List<Range> range) {
     return this;
   }
 

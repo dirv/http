@@ -3,8 +3,8 @@ package com.danielirvine.http.headers.request;
 import java.util.regex.*;
 import java.util.*;
 
+import com.danielirvine.http.Request;
 import com.danielirvine.http.ranges.*;
-import com.danielirvine.http.resources.Resource;
 
 public class RangeHeader extends RequestHeader {
 
@@ -14,33 +14,18 @@ public class RangeHeader extends RequestHeader {
   private List<Range> ranges = new ArrayList<Range>();
   private boolean isValid = true;
 
-  public RangeHeader(String header) {
+  public RangeHeader(String header, Request request) {
     Matcher m = headerPattern.matcher(header);
     if (m.matches()) {
       processRanges(m.group(1).split(","));
+      if(shouldApply()) {
+        request.setRanges(ranges);
+      }
     }
-  }
-
-  public Resource apply(Resource resource) {
-    return shouldApply() ? resource.applyRange(this) : resource;
   }
 
   private boolean shouldApply() {
     return ranges.size() != 0 && isValid;
-  }
-
-  public List<FixedRange> fix(long fileLength) {
-    long curPos = 0;
-
-    List<FixedRange> specifiers = new ArrayList<FixedRange>();
-    for(Range s : ranges) {
-      FixedRange specifier = s.fix(curPos, fileLength);
-      if(specifier.isSatisfiable()) {
-        curPos += specifier.length() + 1;
-        specifiers.add(specifier);
-      }
-    }
-    return specifiers;
   }
 
   private void processRanges(String[] allRanges) {

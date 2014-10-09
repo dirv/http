@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import com.danielirvine.http.headers.request.RequestHeader;
+import com.danielirvine.http.ranges.Range;
 
 public class Request {
 
@@ -15,7 +16,8 @@ public class Request {
   private String requestLine;
   private final Reader in;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
-  long contentLength;
+  private long contentLength;
+  private List<Range> ranges;
 
   public Request(BufferedReader in) throws IOException {
     this.in = in;
@@ -45,6 +47,14 @@ public class Request {
 
   public String[] getPathSegments() {
     return path.split("/");
+  }
+
+  public boolean hasRanges() {
+    return ranges != null && ranges.size() > 0;
+  }
+
+  public List<Range> getRanges() {
+    return ranges;
   }
 
   public boolean hasCredentials() {
@@ -106,5 +116,9 @@ public class Request {
 
   public boolean isDelete() {
     return verb.equals("DELETE");
+  }
+
+  public void setRanges(List<Range> ranges) {
+    this.ranges = ranges;
   }
 }

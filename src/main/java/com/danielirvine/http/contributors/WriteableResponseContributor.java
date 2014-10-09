@@ -3,7 +3,9 @@ package com.danielirvine.http.contributors;
 import java.util.*;
 
 import com.danielirvine.http.*;
-import com.danielirvine.http.resources.EmptyResponse;
+import com.danielirvine.http.responses.EmptyResponse;
+import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 public class WriteableResponseContributor extends PathMatchingResponseContributor {
 

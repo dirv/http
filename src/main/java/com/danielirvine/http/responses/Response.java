@@ -1,7 +1,8 @@
-package com.danielirvine.http;
+package com.danielirvine.http.responses;
 
 import java.io.*;
 
+import com.danielirvine.http.HttpServer;
 import com.danielirvine.http.content.HeadedContent;
 
 public class Response {

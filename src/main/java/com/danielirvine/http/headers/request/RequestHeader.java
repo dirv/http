@@ -13,7 +13,7 @@ public class RequestHeader {
   private static final BiFunction<String, Request, RequestHeader> defaultBuilder;
 
   static {
-    builders.put("Range", (v, r) -> new RangeHeader(v));
+    builders.put("Range", (v, r) -> new RangeHeader(v, r));
     builders.put("Authorization", (v, r) -> new AuthorizationHeader(v, r));
     builders.put("Content-Length", (v, r) -> new RequestContentLengthHeader(v, r));
     defaultBuilder = (v, r) -> new UnknownRequestHeader();

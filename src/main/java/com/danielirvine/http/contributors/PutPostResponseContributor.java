@@ -4,9 +4,11 @@ import java.util.*;
 
 import com.danielirvine.http.*;
 import com.danielirvine.http.resources.DirectoryResource;
-import com.danielirvine.http.resources.EmptyResponse;
-import com.danielirvine.http.resources.ErrorResponse;
 import com.danielirvine.http.resources.Resource;
+import com.danielirvine.http.responses.EmptyResponse;
+import com.danielirvine.http.responses.ErrorResponse;
+import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 public class PutPostResponseContributor implements ResponseContributor {
 

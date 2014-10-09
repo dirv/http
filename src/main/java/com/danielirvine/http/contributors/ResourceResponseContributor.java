@@ -1,9 +1,9 @@
 package com.danielirvine.http.contributors;
 
 import com.danielirvine.http.*;
-import com.danielirvine.http.headers.request.RequestHeader;
 import com.danielirvine.http.resources.DirectoryResource;
 import com.danielirvine.http.resources.Resource;
+import com.danielirvine.http.responses.Response;
 
 public class ResourceResponseContributor implements ResponseContributor {
 
@@ -21,8 +21,8 @@ public class ResourceResponseContributor implements ResponseContributor {
   @Override
   public Response respond(Request request) {
     Resource resource = root.findResource(request.getPath().split("/"));
-    for(RequestHeader h : request.getHeaders()) {
-      resource = h.apply(resource);
+    if(request.hasRanges()) {
+      resource = resource.applyRange(request.getRanges());
     }
     return resource.toResponse();
   }

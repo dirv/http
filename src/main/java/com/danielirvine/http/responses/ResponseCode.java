@@ -1,4 +1,4 @@
-package com.danielirvine.http;
+package com.danielirvine.http.responses;
 
 public enum ResponseCode {
 

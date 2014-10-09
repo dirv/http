@@ -1,9 +1,9 @@
 package com.danielirvine.http.contributors;
 
 import com.danielirvine.http.Request;
-import com.danielirvine.http.Response;
-import com.danielirvine.http.ResponseCode;
-import com.danielirvine.http.resources.ErrorResponse;
+import com.danielirvine.http.responses.ErrorResponse;
+import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 public class NotFoundResponseContributor implements ResponseContributor {
 

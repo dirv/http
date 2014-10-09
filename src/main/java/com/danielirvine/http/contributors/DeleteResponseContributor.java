@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.danielirvine.http.*;
 import com.danielirvine.http.resources.DirectoryResource;
-import com.danielirvine.http.resources.EmptyResponse;
-import com.danielirvine.http.resources.ErrorResponse;
+import com.danielirvine.http.responses.EmptyResponse;
+import com.danielirvine.http.responses.ErrorResponse;
+import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 public class DeleteResponseContributor implements ResponseContributor {
 

@@ -2,7 +2,9 @@ package com.danielirvine.http.contributors;
 
 import com.danielirvine.http.*;
 import com.danielirvine.http.headers.response.ResponseHeader;
-import com.danielirvine.http.resources.ErrorResponse;
+import com.danielirvine.http.responses.ErrorResponse;
+import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 public class RedirectResponseContributor implements ResponseContributor {
 

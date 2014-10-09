@@ -5,6 +5,7 @@ import org.junit.*;
 import com.danielirvine.http.headers.request.RangeHeader;
 import com.danielirvine.http.resources.FileResource;
 import com.danielirvine.http.resources.Resource;
+import com.danielirvine.http.responses.ResponseCode;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -12,7 +13,7 @@ import static org.hamcrest.CoreMatchers.*;
 import java.io.*;
 import java.util.*;
 
-public class RangeHeaderTest {
+public class RangeHeaderTest extends RequestTest {
 
   private static final String content = "abcdefghijklmnopqrstuvwxyz";
   private final FileResource file = new FileResource(new InMemoryFileDescriptor("test", content));
@@ -84,13 +85,20 @@ public class RangeHeaderTest {
 
 
   private void setRangeOnFile(String rangeHeader) {
-    partial = new RangeHeader(rangeHeader).apply(file);
+    startRequest("GET / HTTP/1.1");
+    addHeader("Range", rangeHeader);
+    Request request = buildRequest();
+    if(request.hasRanges()) {
+      partial = file.applyRange(buildRequest().getRanges());
+    } else {
+      partial = file;
+    }
   }
 
   private List<String> dumpResource() {
     ByteArrayOutputStream s = new ByteArrayOutputStream();
     try{
-    partial.toResponse().write(s);
+      partial.toResponse().write(s);
     } catch(IOException ex) {
     }
     return Arrays.asList(s.toString().split(HttpServer.CRLF));

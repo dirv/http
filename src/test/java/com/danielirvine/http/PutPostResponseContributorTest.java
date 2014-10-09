@@ -4,6 +4,7 @@ import org.junit.*;
 
 import com.danielirvine.http.contributors.PutPostResponseContributor;
 import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.responses.ResponseCode;
 
 import static org.junit.Assert.*;
 

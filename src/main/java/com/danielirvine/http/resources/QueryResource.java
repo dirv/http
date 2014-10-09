@@ -2,12 +2,10 @@ package com.danielirvine.http.resources;
 import java.io.*;
 import java.util.*;
 
-import com.danielirvine.http.Response;
-import com.danielirvine.http.ResponseCode;
-import com.danielirvine.http.content.Content;
-import com.danielirvine.http.content.HtmlHeadedContent;
-import com.danielirvine.http.content.QueryVariableContent;
-import com.danielirvine.http.headers.request.RangeHeader;
+import com.danielirvine.http.content.*;
+import com.danielirvine.http.ranges.Range;
+import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 import static java.util.stream.Collectors.*;
 
@@ -23,9 +21,7 @@ public class QueryResource implements Resource {
     return new Response(ResponseCode.OK, new HtmlHeadedContent(generateContent()));
   }
 
-  public Resource applyRange(RangeHeader range) {
-    // TODO: Could actually apply a range at this point since
-    // the content has been generated (or at least could be)
+  public Resource applyRange(List<Range> range) {
     return this;
   }
 

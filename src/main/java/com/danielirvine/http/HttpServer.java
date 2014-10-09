@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.function.*;
 
 import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.responses.Response;
 import com.danielirvine.http.sockets.NetServerSocket;
 import com.danielirvine.http.sockets.ServerSocketProxy;
 import com.danielirvine.http.sockets.SocketProxy;

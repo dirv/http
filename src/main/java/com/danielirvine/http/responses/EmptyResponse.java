@@ -1,9 +1,7 @@
-package com.danielirvine.http.resources;
+package com.danielirvine.http.responses;
 
 import static java.util.Arrays.*;
 
-import com.danielirvine.http.Response;
-import com.danielirvine.http.ResponseCode;
 import com.danielirvine.http.content.HeadedContent;
 
 public class EmptyResponse extends Response {

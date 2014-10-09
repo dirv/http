@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.danielirvine.http.contributors.*;
 import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.responses.Response;
 
 
 class Responder {

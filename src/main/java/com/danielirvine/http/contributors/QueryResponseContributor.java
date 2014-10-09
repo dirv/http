@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.danielirvine.http.*;
 import com.danielirvine.http.resources.QueryResource;
+import com.danielirvine.http.responses.Response;
 
 public class QueryResponseContributor implements ResponseContributor {
 
