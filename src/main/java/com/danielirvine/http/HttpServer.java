@@ -3,6 +3,7 @@ package com.danielirvine.http;
 import java.io.*;
 import java.util.*;
 import java.util.function.*;
+
 import static java.util.Arrays.*;
 
 public class HttpServer {
@@ -35,16 +36,7 @@ public class HttpServer {
     Authorizor authorizor = new Authorizor(authTable);
     logger = new Logger();
 
-    responder = new Responder(asList(
-          new UnauthorizedResponseContributor(authorizor),
-          new RedirectResponseContributor(redirects),
-          new QueryResponseContributor(),
-          new LogsResponseContributor(logger),
-          new DeleteResponseContributor(root, writeablePaths),
-          new PutPostResponseContributor(root, writeablePaths),
-          new ResourceResponseContributor(root),
-          new WriteableResponseContributor(writeablePaths),
-          new NotFoundResponseContributor()));
+    responder = new Responder(logger, writeablePaths, root, redirects, authorizor);
 
     while(socket.hasData()) {
       try(SocketProxy clientSocket = socket.accept()) {
@@ -53,19 +45,6 @@ public class HttpServer {
         ex.printStackTrace();
       }
     }
-  }
-
-  private static List<String> resourceToStrings(String resourceName) throws IOException {
-    List<String> allLines = new ArrayList<String>();
-    try(InputStream in = HttpServer.class.getResourceAsStream(resourceName)){
-      try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-        String currentLine = null;
-        while((currentLine = reader.readLine()) != null) {
-          allLines.add(currentLine);
-        }
-      }
-    }
-    return allLines;
   }
 
   public static void main(String[] args) throws IOException {
@@ -100,4 +79,18 @@ public class HttpServer {
     }
     return null;
   }
+
+  private static List<String> resourceToStrings(String resourceName) throws IOException {
+    List<String> allLines = new ArrayList<String>();
+    try(InputStream in = HttpServer.class.getResourceAsStream(resourceName)){
+      try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+        String currentLine = null;
+        while((currentLine = reader.readLine()) != null) {
+          allLines.add(currentLine);
+        }
+      }
+    }
+    return allLines;
+  }
+
 }
