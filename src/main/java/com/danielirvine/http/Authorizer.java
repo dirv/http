@@ -3,11 +3,11 @@ package com.danielirvine.http;
 import java.util.*;
 import java.security.*;
 
-public class Authorizor {
+public class Authorizer {
 
   private final List<AuthorizationTableEntry> authorizationTable = new ArrayList<AuthorizationTableEntry>();
 
-  public Authorizor(List<String> entries) {
+  public Authorizer(List<String> entries) {
     for(String entry : entries) {
       parseAuthorizationTableEntry(entry);
     }

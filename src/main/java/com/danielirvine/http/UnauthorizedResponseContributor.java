@@ -2,20 +2,20 @@ package com.danielirvine.http;
 
 class UnauthorizedResponseContributor implements ResponseContributor {
 
-  private final Authorizor authorizor;
+  private final Authorizer authorizer;
 
-  public UnauthorizedResponseContributor(Authorizor authorizor) {
-    this.authorizor = authorizor;
+  public UnauthorizedResponseContributor(Authorizer authorizer) {
+    this.authorizer = authorizer;
   }
 
   @Override
   public boolean canRespond(Request request) {
     String path = request.getPath();
-    if (authorizor.requiresAuthorization(path)) {
+    if (authorizer.requiresAuthorization(path)) {
       if(request.hasCredentials()) {
         String user = request.getUser();
         String password = request.getPassword();
-        if(authorizor.isAuthorized(path, user, password)) {
+        if(authorizer.isAuthorized(path, user, password)) {
           return false;
         }
       }

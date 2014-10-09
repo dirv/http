@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.function.*;
 
-import static java.util.Arrays.*;
-
 public class HttpServer {
 
   public static final String CRLF = "\r\n";
@@ -33,10 +31,10 @@ public class HttpServer {
       List<String> writeablePaths) {
     DirectoryResource root = new DirectoryResource(rootFile);
     UrlRedirects redirects = new UrlRedirects(redirectStrings);
-    Authorizor authorizor = new Authorizor(authTable);
+    Authorizer authorizer = new Authorizer(authTable);
     logger = new Logger();
 
-    responder = new Responder(logger, writeablePaths, root, redirects, authorizor);
+    responder = new Responder(logger, writeablePaths, root, redirects, authorizer);
 
     while(socket.hasData()) {
       try(SocketProxy clientSocket = socket.accept()) {

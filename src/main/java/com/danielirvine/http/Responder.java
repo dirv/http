@@ -12,9 +12,9 @@ class Responder {
       List<String> writeablePaths,
       DirectoryResource root,
       UrlRedirects redirects,
-      Authorizor authorizor) {
+      Authorizer authorizer) {
     this.contributors = asList(
-          new UnauthorizedResponseContributor(authorizor),
+          new UnauthorizedResponseContributor(authorizer),
           new RedirectResponseContributor(redirects),
           new QueryResponseContributor(),
           new LogsResponseContributor(logger),
