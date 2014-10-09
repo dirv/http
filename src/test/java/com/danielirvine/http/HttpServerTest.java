@@ -8,6 +8,7 @@ import java.net.*;
 import java.util.function.*;
 import java.util.*;
 import java.util.stream.*;
+import static java.util.Arrays.*;
 import static java.util.stream.Stream.*;
 import static java.util.stream.Collectors.*;
 
@@ -27,7 +28,7 @@ public class HttpServerTest {
       portSpecified = port;
       return new InProcessServerSocket(new String[0]);
     };
-    server = new HttpServer(socketFactory, 212, ".", empty, empty);
+    server = new HttpServer(socketFactory, 212, ".", empty, empty, asList());
     assertEquals(212, portSpecified);
   }
 
@@ -128,7 +129,7 @@ public class HttpServerTest {
   private void createServer() {
     StringBufferInputStream redirectStream = new StringBufferInputStream(redirects);
     StringBufferInputStream authStream = new StringBufferInputStream(authTable);
-    server = new HttpServer(socket, publicRoot, redirectStream, authStream);
+    server = new HttpServer(socket, publicRoot, redirectStream, authStream, asList());
   }
 
   private List<String> outputByLine() {

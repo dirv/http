@@ -2,19 +2,16 @@ package com.danielirvine.http;
 
 import java.util.*;
 import java.util.stream.*;
+import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
 
-class LogsContributor implements ResponseContributor {
+class LogsResponseContributor extends PathMatchingResponseContributor {
 
   private final Logger logger;
 
-  public LogsContributor(Logger logger) {
+  public LogsResponseContributor(Logger logger) {
+    super(asList("/logs"));
     this.logger = logger;
-  }
-
-  @Override
-  public boolean canRespond(Request request) {
-    return request.getPath().equals("/logs");
   }
 
   @Override

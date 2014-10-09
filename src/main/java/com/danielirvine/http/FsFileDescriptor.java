@@ -45,6 +45,10 @@ public class FsFileDescriptor implements FileDescriptor {
     return file.length();
   }
 
+  public boolean canWrite() {
+    return file.canWrite();
+  }
+
   public String contentType() {
     try {
       return Files.probeContentType(file.toPath());

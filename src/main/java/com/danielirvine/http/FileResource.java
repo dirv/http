@@ -23,6 +23,10 @@ class FileResource implements Resource {
           asList(new SinglePartContent(descriptor, new FixedRange(descriptor)))));
   }
 
+  public boolean canWrite() {
+    return descriptor.canWrite();
+  }
+
   private List<ResponseHeader> getHeaders() {
     return asList(
         new ContentTypeHeader(descriptor),

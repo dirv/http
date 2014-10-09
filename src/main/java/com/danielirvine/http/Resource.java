@@ -6,4 +6,5 @@ import java.util.*;
 interface Resource {
   Response toResponse();
   Resource applyRange(RangeHeader range);
+  boolean canWrite();
 }

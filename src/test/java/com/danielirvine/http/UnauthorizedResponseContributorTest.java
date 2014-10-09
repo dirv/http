@@ -11,11 +11,10 @@ import java.util.stream.*;
 import static java.util.stream.Stream.*;
 import static java.util.stream.Collectors.*;
 
-public class UnauthorizedResponseContributorTest {
+public class UnauthorizedResponseContributorTest extends ResponseContributorTest {
 
   private final Base64.Encoder encoder = Base64.getEncoder();
   private UnauthorizedResponseContributor unauthContributor = new UnauthorizedResponseContributor(AuthorizerTest.AUTHORIZER);
-  private String requestContent;
 
   @Test
 	public void authorizesCorrectUser() {
@@ -30,9 +29,6 @@ public class UnauthorizedResponseContributorTest {
     addAuthHeader("admin", "oops");
     assertTrue(unauthContributor.canRespond(buildRequest()));
   }
-  private void startRequest(String requestLine) {
-    requestContent = requestLine + HttpServer.CRLF;
-  }
 
   private void addAuthHeader(String user, String password) {
     String credentials = user + ":" + password;
@@ -40,19 +36,4 @@ public class UnauthorizedResponseContributorTest {
     addHeader("Authorization", "Basic " + encoded);
   }
 
-  private void addHeader(String name, String value) {
-    requestContent += name;
-    requestContent += ": ";
-    requestContent += value;
-    requestContent += HttpServer.CRLF;
-  }
-
-  private Request buildRequest() {
-    requestContent += HttpServer.CRLF;
-    try {
-    return new Request(new StringBufferInputStream(requestContent));
-    } catch(Exception ex) {
-      return null;
-    }
-  }
 }

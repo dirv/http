@@ -10,7 +10,7 @@ class ResourceResponseContributor implements ResponseContributor {
 
   @Override
   public boolean canRespond(Request request) {
-    return root.findResource(request.getPath().split("/")) != null;
+    return root.findResource(request.getPathSegments()) != null;
   }
 
   @Override

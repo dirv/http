@@ -8,12 +8,21 @@ public class Request {
   private String path;
   private String query;
   private String user;
+  private String verb;
   private String password;
   private String requestLine;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
 
   public Request(InputStream request) throws IOException {
     parseRequest(request);
+  }
+
+  public boolean isPut() {
+    return verb.equals("PUT");
+  }
+
+  public boolean isPost() {
+    return verb.equals("POST");
   }
 
   public boolean hasQuery() {
@@ -28,8 +37,17 @@ public class Request {
     return path;
   }
 
+  public String[] getPathSegments() {
+    return path.split("/");
+  }
+
   public boolean hasCredentials() {
     return user != null && password != null;
+  }
+
+  public void setCredentials(String user, String password) {
+    this.user = user;
+    this.password = password;
   }
 
   public String getUser() {
@@ -42,11 +60,6 @@ public class Request {
 
   public String getRequestLine() {
     return requestLine;
-  }
-
-  public void setCredentials(String user, String password) {
-    this.user = user;
-    this.password = password;
   }
 
   public List<RequestHeader> getHeaders() {
@@ -62,6 +75,7 @@ public class Request {
   private void readRequestLine(BufferedReader in) throws IOException {
     requestLine = in.readLine();
     String[] parts = requestLine.split(" ");
+    verb = parts[0];
     int queryIndex = parts[1].indexOf("?");
     if(queryIndex == -1) {
       path = parts[1];

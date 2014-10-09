@@ -32,6 +32,10 @@ class DirectoryResource implements Resource {
     }
   }
 
+  public boolean canWrite() {
+    return descriptor.canWrite();
+  }
+
   public Resource applyRange(RangeHeader range) {
     return this;
   }

@@ -61,4 +61,8 @@ public class InMemoryFileDescriptor implements FileDescriptor {
   public boolean exists() {
     return name != null;
   }
+
+  public boolean canWrite() {
+    return true;
+  }
 }

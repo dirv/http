@@ -24,6 +24,10 @@ class QueryResource implements Resource {
     return this;
   }
 
+  public boolean canWrite() {
+    return false;
+  }
+
   private List<Content> generateContent() {
     return variables.entrySet()
       .stream()

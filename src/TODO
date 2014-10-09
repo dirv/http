@@ -1,4 +1,6 @@
 
+* ErrorResponse renamed to somethign else.
+
 * Directory listings for directories with no files
 * Html for directory listings
 * File sizes for directory entries
@@ -6,3 +8,7 @@
 * Redirect - redirect code
 * Mime.types - can this go in the JAR
 * More tests for Content-Length (return this for directory resource)
+
+Things to do to make this a REAL server:
+* Saving request logs to disk
+* Internal server error logged to disk

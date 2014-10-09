@@ -28,6 +28,10 @@ class PartialFileResource implements Resource {
     }
   }
 
+  public boolean canWrite() {
+    return false;
+  }
+
   private boolean isSatisfiable() {
     return ranges.size() > 0;
   }
