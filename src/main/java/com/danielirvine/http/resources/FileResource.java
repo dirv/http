@@ -30,7 +30,7 @@ public class FileResource implements Resource {
     return new Response(
         ResponseCode.OK,
         new HeadedContent(getHeaders(),
-          asList(new SinglePartContent(descriptor, new FixedRange(descriptor)))));
+          new SinglePartContent(descriptor, new FixedRange(descriptor))));
   }
 
   @Override

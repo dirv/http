@@ -25,11 +25,11 @@ public class QueryResource implements Resource {
     return this;
   }
 
-  private List<Content> generateContent() {
-    return variables.entrySet()
+  private Content generateContent() {
+    return new ListContent(variables.entrySet()
       .stream()
       .map(this::toQueryVariableContent)
-      .collect(toList());
+      .collect(toList()));
   }
 
   private QueryVariableContent toQueryVariableContent(Map.Entry<String, String> variable) {

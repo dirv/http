@@ -7,6 +7,7 @@ import com.danielirvine.http.FileDescriptor;
 import com.danielirvine.http.content.Content;
 import com.danielirvine.http.content.HtmlHeadedContent;
 import com.danielirvine.http.content.LinkContent;
+import com.danielirvine.http.content.ListContent;
 import com.danielirvine.http.ranges.Range;
 import com.danielirvine.http.responses.Response;
 import com.danielirvine.http.responses.ResponseCode;
@@ -69,11 +70,11 @@ public class DirectoryResource implements Resource {
     return;
   }
 
-  private List<Content> generateLinks() {
-    return descriptor.getChildren()
+  private Content generateLinks() {
+    return new ListContent(descriptor.getChildren()
       .stream()
       .map(this::createLink)
-      .collect(toList());
+      .collect(toList()));
   }
 
   private LinkContent createLink(FileDescriptor child) {

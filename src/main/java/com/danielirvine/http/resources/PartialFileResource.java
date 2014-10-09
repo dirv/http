@@ -33,7 +33,7 @@ class PartialFileResource implements Resource {
     } else {
       return new Response(ResponseCode.UNSATISFIABLE,
           new HtmlHeadedContent(
-            asList(new StringContent("Range request unsatisfiable"))));
+            new StringContent("Range request unsatisfiable")));
     }
   }
 
