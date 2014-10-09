@@ -1,8 +1,6 @@
 package com.danielirvine.http;
 
 import org.junit.*;
-
-import com.danielirvine.http.headers.request.RangeHeader;
 import com.danielirvine.http.resources.FileResource;
 import com.danielirvine.http.resources.Resource;
 import com.danielirvine.http.responses.ResponseCode;

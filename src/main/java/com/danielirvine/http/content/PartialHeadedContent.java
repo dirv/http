@@ -11,7 +11,7 @@ import static java.util.Arrays.*;
 public class PartialHeadedContent extends HeadedContent {
 
   public PartialHeadedContent(FileDescriptor descriptor, List<FixedRange> ranges) {
-    super(getHeaders(descriptor, ranges), asList(getContent(descriptor, ranges)));
+    super(getHeaders(descriptor, ranges), getContent(descriptor, ranges));
   }
 
   private static Content getContent(FileDescriptor descriptor, List<FixedRange> ranges) {

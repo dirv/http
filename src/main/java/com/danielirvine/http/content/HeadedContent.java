@@ -9,9 +9,9 @@ import com.danielirvine.http.headers.response.ResponseHeader;
 public class HeadedContent implements Content {
 
   private final List<ResponseHeader> headers;
-  private final List<Content> content;
+  private final Content content;
 
-  public HeadedContent(List<ResponseHeader> headers, List<Content> content) {
+  public HeadedContent(List<ResponseHeader> headers, Content content) {
     this.headers = headers;
     this.content = content;
   }
@@ -23,7 +23,8 @@ public class HeadedContent implements Content {
   }
 
   public long length() {
-    return content.stream().mapToLong(s->s.length()).sum();
+    return content.length();
+    //return content.stream().mapToLong(s->s.length()).sum();
   }
 
   private void writeHeaders(PrintStream out) {
@@ -33,9 +34,7 @@ public class HeadedContent implements Content {
   }
 
   private void writeContents(PrintStream out) {
-    for(Content c : content) {
-      c.write(out);
-    }
+    content.write(out);
   }
 
   private void endHeader(PrintStream out) {

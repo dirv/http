@@ -38,7 +38,7 @@ class MultiPartContent implements Content {
       .stream()
       .map(r->new HeadedContent(
             asList(contentTypeHeader, r.getHeader()),
-            asList(r.toContent(in))));
+            r.toContent(in)));
   }
 
   private void writePartial(Content content, PrintStream out) {
