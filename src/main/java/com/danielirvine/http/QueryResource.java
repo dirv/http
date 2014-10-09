@@ -12,7 +12,7 @@ class QueryResource implements Resource {
   }
 
   public Response toResponse() {
-    return new Response(ResponseCode.OK, new PlainTextHeadedContent(generateContent()));
+    return new Response(ResponseCode.OK, new HtmlHeadedContent(generateContent()));
   }
 
   public Resource applyRange(RangeHeader range) {

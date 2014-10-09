@@ -25,7 +25,7 @@ class PartialFileResource implements Resource {
         new PartialHeadedContent(descriptor, ranges));
     } else {
       return new Response(ResponseCode.UNSATISFIABLE,
-          new PlainTextHeadedContent(
+          new HtmlHeadedContent(
             asList(new StringContent("Range request unsatisfiable"))));
     }
   }

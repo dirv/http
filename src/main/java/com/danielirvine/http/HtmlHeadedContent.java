@@ -3,9 +3,9 @@ package com.danielirvine.http;
 import java.util.*;
 import static java.util.Arrays.*;
 
-class PlainTextHeadedContent extends HeadedContent {
+class HtmlHeadedContent extends HeadedContent {
 
-  public PlainTextHeadedContent(List<Content> content) {
+  public HtmlHeadedContent(List<Content> content) {
     super(generateHeaders(content), content);
   }
 
@@ -13,6 +13,6 @@ class PlainTextHeadedContent extends HeadedContent {
     long length = content.stream().mapToLong(s->s.length()).sum();
     return asList(
         new ContentLengthHeader(length),
-        ContentTypeHeader.TEXT_PLAIN);
+        ContentTypeHeader.TEXT_HTML);
   }
 }

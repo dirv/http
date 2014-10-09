@@ -14,7 +14,7 @@ class DirectoryResource implements Resource {
 
   public Response toResponse() {
     return new Response(ResponseCode.OK,
-        new PlainTextHeadedContent(generateLinks()));
+        new HtmlHeadedContent(generateLinks()));
   }
 
   public boolean hasResource(String[] pathSegments) {

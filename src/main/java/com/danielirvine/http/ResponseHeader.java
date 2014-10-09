@@ -36,6 +36,7 @@ class ContentTypeHeader extends ResponseHeader {
       "boundary=BREAK");
 
   public final static ContentTypeHeader TEXT_PLAIN = new ContentTypeHeader("text/plain");
+  public final static ContentTypeHeader TEXT_HTML = new ContentTypeHeader("text/html");
 
   public ContentTypeHeader(FileDescriptor descriptor) {
     this(descriptor.contentType());
