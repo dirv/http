@@ -106,6 +106,13 @@ public class HttpServerTest {
     assertThat(outputByLine(), hasItem(containsString("WWW-Authenticate: Basic realm=\"/a\"")));
   }
 
+  @Test
+	public void showsLogs() {
+    createGetRequest("/a", "/b", "/logs");
+    createServer();
+    assertThat(requestOutput(2), hasItem(containsString("GET /a HTTP/1.1")));
+    assertThat(requestOutput(2), hasItem(containsString("GET /b HTTP/1.1")));
+  }
   private void createGetRequest(String... paths) {
     String[] requests = new String[paths.length];
     for(int i = 0; i < paths.length; ++i){
@@ -125,6 +132,10 @@ public class HttpServerTest {
   }
 
   private List<String> outputByLine() {
-    return Arrays.asList(socket.getOutput(0).split(HttpServer.CRLF));
+    return requestOutput(0);
+  }
+
+  private List<String> requestOutput(int number){
+    return Arrays.asList(socket.getOutput(number).split(HttpServer.CRLF));
   }
 }

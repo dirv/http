@@ -10,6 +10,7 @@ public class HttpServer {
   public static final String CRLF = "\r\n";
   public static final String PROTOCOL_VERSION = "HTTP/1.1";
   private final Responder responder;
+  private final Logger logger;
 
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory,
       int port,
@@ -29,11 +30,13 @@ public class HttpServer {
     DirectoryResource root = new DirectoryResource(rootFile);
     UrlRedirects redirects = new UrlRedirects(redirectsStream);
     Authorizor authorizor = new Authorizor(authStream);
+    logger = new Logger();
 
     responder = new Responder(asList(
           new UnauthorizedResponseContributor(authorizor),
           new RedirectResponseContributor(redirects),
           new QueryResponseContributor(),
+          new LogsContributor(logger),
           new ResourceResponseContributor(root),
           new NotFoundResponseContributor()));
 
@@ -60,6 +63,7 @@ public class HttpServer {
 
   private void handleIncomingRequest(SocketProxy socket) throws IOException {
     Request request = new Request(socket.getInputStream());
+    logger.log(request);
     Response response = responder.response(request);
     response.write(socket.getOutputStream());
   }
