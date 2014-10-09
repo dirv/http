@@ -17,10 +17,10 @@ public class HttpServerTest {
   private HttpServer server;
   private InProcessServerSocket socket;
   private final InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
-  private final StringBufferInputStream empty = new StringBufferInputStream("");
   private int portSpecified = 0;
-  private String redirects = "";
-  private String authTable = "";
+  private List<String> redirects = new ArrayList<String>();
+  private List<String> authTable = new ArrayList<String>();
+  private List<String> writeablePaths = new ArrayList<String>();
 
   @Test
   public void opensSocketOnPort() throws Exception {
@@ -28,7 +28,7 @@ public class HttpServerTest {
       portSpecified = port;
       return new InProcessServerSocket(new String[0]);
     };
-    server = new HttpServer(socketFactory, 212, ".", empty, empty, asList());
+    server = new HttpServer(socketFactory, 212, ".", redirects, authTable, writeablePaths);
     assertEquals(212, portSpecified);
   }
 
@@ -90,7 +90,7 @@ public class HttpServerTest {
 
   @Test
 	public void redirects() {
-    redirects = "/a => /b";
+    redirects.add("/a => /b");
     publicRoot.addFile("b", "hello");
     createGetRequest("/a");
     createServer();
@@ -100,7 +100,7 @@ public class HttpServerTest {
 
   @Test
 	public void promptsForAuthorization() {
-    authTable = "/a:admin:xs";
+    authTable.add("/a:admin:xs");
     createGetRequest("/a");
     createServer();
     assertEquals("HTTP/1.1 401 Authentication required", outputByLine().get(0));
@@ -127,9 +127,7 @@ public class HttpServerTest {
   }
 
   private void createServer() {
-    StringBufferInputStream redirectStream = new StringBufferInputStream(redirects);
-    StringBufferInputStream authStream = new StringBufferInputStream(authTable);
-    server = new HttpServer(socket, publicRoot, redirectStream, authStream, asList());
+    server = new HttpServer(socket, publicRoot, redirects, authTable, writeablePaths);
   }
 
   private List<String> outputByLine() {

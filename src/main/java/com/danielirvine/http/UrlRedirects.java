@@ -7,20 +7,14 @@ public class UrlRedirects {
 
   private final Map<String,String> redirects = new HashMap<String, String>();
 
-  public UrlRedirects(InputStream in) {
-    try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-      String currentLine = null;
-      while((currentLine = reader.readLine()) != null) {
-        parseRedirect(currentLine);
-      }
-    }catch(IOException ex) {
-      ex.printStackTrace();
+  public UrlRedirects(List<String> urlRedirects) {
+    for(String urlRedirect : urlRedirects) {
+      parseRedirect(urlRedirect);
     }
   }
 
   private void parseRedirect(String line) {
     String[] parts = line.split("=>");
-
     redirects.put(parts[0].trim(), parts[1].trim());
   }
 

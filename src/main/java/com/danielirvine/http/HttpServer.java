@@ -16,24 +16,24 @@ public class HttpServer {
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory,
       int port,
       String publicRoot,
-      InputStream redirectStream,
-      InputStream authStream,
+      List<String> redirectStrings,
+      List<String> authTable,
       List<String> writeablePaths) {
     this(socketFactory.apply(port),
         new FsFileDescriptor(new File(publicRoot)),
-        redirectStream,
-        authStream,
+        redirectStrings,
+        authTable,
         writeablePaths);
   }
 
   public HttpServer(ServerSocketProxy socket,
       FileDescriptor rootFile,
-      InputStream redirectsStream,
-      InputStream authStream,
+      List<String> redirectStrings,
+      List<String> authTable,
       List<String> writeablePaths) {
     DirectoryResource root = new DirectoryResource(rootFile);
-    UrlRedirects redirects = new UrlRedirects(redirectsStream);
-    Authorizor authorizor = new Authorizor(authStream);
+    UrlRedirects redirects = new UrlRedirects(redirectStrings);
+    Authorizor authorizor = new Authorizor(authTable);
     logger = new Logger();
 
     responder = new Responder(asList(
@@ -70,14 +70,11 @@ public class HttpServer {
 
   public static void main(String[] args) throws IOException {
     ArgumentParser parser = new ArgumentParser(args);
-
-    InputStream redirectStream = HttpServer.class.getResourceAsStream("/redirects.txt");
-    InputStream authStream = HttpServer.class.getResourceAsStream("/access.txt");
     new HttpServer(HttpServer::createSocket,
         parser.get("p", 5000),
         parser.get("d", ""),
-        redirectStream,
-        authStream,
+        resourceToStrings("/redirects.txt"),
+        resourceToStrings("/access.txt"),
         resourceToStrings("/writeable.txt"));
   }
 

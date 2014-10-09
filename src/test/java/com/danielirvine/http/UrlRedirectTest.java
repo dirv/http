@@ -2,27 +2,21 @@ package com.danielirvine.http;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-
-import java.io.*;
 import java.util.*;
-import java.util.stream.*;
-import static java.util.stream.Stream.*;
-import static java.util.stream.Collectors.*;
+import static java.util.Arrays.*;
 
 public class UrlRedirectTest {
 
   @Test
 	public void parsesSingleRedirect() {
-    String redirect = "/a => /b";
-
-    UrlRedirects r = new UrlRedirects(new StringBufferInputStream(redirect));
+    String[] redirect = new String[] {"/a => /b"};
+    UrlRedirects r = new UrlRedirects(asList(redirect));
     assertEquals("/b", r.redirect("/a"));
   }
 
   @Test
 	public void doesNotParseUnknownRedirect() {
-    String redirect = "";
-    UrlRedirects r = new UrlRedirects(new StringBufferInputStream(redirect));
+    UrlRedirects r = new UrlRedirects(new ArrayList<String>());
     assertFalse(r.hasRedirect("/a"));
   }
 }

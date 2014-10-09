@@ -8,14 +8,9 @@ public class Authorizor {
 
   private final List<AuthorizationTableEntry> authorizationTable = new ArrayList<AuthorizationTableEntry>();
 
-  public Authorizor(InputStream in) {
-    try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-      String currentLine = null;
-      while((currentLine = reader.readLine()) != null) {
-        parseAuthorizationTableEntry(currentLine);
-      }
-    }catch(IOException ex) {
-      ex.printStackTrace();
+  public Authorizor(List<String> entries) {
+    for(String entry : entries) {
+      parseAuthorizationTableEntry(entry);
     }
   }
 
