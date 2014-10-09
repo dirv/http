@@ -8,7 +8,6 @@ import java.util.*;
 
 public class HttpServerTest {
 
-  private HttpServer server;
   private InProcessServerSocket socket;
   private final InMemoryFileDescriptor publicRoot = new InMemoryFileDescriptor("publicRoot");
   private int portSpecified = 0;
@@ -22,7 +21,7 @@ public class HttpServerTest {
       portSpecified = port;
       return new InProcessServerSocket(new String[0]);
     };
-    server = new HttpServer(socketFactory, 212, ".", redirects, authTable, writeablePaths);
+    new HttpServer(socketFactory, 212, ".", redirects, authTable, writeablePaths);
     assertEquals(212, portSpecified);
   }
 
@@ -121,7 +120,7 @@ public class HttpServerTest {
   }
 
   private void createServer() {
-    server = new HttpServer(socket, publicRoot, redirects, authTable, writeablePaths);
+    new HttpServer(socket, publicRoot, redirects, authTable, writeablePaths);
   }
 
   private List<String> outputByLine() {

@@ -11,7 +11,6 @@ public class HeadersTest {
 
   private final InMemoryFileDescriptor rootDirectory = new InMemoryFileDescriptor("/");
   private final DirectoryResource root = new DirectoryResource(rootDirectory);
-  private Request request;
   private Response response;
 
 
@@ -55,7 +54,7 @@ public class HeadersTest {
     String requestString = "GET /" + resource + " HTTP/1.1" + HttpServer.CRLF;
     requestString += header + HttpServer.CRLF;
     try {
-      Request request = new Request(new BufferedReader(new InputStreamReader(new StringBufferInputStream(requestString))));
+      Request request = new Request(new BufferedReader(new StringReader(requestString)));
       response = new ResourceResponseContributor(root).response(request);
     } catch(IOException ex) {
     }

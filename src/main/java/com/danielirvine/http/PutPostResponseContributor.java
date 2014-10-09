@@ -28,9 +28,4 @@ class PutPostResponseContributor implements ResponseContributor {
 
     return new EmptyResponse(ResponseCode.OK);
   }
-
-  private String[] getParent(String[] pathSegments) {
-    if(pathSegments.length == 0) return new String[0];
-    return Arrays.copyOfRange(pathSegments, 0, pathSegments.length - 1);
-  }
 }

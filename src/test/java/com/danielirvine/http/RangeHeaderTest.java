@@ -11,7 +11,6 @@ public class RangeHeaderTest {
 
   private static final String content = "abcdefghijklmnopqrstuvwxyz";
   private final FileResource file = new FileResource(new InMemoryFileDescriptor("test", content));
-  private RangeHeader range;
   private Resource partial;
 
   @Test

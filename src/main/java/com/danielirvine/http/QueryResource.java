@@ -6,7 +6,6 @@ import static java.util.stream.Collectors.*;
 class QueryResource implements Resource {
 
   private final Map<String, String> variables;
-  private String content;
 
   public QueryResource(Map<String, String> variables) {
     this.variables = variables;
