@@ -102,7 +102,7 @@ public class HttpServerTest {
     authTable = "/a:admin:xs";
     createGetRequest("/a");
     createServer();
-    assertEquals("HTTP/1.1 401 Unauthorized", outputByLine().get(0));
+    assertEquals("HTTP/1.1 401 Authentication required", outputByLine().get(0));
     assertThat(outputByLine(), hasItem(containsString("WWW-Authenticate: Basic realm=\"/a\"")));
   }
 

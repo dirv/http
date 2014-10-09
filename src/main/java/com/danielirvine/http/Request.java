@@ -7,6 +7,8 @@ public class Request {
 
   private String path;
   private String query;
+  private String user;
+  private String password;
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
 
   public Request(InputStream request) throws IOException {
@@ -23,6 +25,23 @@ public class Request {
 
   public String getPath() {
     return path;
+  }
+
+  public boolean hasCredentials() {
+    return user != null && password != null;
+  }
+
+  public String getUser() {
+    return user;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setCredentials(String user, String password) {
+    this.user = user;
+    this.password = password;
   }
 
   public List<RequestHeader> getHeaders() {
@@ -49,11 +68,13 @@ public class Request {
 
   private void readHeaders(BufferedReader in) throws IOException {
     String headerString = null;
-    while((headerString = in.readLine()) != null) {
+    while(!isNullOrBlank((headerString = in.readLine()))) {
       headers.add(buildHeader(headerString));
-      // TODO: fix this break
-      if (headerString.equals("")) break;
     }
+  }
+
+  public static boolean isNullOrBlank(String param) {
+    return param == null || param.trim().length() == 0;
   }
 
   private RequestHeader buildHeader(String headerString) {
@@ -61,8 +82,9 @@ public class Request {
     // TODO: parse this using a map
     if(parts[0].equals("Range")) {
       return new RangeHeader(parts[1].trim());
-    }
-    else {
+    } else if (parts[0].equals("Authorization")) {
+      return new AuthorizationHeader(parts[1].trim(), this);
+    } else {
       return new UnknownRequestHeader();
     }
   }

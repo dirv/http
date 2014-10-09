@@ -6,7 +6,7 @@ public enum ResponseCode {
   PARTIAL(206, "Partial content"),
   UNSATISFIABLE(216, "Requested range not satisfiable"),
   MOVED_PERMANENTLY(301, "Moved Permanently"),
-  UNAUTHORIZED(401, "Unauthorized"),
+  UNAUTHORIZED(401, "Authentication required"),
   NOT_FOUND(404, "Not Found");
 
   private final int code;

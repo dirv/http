@@ -10,7 +10,18 @@ class UnauthorizedResponseContributor implements ResponseContributor {
 
   @Override
   public boolean canRespond(Request request) {
-    return authorizor.requiresAuthorization(request.getPath());
+    String path = request.getPath();
+    if (authorizor.requiresAuthorization(path)) {
+      if(request.hasCredentials()) {
+        String user = request.getUser();
+        String password = request.getPassword();
+        if(authorizor.isAuthorized(path, user, password)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
   }
 
   @Override
