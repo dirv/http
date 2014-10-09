@@ -1,8 +1,12 @@
 package com.danielirvine.http;
 
 import org.junit.*;
+
+import com.danielirvine.http.sockets.ServerSocketProxy;
+
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+
 import java.util.function.*;
 import java.util.*;
 

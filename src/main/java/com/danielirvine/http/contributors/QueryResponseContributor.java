@@ -3,6 +3,7 @@ package com.danielirvine.http.contributors;
 import java.util.*;
 
 import com.danielirvine.http.*;
+import com.danielirvine.http.resources.QueryResource;
 
 public class QueryResponseContributor implements ResponseContributor {
 

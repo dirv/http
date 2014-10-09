@@ -3,6 +3,9 @@ package com.danielirvine.http.contributors;
 import java.util.List;
 
 import com.danielirvine.http.*;
+import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.resources.EmptyResponse;
+import com.danielirvine.http.resources.ErrorResponse;
 
 public class DeleteResponseContributor implements ResponseContributor {
 

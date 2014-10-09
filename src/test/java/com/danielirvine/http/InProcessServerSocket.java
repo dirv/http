@@ -3,6 +3,9 @@ package com.danielirvine.http;
 import java.io.*;
 import java.util.concurrent.*;
 
+import com.danielirvine.http.sockets.ServerSocketProxy;
+import com.danielirvine.http.sockets.SocketProxy;
+
 public class InProcessServerSocket implements ServerSocketProxy, Closeable {
 
   private final ConcurrentLinkedQueue<String> inputs = new ConcurrentLinkedQueue<String>();

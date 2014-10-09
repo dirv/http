@@ -3,6 +3,8 @@ package com.danielirvine.http;
 import java.io.*;
 import java.util.*;
 
+import com.danielirvine.http.headers.request.RequestHeader;
+
 public class Request {
 
   private String path;

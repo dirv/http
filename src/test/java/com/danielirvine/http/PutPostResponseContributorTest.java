@@ -3,6 +3,7 @@ package com.danielirvine.http;
 import org.junit.*;
 
 import com.danielirvine.http.contributors.PutPostResponseContributor;
+import com.danielirvine.http.resources.DirectoryResource;
 
 import static org.junit.Assert.*;
 

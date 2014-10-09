@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.*;
 
 import com.danielirvine.http.contributors.*;
+import com.danielirvine.http.resources.DirectoryResource;
 
 
 class Responder {

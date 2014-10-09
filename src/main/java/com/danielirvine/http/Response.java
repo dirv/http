@@ -2,6 +2,8 @@ package com.danielirvine.http;
 
 import java.io.*;
 
+import com.danielirvine.http.content.HeadedContent;
+
 public class Response {
 
   private final ResponseCode code;

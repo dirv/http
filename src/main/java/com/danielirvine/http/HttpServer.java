@@ -4,6 +4,11 @@ import java.io.*;
 import java.util.*;
 import java.util.function.*;
 
+import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.sockets.NetServerSocket;
+import com.danielirvine.http.sockets.ServerSocketProxy;
+import com.danielirvine.http.sockets.SocketProxy;
+
 public class HttpServer {
 
   public static final String CRLF = "\r\n";

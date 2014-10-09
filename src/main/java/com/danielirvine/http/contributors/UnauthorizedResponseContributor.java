@@ -1,6 +1,8 @@
 package com.danielirvine.http.contributors;
 
 import com.danielirvine.http.*;
+import com.danielirvine.http.headers.response.ResponseHeader;
+import com.danielirvine.http.resources.ErrorResponse;
 
 public class UnauthorizedResponseContributor implements ResponseContributor {
 

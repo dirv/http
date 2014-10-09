@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.danielirvine.http.contributors.DeleteResponseContributor;
+import com.danielirvine.http.resources.DirectoryResource;
 
 public class DeleteResponseContributorTest extends RequestTest {
 

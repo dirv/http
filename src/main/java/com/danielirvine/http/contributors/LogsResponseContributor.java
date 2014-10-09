@@ -3,6 +3,9 @@ package com.danielirvine.http.contributors;
 import java.util.*;
 
 import com.danielirvine.http.*;
+import com.danielirvine.http.content.Content;
+import com.danielirvine.http.content.HtmlHeadedContent;
+import com.danielirvine.http.content.StringContent;
 
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;

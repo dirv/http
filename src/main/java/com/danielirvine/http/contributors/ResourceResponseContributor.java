@@ -1,6 +1,9 @@
 package com.danielirvine.http.contributors;
 
 import com.danielirvine.http.*;
+import com.danielirvine.http.headers.request.RequestHeader;
+import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.resources.Resource;
 
 public class ResourceResponseContributor implements ResponseContributor {
 

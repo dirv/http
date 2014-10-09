@@ -3,6 +3,10 @@ package com.danielirvine.http.contributors;
 import java.util.*;
 
 import com.danielirvine.http.*;
+import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.resources.EmptyResponse;
+import com.danielirvine.http.resources.ErrorResponse;
+import com.danielirvine.http.resources.Resource;
 
 public class PutPostResponseContributor implements ResponseContributor {
 

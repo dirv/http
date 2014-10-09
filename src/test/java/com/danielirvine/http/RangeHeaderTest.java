@@ -1,6 +1,11 @@
 package com.danielirvine.http;
 
 import org.junit.*;
+
+import com.danielirvine.http.headers.request.RangeHeader;
+import com.danielirvine.http.resources.FileResource;
+import com.danielirvine.http.resources.Resource;
+
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
