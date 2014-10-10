@@ -14,11 +14,13 @@ import com.danielirvine.http.ranges.FixedRange;
 class RangedStreamer {
   private final FileDescriptor descriptor;
   private final Queue<FixedRange> fixedRanges;
+  private final ContentTypeHeader contentTypeHeader;
   private BufferedReader in;
 
   public RangedStreamer(FileDescriptor descriptor, List<FixedRange> ranges) {
     this.descriptor = descriptor;
     this.fixedRanges = new LinkedList<FixedRange>(ranges);
+    this.contentTypeHeader = new ContentTypeHeader(descriptor.contentType());
   }
 
   public void streamNext(PrintStream out) {
@@ -33,7 +35,7 @@ class RangedStreamer {
 
   public List<Content> toContent() {
     return fixedRanges.stream()
-      .map(r->new RangedStreamerContent())
+      .map(r->new RangedStreamerContent(r.length()))
       .collect(toList());
   }
 
@@ -68,24 +70,28 @@ class RangedStreamer {
 
   private class RangedStreamerContent implements Content {
 
+    private final long length;
+
+    public RangedStreamerContent(long length) {
+      this.length = length;
+    }
+
     public void write(PrintStream out) {
       streamNext(out);
     }
 
     public long length() {
-      return descriptor.length();
+      return length;
     }
 
     public ContentTypeHeader contentType() {
-      // TODO: this will get called repeatedly
-      return new ContentTypeHeader(descriptor.contentType());
+      return contentTypeHeader;
     }
 
     public List<Content> withRanges(List<FixedRange> ranges) {
       return toContent();
     }
 
-    @Override
     public List<ResponseHeader> additionalHeaders() {
       return new ArrayList<ResponseHeader>();
     }

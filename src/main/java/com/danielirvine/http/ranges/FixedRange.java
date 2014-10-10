@@ -21,6 +21,10 @@ public class FixedRange {
     this.totalLength = totalLength;
   }
 
+  public long start() {
+    return start;
+  }
+
   public long length() {
     return end - start + 1;
   }

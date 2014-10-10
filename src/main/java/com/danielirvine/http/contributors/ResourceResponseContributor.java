@@ -34,11 +34,10 @@ public class ResourceResponseContributor implements ResponseContributor {
     if(request.hasRanges()) {
       List<FixedRange> fixedRanges = fix(request.getRanges(), content.length());
 
-      List<Content> partialContents = content.withRanges(fixedRanges);
       if(fixedRanges.size() == 0) {
         return new ErrorResponse(ResponseCode.UNSATISFIABLE);
       } else {
-        return new Response(ResponseCode.PARTIAL, new MultiPartContent(fixedRanges, partialContents));
+        return new Response(ResponseCode.PARTIAL, new MultiPartContent(content, fixedRanges));
       }
     }
     return new Response(ResponseCode.OK, content);

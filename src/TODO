@@ -1,4 +1,4 @@
-
+* shasum & my hash comparison function
 * ResponseCode 200 should be returning contnet.
 * ErrorResponse renamed to somethign else.
 

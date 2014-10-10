@@ -37,8 +37,9 @@ public class RangeHeaderTest extends RequestTest {
   @Test
 	public void multipleRanges() {
     setRangeOnFile("bytes=0-2,4-5");
-    assertThat(dumpResource(), hasItem(containsString("abc")));
-    assertThat(dumpResource(), hasItem(containsString("ef")));
+    List<String> output = dumpResource();
+    assertThat(output, hasItem(containsString("abc")));
+    assertThat(output, hasItem(containsString("ef")));
   }
 
   @Test
@@ -87,10 +88,10 @@ public class RangeHeaderTest extends RequestTest {
 
 
   private void setRangeOnFile(String rangeHeader) {
-    startRequest("GET / HTTP/1.1");
+    startRequest("GET /alphabet HTTP/1.1");
     addHeader("Range", rangeHeader);
     Request request = buildRequest();
-    root.addFile("test", content);
+    root.addFile("alphabet", content);
     response = contributor.respond(request);
   }
 

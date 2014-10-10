@@ -43,8 +43,9 @@ public class HeadersTest extends RequestTest {
 	public void rangeShowsOriginalContentPart() {
     rootDirectory.addFile("alphabet", "abcdefghijklmnopqrstuvwxyz");
     buildRequestWithHeader("/alphabet", "Range", "bytes=-5");
-    assertThat(headers(), hasItem(containsString("Content-type: text/plain")));
-    assertThat(headers(), hasItem(containsString("Content-Length: 5")));
+    List<String> headers = headers();
+    assertThat(headers, hasItem(containsString("Content-type: text/plain")));
+    assertThat(headers, hasItem(containsString("Content-Length: 5")));
   }
 
   @Test

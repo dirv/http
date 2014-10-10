@@ -7,6 +7,7 @@ import java.util.List;
 import com.danielirvine.http.headers.response.ContentTypeHeader;
 import com.danielirvine.http.headers.response.ResponseHeader;
 import com.danielirvine.http.ranges.FixedRange;
+import static java.util.stream.Collectors.*;
 
 public class StringContent implements Content {
 
@@ -33,9 +34,8 @@ public class StringContent implements Content {
   }
 
   public List<Content> withRanges(List<FixedRange> ranges) {
-    // TODO
-    //FixedRange range = ranges.get(0);
-    return new ArrayList<Content>();
-    //return asList(new StringContent(content.substring(range.getLow(), range.length())));
+    return ranges.stream()
+        .map(r->new StringContent(content.substring((int)r.start(), (int)r.length())))
+        .collect(toList());
   }
 }

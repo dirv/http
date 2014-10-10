@@ -13,11 +13,12 @@ public class MultiPartContent extends ListContent {
 
   private final List<FixedRange> ranges;
 
-  public MultiPartContent(List<FixedRange> ranges, List<Content> content) {
-    super(content);
+  public MultiPartContent(Content content, List<FixedRange> ranges) {
+    super(content.withRanges(ranges));
     this.ranges = ranges;
   }
 
+  @Override
   public ContentTypeHeader contentType() {
     if(content.size() == 1) {
       return content.get(0).contentType();
@@ -25,6 +26,7 @@ public class MultiPartContent extends ListContent {
     return ContentTypeHeader.MULTIPART_BYTE_RANGES;
   }
 
+  @Override
   public List<ResponseHeader> additionalHeaders() {
     if(content.size() == 1) {
       return asList(ranges.get(0).getHeader());
@@ -32,19 +34,22 @@ public class MultiPartContent extends ListContent {
     return asList();
   }
 
+  @Override
   public long length() {
-    return 0; // TODO- this needs to be fixed.
+    // TODO: this is currently wrong for multi-parts as it won't
+    // take into consideration the length of all range headers.
+    return content.stream().mapToLong(c->c.length()).sum();
   }
 
+  @Override
   public void write(PrintStream out) {
     if(content.size() == 1) {
       content.get(0).write(out);
     } else {
       for(int i = 0; i < content.size(); ++i) {
         Content c = content.get(i);
-        FixedRange r = ranges.get(i);
-        out.print(c.contentType());
-        out.print(r.getHeader());
+        c.contentType().write(out);
+        ranges.get(i).getHeader().write(out);
         out.print(HttpServer.CRLF);
         c.write(out);
         // TODO - boundary
