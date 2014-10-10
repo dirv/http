@@ -2,6 +2,9 @@ package com.danielirvine.http;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.*;
 
 import com.danielirvine.http.resources.DirectoryResource;
@@ -16,12 +19,14 @@ public class HttpServer {
   private final Logger logger;
 
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory,
+      Executor executor,
       int port,
       String publicRoot,
       List<String> redirectStrings,
       List<String> authTable,
       List<String> writeablePaths) {
     this(socketFactory.apply(port),
+        executor,
         new FsFileDescriptor(new File(publicRoot)),
         redirectStrings,
         authTable,
@@ -29,6 +34,7 @@ public class HttpServer {
   }
 
   public HttpServer(ServerSocketProxy socket,
+      Executor executor,
       FileDescriptor rootFile,
       List<String> redirectStrings,
       List<String> authTable,
@@ -37,39 +43,58 @@ public class HttpServer {
     UrlRedirects redirects = new UrlRedirects(redirectStrings);
     Authorizer authorizer = new Authorizer(authTable);
     InMemoryResourceCache cache = new InMemoryResourceCache();
-    logger = new Logger();
+    this.logger = new Logger();
 
     responder = new Responder(logger, writeablePaths, root, redirects, authorizer, cache);
-
-    while(socket.hasData()) {
-      try(SocketProxy clientSocket = socket.accept()) {
-        handleIncomingRequest(clientSocket);
-      } catch(Exception ex) {
-        ex.printStackTrace();
+    
+    try {
+      while(socket.hasData()) {
+        executor.execute(new SocketHandler(socket.accept()));
       }
+    } catch(Exception ex) {
+      ex.printStackTrace();
     }
   }
 
   public static void main(String[] args) throws IOException {
     ArgumentParser parser = new ArgumentParser(args);
+    ExecutorService executor = Executors.newCachedThreadPool();
     new HttpServer(HttpServer::createSocket,
+        executor,
         parser.get("p", 5000),
         parser.get("d", ""),
         resourceToStrings("/redirects.txt"),
         resourceToStrings("/access.txt"),
         resourceToStrings("/writeable.txt"));
+    executor.shutdown();
   }
 
-  private void handleIncomingRequest(SocketProxy socket) throws IOException {
-    try(InputStream in = socket.getInputStream()) {
-      try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-        Request request = new Request(reader);
-        logger.log(request);
-        Response response = responder.response(request);
-        try(BufferedOutputStream output = new BufferedOutputStream(socket.getOutputStream())) {
-          response.write(output);
+  class SocketHandler implements Runnable {
+    private final SocketProxy socket;
+
+    SocketHandler(SocketProxy socket) { 
+      this.socket = socket;
+    }
+
+    public void run() {
+      try {
+        handleIncomingRequest(socket);
+      } catch(Exception ex) {
+      }
+    }
+
+    private void handleIncomingRequest(SocketProxy socket) throws IOException {
+      try(InputStream in = socket.getInputStream()) {
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+          Request request = new Request(reader);
+          logger.log(request);
+          Response response = responder.response(request);
+          try(BufferedOutputStream output = new BufferedOutputStream(socket.getOutputStream())) {
+            response.write(output);
+          }
         }
       }
+      socket.close();
     }
   }
 

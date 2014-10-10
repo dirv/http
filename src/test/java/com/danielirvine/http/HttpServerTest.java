@@ -25,7 +25,7 @@ public class HttpServerTest {
       portSpecified = port;
       return new InProcessServerSocket(new String[0]);
     };
-    new HttpServer(socketFactory, 212, ".", redirects, authTable, writeablePaths);
+    new HttpServer(socketFactory, new DirectExecutor(), 212, ".", redirects, authTable, writeablePaths);
     assertEquals(212, portSpecified);
   }
 
@@ -124,7 +124,7 @@ public class HttpServerTest {
   }
 
   private void createServer() {
-    new HttpServer(socket, publicRoot, redirects, authTable, writeablePaths);
+    new HttpServer(socket, new DirectExecutor(), publicRoot, redirects, authTable, writeablePaths);
   }
 
   private List<String> outputByLine() {
