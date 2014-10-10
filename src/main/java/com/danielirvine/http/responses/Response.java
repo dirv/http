@@ -38,14 +38,14 @@ public class Response {
 
   private void writeHeaders(PrintStream out) {
 
-    out.print(body.contentType());
+    body.contentType().write(out);
     out.print(new ContentLengthHeader(body.length()));
     for(ResponseHeader h : body.additionalHeaders()) {
-      out.print(h);
+      h.write(out);
     }
     endHeader(out);
   }
-
+  
   private void endHeader(PrintStream out) {
     out.print(HttpServer.CRLF);
   }
