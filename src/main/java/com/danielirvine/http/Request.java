@@ -19,7 +19,7 @@ public class Request {
   private long contentLength;
   private List<Range> ranges;
 
-  public Request(BufferedReader in) throws IOException {
+  publi Request(BufferedReader in) throws IOException {
     this.in = in;
     readRequestLine(in);
     readHeaders(in);

@@ -23,7 +23,7 @@ public class FileResource implements Resource {
   }
 
   public Content toContent() {
-    return new SinglePartContent(descriptor);
+    return new StreamContent(descriptor);
   }
 
   @Override

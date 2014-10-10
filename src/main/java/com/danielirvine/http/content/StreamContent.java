@@ -1,17 +1,14 @@
 package com.danielirvine.http.content;
 
 import java.io.*;
+import java.util.*;
 
 public class StreamContent implements Content {
 
-  private final long skip;
-  private final long length;
-  private final InputStream in;
+  private final FileDescriptor descriptor;
 
-  public StreamContent(long skip, long length, InputStream in) {
-    this.skip = skip;
-    this.length = length;
-    this.in = in;
+  public StreamContent(FileDescriptor descriptor) {
+    this.descriptor = descriptor;
   }
 
   public void write(PrintStream out) {
@@ -28,6 +25,14 @@ public class StreamContent implements Content {
   }
 
   public long length() {
-    return length;
+    return descriptor.length();
+  }
+
+  public ContentTypeHeader contentType() {
+    return new ContentTypeHeader(descriptor.contentType());
+  }
+
+  public List<Content> withRanges(List<FixedRange> ranges) {
+    return new RangedStreamer(file, ranges).toContent();
   }
 }
