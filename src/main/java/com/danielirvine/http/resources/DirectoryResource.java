@@ -22,9 +22,11 @@ public class DirectoryResource implements Resource {
     this.descriptor = descriptor;
   }
 
-  public Response toResponse() {
-    return new Response(ResponseCode.OK,
-        new HtmlHeadedContent(generateLinks()));
+  public Content toContent() {
+    return new ListContent(descriptor.getChildren()
+      .stream()
+      .map(this::createLink)
+      .collect(toList()));
   }
 
   public boolean hasResource(String[] pathSegments) {
@@ -56,10 +58,6 @@ public class DirectoryResource implements Resource {
     }
   }
 
-  public Resource applyRange(List<Range> range) {
-    return this;
-  }
-
   @Override
   public void write(Reader in) {
     return;
@@ -68,13 +66,6 @@ public class DirectoryResource implements Resource {
   @Override
   public void delete() {
     return;
-  }
-
-  private Content generateLinks() {
-    return new ListContent(descriptor.getChildren()
-      .stream()
-      .map(this::createLink)
-      .collect(toList()));
   }
 
   private LinkContent createLink(FileDescriptor child) {

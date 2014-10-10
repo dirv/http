@@ -8,9 +8,9 @@ import com.danielirvine.http.content.HeadedContent;
 public class Response {
 
   private final ResponseCode code;
-  private final HeadedContent body;
+  private final Content body;
 
-  public Response(ResponseCode code, HeadedContent body) {
+  public Response(ResponseCode code, Content body) {
     this.code = code;
     this.body = body;
   }
@@ -22,6 +22,7 @@ public class Response {
   public void write(OutputStream out) throws IOException {
     try(PrintStream p = new PrintStream(out)) {
       writeStatusLine(p);
+      writeHeaders(p);
       body.write(p);
     }
   }
@@ -30,6 +31,20 @@ public class Response {
     out.print(HttpServer.PROTOCOL_VERSION);
     out.print(" ");
     out.print(code);
+    out.print(HttpServer.CRLF);
+  }
+
+  private void writeHeaders(PrintStream out) {
+
+    out.print(body.contentType());
+    out.print(new ContentLengthHeader(body.length()));
+    for(Header h : body.additionalHeaders()) {
+      out.print(h);
+    }
+    endHeader(out);
+  }
+
+  private void endHeader(PrintStream out) {
     out.print(HttpServer.CRLF);
   }
 }

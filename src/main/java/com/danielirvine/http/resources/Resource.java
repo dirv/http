@@ -7,8 +7,7 @@ import com.danielirvine.http.ranges.Range;
 import com.danielirvine.http.responses.Response;
 
 public interface Resource {
-  Response toResponse();
-  Resource applyRange(List<Range> range);
+  Content toContent();
   void write(Reader in);
   void delete();
 }

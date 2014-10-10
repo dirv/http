@@ -17,15 +17,7 @@ public class QueryResource implements Resource {
     this.variables = variables;
   }
 
-  public Response toResponse() {
-    return new Response(ResponseCode.OK, new HtmlHeadedContent(generateContent()));
-  }
-
-  public Resource applyRange(List<Range> range) {
-    return this;
-  }
-
-  private Content generateContent() {
+  public Content toContent() {
     return new ListContent(variables.entrySet()
       .stream()
       .map(this::toQueryVariableContent)

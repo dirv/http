@@ -22,15 +22,8 @@ public class FileResource implements Resource {
     this.descriptor = descriptor;
   }
 
-  public Resource applyRange(List<Range> ranges) {
-    return new PartialFileResource(descriptor, ranges);
-  }
-
-  public Response toResponse() {
-    return new Response(
-        ResponseCode.OK,
-        new HeadedContent(getHeaders(),
-          new SinglePartContent(descriptor, new FixedRange(descriptor))));
+  public Content toContent() {
+    return new SinglePartContent(descriptor);
   }
 
   @Override
@@ -41,11 +34,5 @@ public class FileResource implements Resource {
   @Override
   public void delete() {
     descriptor.delete();
-  }
-
-  private List<ResponseHeader> getHeaders() {
-    return asList(
-        new ContentTypeHeader(descriptor),
-        new ContentLengthHeader(descriptor));
   }
 }

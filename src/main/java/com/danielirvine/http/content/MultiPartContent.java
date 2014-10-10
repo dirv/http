@@ -11,38 +11,40 @@ import com.danielirvine.http.ranges.FixedRange;
 
 import static java.util.Arrays.*;
 
-class MultiPartContent implements Content {
-  private final FileDescriptor descriptor;
-  private final List<FixedRange> ranges;
+class MultiPartContent extends ListContent {
 
-  public MultiPartContent(FileDescriptor descriptor, List<FixedRange> ranges) {
-    this.descriptor = descriptor;
-    this.ranges = ranges;
+  public MultiPartContent(List<RangedContent> partials) {
+    super(partials);
+  }
+
+  public ContentTypeHeader contentType() {
+    if(partials.size() > 1) {
+      return ContentTypeHeader.MULTIPART_BYTE_RANGES;
+    }
+    return partials.get(0).contentType();
+  }
+
+  public List<Header> additionalHeaders() {
+    if(partials.size() == 1) {
+      return asList(partials.get(0).getRange().getHeader());
+    }
+    return asList();
   }
 
   public long length() {
-    return descriptor.length(); // TODO - should possibly be total length of all parts
+    return 0; // TODO- this needs to be fixed.
   }
 
   public void write(PrintStream out) {
-    try(InputStream in = new BufferedInputStream(descriptor.getReadStream())) {
-      parts(in).forEach(p->writePartial(p, out));
-    } catch(IOException ex)
-    {
+    if(partials.size() == 1) {
+      partials.get(0).write(out);
+    } else {
+      for(RangedContent c : content) {
+        out.print(c.contentType());
+        out.print(c.getRange().getHeader());
+        out.print(HttpServer.CRLF);
+        c.write(out);
+        // TODO - boundary
+      }
     }
   }
-
-  private Stream<HeadedContent> parts(InputStream in) {
-    ContentTypeHeader contentTypeHeader = new ContentTypeHeader(descriptor);
-    return ranges
-      .stream()
-      .map(r->new HeadedContent(
-            asList(contentTypeHeader, r.getHeader()),
-            r.toContent(in)));
-  }
-
-  private void writePartial(Content content, PrintStream out) {
-    content.write(out);
-    out.print(HttpServer.CRLF);
-  }
-}
