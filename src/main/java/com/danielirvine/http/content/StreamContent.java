@@ -29,6 +29,11 @@ public class StreamContent implements Content {
     return descriptor.length();
   }
 
+  @Override
+  public long lastModified() {
+    return descriptor.lastModified();
+  }
+
   public ContentTypeHeader contentType() {
     return new ContentTypeHeader(descriptor.contentType());
   }
@@ -38,6 +43,6 @@ public class StreamContent implements Content {
   }
 
   public List<ResponseHeader> additionalHeaders() {
-    return new ArrayList<ResponseHeader>();
+    return ResponseHeader.EMPTY;
   }
 }

@@ -9,9 +9,11 @@ import com.danielirvine.http.ranges.FixedRange;
 public class ListContent implements Content {
 
   protected List<Content> content;
+  private final long lastModified;
 
   public ListContent(List<Content> content) {
     this.content = content;
+    this.lastModified = calculateLastModified(content).orElse(System.currentTimeMillis());
   }
 
   public void write(OutputStream out) throws IOException {
@@ -28,6 +30,15 @@ public class ListContent implements Content {
     return ContentTypeHeader.TEXT_HTML;
   }
 
+  @Override
+  public long lastModified() {
+    return lastModified;
+  }
+
+  private static OptionalLong calculateLastModified(List<Content> content) {
+    return content.stream().mapToLong(s->s.lastModified()).max();
+  }
+
   public List<Content> withRanges(List<FixedRange> ranges) {
     // TODO: need to split out ranges based on Content length, and
     // possibly fix ranges again.
@@ -35,6 +46,6 @@ public class ListContent implements Content {
   }
 
   public List<ResponseHeader> additionalHeaders() {
-    return new ArrayList<ResponseHeader>();
+    return ResponseHeader.EMPTY;
   }
 }

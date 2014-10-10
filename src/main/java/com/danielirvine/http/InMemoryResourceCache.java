@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import com.danielirvine.http.content.ByteArrayContent;
 import com.danielirvine.http.content.Content;
+import com.danielirvine.http.resources.Resource;
 
 public class InMemoryResourceCache {
 
@@ -15,29 +16,21 @@ public class InMemoryResourceCache {
   public void store(String path, Content content) {
     try {
       if(content.length() <= MAX_FILE_SIZE) {
-        contents.put(path, convertToByteArrayContent(content));
+        contents.put(path, ByteArrayContent.convert(content));
       }
     } catch(IOException ex) {
     }
   }
 
-  private ByteArrayContent convertToByteArrayContent(Content content) throws IOException {
-    try(ByteArrayOutputStream str = new ByteArrayOutputStream()) {
-      try(BufferedOutputStream out = new BufferedOutputStream(str)) {
-        content.write(out);
-        out.flush();
-      }
-      return new ByteArrayContent(str.toByteArray(), content.contentType());
+  public boolean hasCurrentContent(String path, Resource resource) {
+    Content content = getContent(path);
+    if(content != null) {
+      return content.lastModified() == resource.lastModified();
     }
+    return false;
   }
-
-  public boolean hasContent(String path) {
-    return contents.containsKey(path);
-  }
-  
   
   public Content getContent(String path) {
     return contents.get(path);
   }
-
 }

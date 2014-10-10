@@ -1,6 +1,8 @@
 package com.danielirvine.http.headers.response;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.danielirvine.http.HttpServer;
 
@@ -9,6 +11,8 @@ public class ResponseHeader {
   private final String header;
   private final String value;
   private final String[] parameters;
+
+  public static final List<ResponseHeader> EMPTY = new ArrayList<ResponseHeader>();
 
   public ResponseHeader(String header, String value, String... parameters) {
     this.header = header;

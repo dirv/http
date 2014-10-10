@@ -26,7 +26,7 @@ public class DirectoryResource implements Resource {
 
   public boolean hasResource(String[] pathSegments) {
     if(pathSegments.length == 0) {
-      return false;
+      return true;
     }
     FileDescriptor child = descriptor.getFile(pathSegments[1]);
     return child.exists();
@@ -37,11 +37,7 @@ public class DirectoryResource implements Resource {
       return this;
     } else {
       FileDescriptor child = descriptor.getFile(pathSegments[1]);
-      if(child.exists()) {
-        return new FileResource(child);
-      } else {
-        return null; // TODO - get rid of this call
-      }
+      return new FileResource(child);
     }
   }
 
@@ -66,5 +62,10 @@ public class DirectoryResource implements Resource {
   private LinkContent createLink(FileDescriptor child) {
     String text = child.getName();
     return new LinkContent(text, text);
+  }
+
+  @Override
+  public long lastModified() {
+    return descriptor.lastModified();
   }
 }

@@ -1,13 +1,13 @@
 package com.danielirvine.http;
 
 import java.io.*;
-
 import java.util.*;
 
 public class InMemoryFileDescriptor implements FileDescriptor {
   private String name;
   private String contents;
   private final List<FileDescriptor> children;
+  private long lastModified;
 
   public InMemoryFileDescriptor(String name) {
     this(name, null);
@@ -17,6 +17,7 @@ public class InMemoryFileDescriptor implements FileDescriptor {
     this.name = name;
     this.children = new ArrayList<FileDescriptor>();
     this.contents = contents;
+    lastModified = 1;
   }
 
   public String getName() {
@@ -42,8 +43,10 @@ public class InMemoryFileDescriptor implements FileDescriptor {
     return contents.length();
   }
 
-  public void addFile(String name, String contents) {
-    children.add(new InMemoryFileDescriptor(name, contents));
+  public InMemoryFileDescriptor addFile(String name, String contents) {
+    InMemoryFileDescriptor file = new InMemoryFileDescriptor(name, contents);
+    children.add(file);
+    return file;
   }
 
   public InputStream getReadStream() {
@@ -80,9 +83,19 @@ public class InMemoryFileDescriptor implements FileDescriptor {
       throw new RuntimeException(ex);
     }
     contents = out.toString(); 
+    increaseLastModified();
   }
-  
+
+  private void increaseLastModified() {
+    lastModified += 1;
+  }
+
   public void delete() {
     name = "";
+  }
+  
+  @Override
+  public long lastModified() {
+    return lastModified;
   }
 }

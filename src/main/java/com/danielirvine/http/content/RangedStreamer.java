@@ -80,6 +80,10 @@ class RangedStreamer {
       return length;
     }
 
+    public long lastModified() {
+      return descriptor.lastModified();
+    }
+
     public ContentTypeHeader contentType() {
       return contentTypeHeader;
     }
@@ -89,7 +93,7 @@ class RangedStreamer {
     }
 
     public List<ResponseHeader> additionalHeaders() {
-      return new ArrayList<ResponseHeader>();
+      return ResponseHeader.EMPTY;
     }
   }
 }

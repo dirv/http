@@ -8,4 +8,5 @@ public interface Resource {
   Content toContent();
   void write(Reader in);
   void delete();
+  long lastModified();
 }

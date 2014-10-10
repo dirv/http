@@ -13,4 +13,5 @@ public interface FileDescriptor {
   public String contentType();
   public void write(Reader in);
   public void delete();
+  public long lastModified();
 }

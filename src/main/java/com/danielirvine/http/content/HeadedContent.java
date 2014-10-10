@@ -15,7 +15,6 @@ public class HeadedContent implements Content {
   public HeadedContent(List<ResponseHeader> headers, Content content) {
     this.headers = headers;
     this.content = content;
-  
   }
 
   @Override
@@ -26,6 +25,11 @@ public class HeadedContent implements Content {
   @Override
   public long length() {
     return content.length();
+  }
+
+  @Override
+  public long lastModified() {
+    return content.lastModified();
   }
 
   @Override
@@ -42,5 +46,4 @@ public class HeadedContent implements Content {
   public List<ResponseHeader> additionalHeaders() {
     return headers;
   }
-
 }

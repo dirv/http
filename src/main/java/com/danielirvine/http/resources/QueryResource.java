@@ -9,9 +9,11 @@ import static java.util.stream.Collectors.*;
 public class QueryResource implements Resource {
 
   private final Map<String, String> variables;
+  private final long lastModified;
 
   public QueryResource(Map<String, String> variables) {
     this.variables = variables;
+    this.lastModified = System.currentTimeMillis();
   }
 
   public Content toContent() {
@@ -31,6 +33,11 @@ public class QueryResource implements Resource {
 
   @Override
   public void delete() {
+  }
+
+  @Override
+  public long lastModified() {
+    return lastModified;
   }
 }
 

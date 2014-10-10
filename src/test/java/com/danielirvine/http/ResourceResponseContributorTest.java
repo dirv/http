@@ -4,11 +4,13 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.*;
 
+import java.io.StringReader;
+
 import org.junit.Test;
 
-import com.danielirvine.http.content.StringContent;
 import com.danielirvine.http.contributors.*;
 import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.resources.FileResource;
 import com.danielirvine.http.responses.Response;
 
 public class ResourceResponseContributorTest extends RequestTest {
@@ -20,19 +22,31 @@ public class ResourceResponseContributorTest extends RequestTest {
 
   @Test
   public void savesFileInCache() {
-    root.addFile("file", "Hello, world!");
+    FileResource file = new FileResource(root.addFile("file", "Hello, world!"));
     startRequest("GET /file HTTP/1.1");
 
     contributor.respond(buildRequest());
-    assertTrue(cache.hasContent("/file"));
+    assertTrue(cache.hasCurrentContent("/file", file));
   }
   
   @Test
   public void respondsCorrectlyToCachedFile() {
-    cache.store("/file", new StringContent("Hello, world!"));
+    FileResource file = new FileResource(root.addFile("file", "Hello, world!"));
+    cache.store("/file", file.toContent());
     startRequest("GET /file HTTP/1.1");
     Response response = contributor.respond(buildRequest());
 
     assertThat(responseText(response), hasItem(containsString("Hello, world!")));
+  }
+  
+  @Test
+  public void doesNotServeCachedResourceIfUnderlyingResourceHasChanged() {
+    InMemoryFileDescriptor file = root.addFile("file", "Hello, world!");
+    startRequest("GET /file HTTP/1.1");
+    contributor.respond(buildRequest());
+    file.write(new StringReader("Hello, everybody!"));
+    startRequest("GET /file HTTP/1.1");
+    Response response = contributor.respond(buildRequest());
+    assertThat(responseText(response), hasItem(containsString("Hello, everybody!")));
   }
 }

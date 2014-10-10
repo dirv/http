@@ -27,4 +27,9 @@ public class FileResource implements Resource {
   public void delete() {
     descriptor.delete();
   }
+
+  @Override
+  public long lastModified() {
+    return descriptor.lastModified();
+  }
 }

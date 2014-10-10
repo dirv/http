@@ -1,7 +1,6 @@
 package com.danielirvine.http.content;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,13 +12,14 @@ import static java.util.stream.Collectors.*;
 
 public class ByteArrayContent implements Content {
 
-  private static final List<ResponseHeader> HEADERS = new ArrayList<ResponseHeader>();
   private final byte[] content;
   private final ContentTypeHeader contentTypeHeader;
+  private final long lastModified;
 
-  public ByteArrayContent(byte[] content, ContentTypeHeader contentTypeHeader) {
+  public ByteArrayContent(byte[] content, ContentTypeHeader contentTypeHeader, long lastModified) {
     this.content = content;
     this.contentTypeHeader = contentTypeHeader;
+    this.lastModified = lastModified;
   }
 
   public long length() {
@@ -27,7 +27,7 @@ public class ByteArrayContent implements Content {
   }
 
   public List<ResponseHeader> additionalHeaders() {
-    return HEADERS;
+    return ResponseHeader.EMPTY;
   }
 
   public void write(OutputStream out) throws IOException {
@@ -38,9 +38,23 @@ public class ByteArrayContent implements Content {
     return contentTypeHeader;
   }
 
+  public long lastModified() {
+    return lastModified;
+  }
+
   public List<Content> withRanges(List<FixedRange> ranges) {
     return ranges.stream()
-        .map(r->new ByteArrayContent(Arrays.copyOfRange(content, (int)r.start(), (int)r.end()), contentTypeHeader))
+        .map(r->new ByteArrayContent(Arrays.copyOfRange(content, (int)r.start(), (int)r.end()), contentTypeHeader, lastModified))
         .collect(toList());
+  }
+  
+  public static ByteArrayContent convert(Content content) throws IOException {
+    try(ByteArrayOutputStream str = new ByteArrayOutputStream()) {
+      try(BufferedOutputStream out = new BufferedOutputStream(str)) {
+        content.write(out);
+        out.flush();
+      }
+      return new ByteArrayContent(str.toByteArray(), content.contentType(), content.lastModified());
+    }
   }
 }

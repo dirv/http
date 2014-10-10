@@ -21,7 +21,7 @@ public class ResourceResponseContributor implements ResponseContributor {
 
   @Override
   public boolean canRespond(Request request) {
-    return root.findResource(request.getPathSegments()) != null;
+    return root.hasResource(request.getPathSegments());
   }
 
   @Override
@@ -41,12 +41,12 @@ public class ResourceResponseContributor implements ResponseContributor {
   }
 
   private Content getContent(Request request) {
+    Resource resource = root.findResource(request.getPathSegments());
     Content content;
     String path = request.getPath();
-    if (cache.hasContent(path)) {
+    if (cache.hasCurrentContent(path, resource)) {
       content = cache.getContent(path);
     } else {
-      Resource resource = root.findResource(request.getPath().split("/"));
       content = resource.toContent();
       cache.store(request.getPath(), content);
     }

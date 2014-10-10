@@ -80,4 +80,9 @@ public class FsFileDescriptor implements FileDescriptor {
   private FileDescriptor getFile(File file) {
     return new FsFileDescriptor(file);
   }
+
+  @Override
+  public long lastModified() {
+    return file.lastModified();
+  }
 }
