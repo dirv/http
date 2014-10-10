@@ -33,6 +33,10 @@ public class Request {
     return verb.equals("POST");
   }
 
+  public boolean isDelete() {
+    return verb.equals("DELETE");
+  }
+
   public boolean hasQuery() {
     return query != null;
   }
@@ -57,6 +61,14 @@ public class Request {
     return ranges;
   }
 
+  public void setRanges(List<Range> ranges) {
+    this.ranges = ranges;
+  }
+
+  public void setContentLength(long length) {
+    this.contentLength = length;
+  }
+
   public boolean hasCredentials() {
     return user != null && password != null;
   }
@@ -76,10 +88,6 @@ public class Request {
 
   public String getRequestLine() {
     return requestLine;
-  }
-
-  public List<RequestHeader> getHeaders() {
-    return headers;
   }
 
   public Reader getDataStream() {
@@ -106,19 +114,7 @@ public class Request {
     }
   }
 
-  public static boolean isNullOrBlank(String param) {
+  private static boolean isNullOrBlank(String param) {
     return param == null || param.trim().length() == 0;
-  }
-
-  public void setContentLength(long length) {
-    this.contentLength = length;
-  }
-
-  public boolean isDelete() {
-    return verb.equals("DELETE");
-  }
-
-  public void setRanges(List<Range> ranges) {
-    this.ranges = ranges;
   }
 }
