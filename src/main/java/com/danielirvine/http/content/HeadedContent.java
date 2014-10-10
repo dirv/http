@@ -1,6 +1,6 @@
 package com.danielirvine.http.content;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.util.List;
 
 import com.danielirvine.http.headers.response.ContentTypeHeader;
@@ -19,7 +19,7 @@ public class HeadedContent implements Content {
   }
 
   @Override
-  public void write(PrintStream out) {
+  public void write(OutputStream out) throws IOException {
     content.write(out);
   }
 

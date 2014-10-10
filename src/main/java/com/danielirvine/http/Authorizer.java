@@ -15,7 +15,6 @@ public class Authorizer {
 
   private void parseAuthorizationTableEntry(String line) {
     String[] parts = line.split(":");
-
     authorizationTable.add(new AuthorizationTableEntry(parts[0], parts[1], parts[2]));
   }
 

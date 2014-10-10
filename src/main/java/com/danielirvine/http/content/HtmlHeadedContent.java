@@ -1,6 +1,6 @@
 package com.danielirvine.http.content;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 
 import com.danielirvine.http.headers.response.*;
@@ -22,7 +22,7 @@ public class HtmlHeadedContent implements Content {
     return content.length();
   }
 
-  public void write(PrintStream out) {
+  public void write(OutputStream out) throws IOException {
     content.write(out);
   }
 

@@ -16,9 +16,8 @@ public class ResponseHeader {
     this.parameters = parameters;
   }
 
-  public void write(PrintStream out) {
-    out.print(toString());
-    out.print(HttpServer.CRLF);
+  public void write(OutputStream out) throws IOException {
+    out.write((toString() + HttpServer.CRLF).getBytes());
   }
 
   @Override

@@ -16,14 +16,12 @@ public class StreamContent implements Content {
     this.descriptor = descriptor;
   }
 
-  public void write(PrintStream out) {
-    try(BufferedReader in = new BufferedReader(new InputStreamReader(descriptor.getReadStream()))) {
+  public void write(OutputStream out) throws IOException {
+    try(BufferedInputStream in = new BufferedInputStream(descriptor.getReadStream())) {
       int b;
       while((b = in.read()) != -1) {
         out.write(b);
       }
-    }
-    catch(IOException ex) {
     }
   }
 

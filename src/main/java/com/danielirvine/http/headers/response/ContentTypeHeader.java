@@ -10,6 +10,6 @@ public class ContentTypeHeader extends ResponseHeader {
   public final static ContentTypeHeader TEXT_HTML = new ContentTypeHeader("text/html");
 
   public ContentTypeHeader(String type, String... parameters) {
-    super("Content-type", type, parameters);
+    super("Content-type", type == null ? "text/plain" : type, parameters);
   }
 }

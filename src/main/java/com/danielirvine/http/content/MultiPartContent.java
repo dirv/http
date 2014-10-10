@@ -42,7 +42,7 @@ public class MultiPartContent extends ListContent {
   }
 
   @Override
-  public void write(PrintStream out) {
+  public void write(OutputStream out) throws IOException {
     if(content.size() == 1) {
       content.get(0).write(out);
     } else {
@@ -50,7 +50,7 @@ public class MultiPartContent extends ListContent {
         Content c = content.get(i);
         c.contentType().write(out);
         ranges.get(i).getHeader().write(out);
-        out.print(HttpServer.CRLF);
+        out.write(HttpServer.CRLF.getBytes());
         c.write(out);
         // TODO - boundary
 

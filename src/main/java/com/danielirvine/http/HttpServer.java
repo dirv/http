@@ -65,7 +65,7 @@ public class HttpServer {
         Request request = new Request(reader);
         logger.log(request);
         Response response = responder.response(request);
-        try(OutputStream output = socket.getOutputStream()) {
+        try(BufferedOutputStream output = new BufferedOutputStream(socket.getOutputStream())) {
           response.write(output);
         }
       }

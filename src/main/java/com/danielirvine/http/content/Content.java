@@ -8,7 +8,7 @@ import com.danielirvine.http.headers.response.ResponseHeader;
 import com.danielirvine.http.ranges.FixedRange;
 
 public interface Content {
-  public void write(PrintStream out);
+  public void write(OutputStream out) throws IOException;
   public long length();
   public ContentTypeHeader contentType();
   public List<Content> withRanges(List<FixedRange> range);

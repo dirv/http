@@ -25,8 +25,8 @@ public class StringContent implements Content {
     return new ArrayList<ResponseHeader>();
   }
 
-  public void write(PrintStream out) {
-    out.print(content);
+  public void write(OutputStream out) throws IOException {
+    out.write(content.getBytes());
   }
 
   public ContentTypeHeader contentType() {

@@ -22,31 +22,26 @@ public class Response {
   }
 
   public void write(OutputStream out) throws IOException {
-    try(PrintStream p = new PrintStream(out)) {
-      writeStatusLine(p);
-      writeHeaders(p);
-      body.write(p);
-    }
+    writeStatusLine(out);
+    writeHeaders(out);
+    body.write(out);
+    out.flush();
   }
 
-  private void writeStatusLine(PrintStream out) {
-    out.print(HttpServer.PROTOCOL_VERSION);
-    out.print(" ");
-    out.print(code);
-    out.print(HttpServer.CRLF);
+  private void writeStatusLine(OutputStream out) throws IOException {
+    writeString(out, HttpServer.PROTOCOL_VERSION + " " + code + HttpServer.CRLF);
   }
 
-  private void writeHeaders(PrintStream out) {
-
+  private void writeHeaders(OutputStream out) throws IOException {
     body.contentType().write(out);
-    out.print(new ContentLengthHeader(body.length()));
+    new ContentLengthHeader(body.length()).write(out);
     for(ResponseHeader h : body.additionalHeaders()) {
       h.write(out);
     }
-    endHeader(out);
+    writeString(out, HttpServer.CRLF);
   }
   
-  private void endHeader(PrintStream out) {
-    out.print(HttpServer.CRLF);
+  private void writeString(OutputStream out, String string) throws IOException {
+    out.write(string.getBytes());
   }
 }

@@ -1,8 +1,7 @@
 package com.danielirvine.http.content;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import com.danielirvine.http.headers.response.*;
 import com.danielirvine.http.ranges.FixedRange;
@@ -15,7 +14,7 @@ public class ListContent implements Content {
     this.content = content;
   }
 
-  public void write(PrintStream out) {
+  public void write(OutputStream out) throws IOException {
     for(Content c : content) {
       c.write(out);
     }

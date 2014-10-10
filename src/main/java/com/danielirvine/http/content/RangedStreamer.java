@@ -23,7 +23,7 @@ class RangedStreamer {
     this.contentTypeHeader = new ContentTypeHeader(descriptor.contentType());
   }
 
-  public void streamNext(PrintStream out) {
+  public void streamNext(OutputStream out) throws IOException {
     if(!hasStarted()) {
       startStreaming();
     }
@@ -39,17 +39,13 @@ class RangedStreamer {
       .collect(toList());
   }
 
-  private void streamRange(PrintStream out, FixedRange range) {
-    try {
-      in.skip(range.skip());
-      int b;
-      long length = range.length();
-      long curPos = 0;
-      while((b = in.read()) != -1 && ++curPos <= length) {
-        out.write(b);
-      }
-    }
-    catch(IOException ex) {
+  private void streamRange(OutputStream out, FixedRange range) throws IOException {
+    in.skip(range.skip());
+    int b;
+    long length = range.length();
+    long curPos = 0;
+    while((b = in.read()) != -1 && ++curPos <= length) {
+      out.write(b);
     }
   }
 
@@ -76,7 +72,7 @@ class RangedStreamer {
       this.length = length;
     }
 
-    public void write(PrintStream out) {
+    public void write(OutputStream out) throws IOException {
       streamNext(out);
     }
 
