@@ -2,32 +2,31 @@ package com.danielirvine.http.content;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.*;
 
 import com.danielirvine.http.*;
-import com.danielirvine.http.FileDescriptor;
 import com.danielirvine.http.headers.response.*;
 import com.danielirvine.http.ranges.FixedRange;
 
 import static java.util.Arrays.*;
 
-class MultiPartContent extends ListContent {
+public class MultiPartContent extends ListContent {
 
   private final List<FixedRange> ranges;
 
-  public MultiPartContent(List<FixedRange> ranges, List<Content> partials) {
-    super(partials);
+  public MultiPartContent(List<FixedRange> ranges, List<Content> content) {
+    super(content);
+    this.ranges = ranges;
   }
 
   public ContentTypeHeader contentType() {
-    if(partials.size() == 1) {
-      return partials.get(0).contentType();
+    if(content.size() == 1) {
+      return content.get(0).contentType();
     }
     return ContentTypeHeader.MULTIPART_BYTE_RANGES;
   }
 
-  public List<Header> additionalHeaders() {
-    if(partials.size() == 1) {
+  public List<ResponseHeader> additionalHeaders() {
+    if(content.size() == 1) {
       return asList(ranges.get(0).getHeader());
     }
     return asList();
@@ -38,11 +37,11 @@ class MultiPartContent extends ListContent {
   }
 
   public void write(PrintStream out) {
-    if(partials.size() == 1) {
-      partials.get(0).write(out);
+    if(content.size() == 1) {
+      content.get(0).write(out);
     } else {
-      for(int i = 0; i < partials.length; ++i) {
-        Content c = partials.get(i);
+      for(int i = 0; i < content.size(); ++i) {
+        Content c = content.get(i);
         FixedRange r = ranges.get(i);
         out.print(c.contentType());
         out.print(r.getHeader());
@@ -53,3 +52,4 @@ class MultiPartContent extends ListContent {
       }
     }
   }
+}

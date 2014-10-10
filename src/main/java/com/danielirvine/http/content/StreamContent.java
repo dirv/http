@@ -3,6 +3,11 @@ package com.danielirvine.http.content;
 import java.io.*;
 import java.util.*;
 
+import com.danielirvine.http.FileDescriptor;
+import com.danielirvine.http.headers.response.ContentTypeHeader;
+import com.danielirvine.http.headers.response.ResponseHeader;
+import com.danielirvine.http.ranges.FixedRange;
+
 public class StreamContent implements Content {
 
   private final FileDescriptor descriptor;
@@ -12,11 +17,9 @@ public class StreamContent implements Content {
   }
 
   public void write(PrintStream out) {
-    try {
-      in.skip(skip);
+    try(BufferedReader in = new BufferedReader(new InputStreamReader(descriptor.getReadStream()))) {
       int b;
-      long curPos = 0;
-      while((b = in.read()) != -1 && ++curPos <= length) {
+      while((b = in.read()) != -1) {
         out.write(b);
       }
     }
@@ -33,10 +36,10 @@ public class StreamContent implements Content {
   }
 
   public List<Content> withRanges(List<FixedRange> ranges) {
-    return new RangedStreamer(file, ranges).toContent();
+    return new RangedStreamer(descriptor, ranges).toContent();
   }
 
-  public List<Header> additionalHeaders() {
-    return new List<Header>();
+  public List<ResponseHeader> additionalHeaders() {
+    return new ArrayList<ResponseHeader>();
   }
 }

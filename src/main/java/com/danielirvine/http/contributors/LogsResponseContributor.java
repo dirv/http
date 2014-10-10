@@ -1,10 +1,9 @@
 package com.danielirvine.http.contributors;
 
-import java.util.*;
-
 import com.danielirvine.http.*;
 import com.danielirvine.http.content.Content;
 import com.danielirvine.http.content.HtmlHeadedContent;
+import com.danielirvine.http.content.ListContent;
 import com.danielirvine.http.content.StringContent;
 import com.danielirvine.http.responses.Response;
 import com.danielirvine.http.responses.ResponseCode;
@@ -27,7 +26,7 @@ public class LogsResponseContributor extends PathMatchingResponseContributor {
         new HtmlHeadedContent(logContent()));
   }
 
-  private List<Content> logContent() {
-    return logger.entries().stream().map(e->new StringContent(e.getRequestLine())).collect(toList());
+  private Content logContent() {
+    return new ListContent(logger.entries().stream().map(e->new StringContent(e.getRequestLine())).collect(toList()));
   }
 }

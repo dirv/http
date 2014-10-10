@@ -1,8 +1,10 @@
 package com.danielirvine.http.content;
 
+import java.io.PrintStream;
 import java.util.*;
+
 import com.danielirvine.http.headers.response.*;
-import static java.util.Arrays.*;
+import com.danielirvine.http.ranges.FixedRange;
 
 public class HtmlHeadedContent implements Content {
 
@@ -12,7 +14,7 @@ public class HtmlHeadedContent implements Content {
     this.content = content;
   }
 
-  public ContentType contentType() {
+  public ContentTypeHeader contentType() {
     return ContentTypeHeader.TEXT_HTML;
   }
 
@@ -28,7 +30,7 @@ public class HtmlHeadedContent implements Content {
     return content.withRanges(ranges); // TODO: needs to apply a content type of text_html
   }
 
-  public List<Header> additionalHeaders() {
-    return new List<Header>();
+  public List<ResponseHeader> additionalHeaders() {
+    return new ArrayList<ResponseHeader>();
   }
 }

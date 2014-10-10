@@ -3,7 +3,9 @@ package com.danielirvine.http.responses;
 import java.io.*;
 
 import com.danielirvine.http.HttpServer;
-import com.danielirvine.http.content.HeadedContent;
+import com.danielirvine.http.content.Content;
+import com.danielirvine.http.headers.response.ContentLengthHeader;
+import com.danielirvine.http.headers.response.ResponseHeader;
 
 public class Response {
 
@@ -38,7 +40,7 @@ public class Response {
 
     out.print(body.contentType());
     out.print(new ContentLengthHeader(body.length()));
-    for(Header h : body.additionalHeaders()) {
+    for(ResponseHeader h : body.additionalHeaders()) {
       out.print(h);
     }
     endHeader(out);

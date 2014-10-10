@@ -3,8 +3,10 @@ package com.danielirvine.http.contributors;
 import java.util.*;
 
 import com.danielirvine.http.*;
+import com.danielirvine.http.content.HtmlHeadedContent;
 import com.danielirvine.http.resources.QueryResource;
 import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.responses.ResponseCode;
 
 public class QueryResponseContributor implements ResponseContributor {
 
@@ -15,7 +17,8 @@ public class QueryResponseContributor implements ResponseContributor {
 
   @Override
   public Response respond(Request request) {
-    return new QueryResource(buildVariables(request)).toResponse();
+    return new Response(ResponseCode.OK,
+        new HtmlHeadedContent(new QueryResource(buildVariables(request)).toContent()));
   }
 
   private static Map<String, String> buildVariables(Request request) {

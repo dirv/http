@@ -1,10 +1,8 @@
 package com.danielirvine.http.resources;
 
 import java.io.*;
-import java.util.List;
 
-import com.danielirvine.http.ranges.Range;
-import com.danielirvine.http.responses.Response;
+import com.danielirvine.http.content.Content;
 
 public interface Resource {
   Content toContent();

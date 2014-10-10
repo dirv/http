@@ -1,9 +1,6 @@
 package com.danielirvine.http.ranges;
 
-import java.io.*;
-
 import com.danielirvine.http.FileDescriptor;
-import com.danielirvine.http.content.StreamContent;
 import com.danielirvine.http.headers.response.*;
 
 public class FixedRange {
@@ -28,7 +25,7 @@ public class FixedRange {
     return end - start + 1;
   }
 
-  private long skip() {
+  public long skip() {
     return start - previousPosition;
   }
 
@@ -40,7 +37,4 @@ public class FixedRange {
     return new ContentRangeHeader(start, end, totalLength);
   }
 
-  public StreamContent toContent(InputStream in) {
-    return new StreamContent(skip(), length(), in);
-  }
 }

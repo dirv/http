@@ -1,30 +1,39 @@
 package com.danielirvine.http.content;
 
+import java.io.*;
 import java.util.*;
 
-class RangedStreamer {
-  private final FileDescriptor file;
-  private final Queue<FixedRange> fixedRanges;
-  private final BufferedReader in;
+import static java.util.stream.Collectors.*;
 
-  public RangedStreamer(FileDesciptor file, List<FixedRange> ranges) {
-    this.file = file;
-    this.fixedRanges = new Queue<FixedRange>(ranges);
+
+import com.danielirvine.http.FileDescriptor;
+import com.danielirvine.http.headers.response.ContentTypeHeader;
+import com.danielirvine.http.headers.response.ResponseHeader;
+import com.danielirvine.http.ranges.FixedRange;
+
+class RangedStreamer {
+  private final FileDescriptor descriptor;
+  private final Queue<FixedRange> fixedRanges;
+  private BufferedReader in;
+
+  public RangedStreamer(FileDescriptor descriptor, List<FixedRange> ranges) {
+    this.descriptor = descriptor;
+    this.fixedRanges = new LinkedList<FixedRange>(ranges);
   }
 
   public void streamNext(PrintStream out) {
     if(!hasStarted()) {
-      startStreaming(out);
+      startStreaming();
     }
-    streamRange(out, fixedRange.take());
-    if(fixedRanges.empty()) {
+    streamRange(out, fixedRanges.poll());
+    if(fixedRanges.isEmpty()) {
       stopStreaming();
     }
   }
 
-  public List<Content> toContent(List<FixedRange ranges) {
-    return ranges.stream()
-      .map(r->new RangedStreamerContent(this))
+  public List<Content> toContent() {
+    return fixedRanges.stream()
+      .map(r->new RangedStreamerContent())
       .collect(toList());
   }
 
@@ -47,11 +56,14 @@ class RangedStreamer {
   }
 
   private void startStreaming() {
-    in = new BufferedReader(new InputStreamReader(descriptor.getDataStream()));
+    in = new BufferedReader(new InputStreamReader(descriptor.getReadStream()));
   }
 
   private void stopStreaming() {
-    in.close();
+    try{
+      in.close();
+    } catch(IOException ex) {
+    }
   }
 
   private class RangedStreamerContent implements Content {
@@ -61,7 +73,7 @@ class RangedStreamer {
     }
 
     public long length() {
-      return file.length();
+      return descriptor.length();
     }
 
     public ContentTypeHeader contentType() {
@@ -70,7 +82,12 @@ class RangedStreamer {
     }
 
     public List<Content> withRanges(List<FixedRange> ranges) {
-      return toContent(ranges);
+      return toContent();
+    }
+
+    @Override
+    public List<ResponseHeader> additionalHeaders() {
+      return new ArrayList<ResponseHeader>();
     }
   }
 }

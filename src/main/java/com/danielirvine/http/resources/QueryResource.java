@@ -3,9 +3,6 @@ import java.io.*;
 import java.util.*;
 
 import com.danielirvine.http.content.*;
-import com.danielirvine.http.ranges.Range;
-import com.danielirvine.http.responses.Response;
-import com.danielirvine.http.responses.ResponseCode;
 
 import static java.util.stream.Collectors.*;
 

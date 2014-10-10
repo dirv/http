@@ -1,7 +1,5 @@
 package com.danielirvine.http.headers.response;
 
-import com.danielirvine.http.FileDescriptor;
-
 public class ContentTypeHeader extends ResponseHeader {
 
   public final static ContentTypeHeader MULTIPART_BYTE_RANGES = new ContentTypeHeader(

@@ -1,8 +1,10 @@
 package com.danielirvine.http;
 
 import org.junit.*;
-import com.danielirvine.http.resources.FileResource;
-import com.danielirvine.http.resources.Resource;
+
+import com.danielirvine.http.contributors.ResourceResponseContributor;
+import com.danielirvine.http.resources.DirectoryResource;
+import com.danielirvine.http.responses.Response;
 import com.danielirvine.http.responses.ResponseCode;
 
 import static org.junit.Assert.*;
@@ -14,8 +16,10 @@ import java.util.*;
 public class RangeHeaderTest extends RequestTest {
 
   private static final String content = "abcdefghijklmnopqrstuvwxyz";
-  private final FileResource file = new FileResource(new InMemoryFileDescriptor("test", content));
-  private Resource partial;
+  private final InMemoryFileDescriptor root = new InMemoryFileDescriptor("/");
+  private final DirectoryResource publicRoot = new DirectoryResource(root);
+  private final ResourceResponseContributor contributor = new ResourceResponseContributor(publicRoot);
+  private Response response;
 
   @Test
   public void rangeOfFirstBytes() {
@@ -86,24 +90,21 @@ public class RangeHeaderTest extends RequestTest {
     startRequest("GET / HTTP/1.1");
     addHeader("Range", rangeHeader);
     Request request = buildRequest();
-    if(request.hasRanges()) {
-      partial = file.applyRange(buildRequest().getRanges());
-    } else {
-      partial = file;
-    }
+    root.addFile("test", content);
+    response = contributor.respond(request);
   }
 
   private List<String> dumpResource() {
     ByteArrayOutputStream s = new ByteArrayOutputStream();
     try{
-      partial.toResponse().write(s);
+      response.write(s);
     } catch(IOException ex) {
     }
     return Arrays.asList(s.toString().split(HttpServer.CRLF));
   }
 
   private ResponseCode responseCode() {
-    return partial.toResponse().getResponseCode();
+    return response.getResponseCode();
   }
 }
 
