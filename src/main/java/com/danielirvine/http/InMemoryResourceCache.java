@@ -1,8 +1,8 @@
 package com.danielirvine.http;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.danielirvine.http.content.ByteArrayContent;
 import com.danielirvine.http.content.Content;
@@ -10,7 +10,7 @@ import com.danielirvine.http.content.Content;
 public class InMemoryResourceCache {
 
   private static final int MAX_FILE_SIZE = 100000;
-  private final Map<String, ByteArrayContent> contents = new HashMap<String, ByteArrayContent>();
+  private final ConcurrentMap<String, ByteArrayContent> contents = new ConcurrentHashMap<String, ByteArrayContent>();
 
   public void store(String path, Content content) {
     try {
