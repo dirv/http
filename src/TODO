@@ -1,3 +1,5 @@
+* Cache should remove files which are out of date
+* Cache should have a max size (possibly use a linked list where recently accessed items are put back to the start)
 * shasum & my hash comparison function
 * ResponseCode 200 should be returning contnet.
 * ErrorResponse renamed to somethign else.

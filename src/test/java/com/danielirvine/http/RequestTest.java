@@ -1,6 +1,10 @@
 package com.danielirvine.http;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
+
+import com.danielirvine.http.responses.Response;
 
 public abstract class RequestTest {
   private String requestContent;
@@ -51,5 +55,15 @@ public abstract class RequestTest {
     } catch (IOException ex) {
     }
     return out.toString();
+  }
+  
+  protected static List<String> responseText(Response response) {
+    ByteArrayOutputStream s = new ByteArrayOutputStream();
+    try{
+      response.write(s);
+    } catch(IOException ex)
+    {
+    }
+    return Arrays.asList(s.toString().split(HttpServer.CRLF));
   }
 }
