@@ -26,7 +26,6 @@ class Responder {
           new LogsResponseContributor(logger),
           new DeleteResponseContributor(root, writeablePaths),
           new PutPostResponseContributor(root, writeablePaths),
-          new InMemoryResourceResponseContributor(cache),
           new ResourceResponseContributor(root, cache),
           new WriteableResponseContributor(writeablePaths),
           new NotFoundResponseContributor());

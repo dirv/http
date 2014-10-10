@@ -26,8 +26,8 @@ public class ResourceResponseContributor implements ResponseContributor {
 
   @Override
   public Response respond(Request request) {
-    Resource resource = root.findResource(request.getPath().split("/"));
-    Content content = resource.toContent();
+    Content content = getContent(request);
+
     if(request.hasRanges()) {
       List<FixedRange> fixedRanges = fix(request.getRanges(), content.length());
 
@@ -38,6 +38,19 @@ public class ResourceResponseContributor implements ResponseContributor {
       }
     }
     return new Response(ResponseCode.OK, content);
+  }
+
+  private Content getContent(Request request) {
+    Content content;
+    String path = request.getPath();
+    if (cache.hasContent(path)) {
+      content = cache.getContent(path);
+    } else {
+      Resource resource = root.findResource(request.getPath().split("/"));
+      content = resource.toContent();
+      cache.store(request.getPath(), content);
+    }
+    return content;
   }
 
   private List<FixedRange> fix(List<Range> ranges, long fileLength) {

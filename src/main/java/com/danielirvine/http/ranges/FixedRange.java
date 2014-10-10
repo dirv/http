@@ -25,6 +25,10 @@ public class FixedRange {
     return start;
   }
 
+  public long end() {
+    return end;
+  }
+
   public long length() {
     return end - start + 1;
   }
@@ -40,5 +44,4 @@ public class FixedRange {
   public ContentRangeHeader getHeader() {
     return new ContentRangeHeader(start, end, totalLength);
   }
-
 }

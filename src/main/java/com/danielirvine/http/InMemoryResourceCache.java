@@ -4,31 +4,30 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.danielirvine.http.content.ByteArrayContent;
 import com.danielirvine.http.content.Content;
-import com.danielirvine.http.content.StringContent;
 
 public class InMemoryResourceCache {
 
   private static final int MAX_FILE_SIZE = 100000;
-  private final Map<String, StringContent> contents = new HashMap<String, StringContent>();
+  private final Map<String, ByteArrayContent> contents = new HashMap<String, ByteArrayContent>();
 
   public void store(String path, Content content) {
     try {
       if(content.length() <= MAX_FILE_SIZE) {
-        contents.put(path, convertToStringContent(content));
+        contents.put(path, convertToByteArrayContent(content));
       }
     } catch(IOException ex) {
     }
   }
 
-  private StringContent convertToStringContent(Content content) throws IOException {
+  private ByteArrayContent convertToByteArrayContent(Content content) throws IOException {
     try(ByteArrayOutputStream str = new ByteArrayOutputStream()) {
       try(BufferedOutputStream out = new BufferedOutputStream(str)) {
         content.write(out);
         out.flush();
       }
-      // TODO: probably needs to be a ByteArrayContent
-      return new StringContent(str.toString());
+      return new ByteArrayContent(str.toByteArray(), content.contentType());
     }
   }
 
