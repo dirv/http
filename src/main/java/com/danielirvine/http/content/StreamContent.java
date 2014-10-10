@@ -35,4 +35,8 @@ public class StreamContent implements Content {
   public List<Content> withRanges(List<FixedRange> ranges) {
     return new RangedStreamer(file, ranges).toContent();
   }
+
+  public List<Header> additionalHeaders() {
+    return new List<Header>();
+  }
 }

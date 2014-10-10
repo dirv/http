@@ -15,6 +15,7 @@ public class StringContent implements Content {
   }
 
   public List<Header> additionalHeaders() {
+    return new List<Header>();
   }
 
   public void write(PrintStream out) {
@@ -25,7 +26,9 @@ public class StringContent implements Content {
     return ContentTypeHeader.TEXT_PLAIN;
   }
 
-  public Content withRange(Range range) {
-    return new StringContent(content.substring(range.getLow(), range.getLength()));
+  public List<Content> withRanges(List<FixedRange> ranges) {
+    // TODO
+    FixedRange range = ranges.get(0);
+    return asList(new StringContent(content.substring(range.getLow(), range.getLength())));
   }
 }

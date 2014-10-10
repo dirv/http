@@ -26,9 +26,12 @@ public class ListContent implements Content {
   }
 
   public List<Content> withRanges(List<FixedRange> ranges) {
-    // TODO
-    // 1. If it's a single range, then retunr a new HeadedContent with a new Header.
-    // 2. If it's multiple range, return a new HeadedContent with mutliple HeadedContents within it.
-    new HeadedContent(
+    // TODO: need to split out ranges based on Content length, and
+    // possibly fix ranges again.
+    return new List<Content>();
+  }
+
+  public List<Header> additionalHeaders() {
+    return new List<Header>();
   }
 }

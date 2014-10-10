@@ -13,20 +13,22 @@ import static java.util.Arrays.*;
 
 class MultiPartContent extends ListContent {
 
-  public MultiPartContent(List<RangedContent> partials) {
+  private final List<FixedRange> ranges;
+
+  public MultiPartContent(List<FixedRange> ranges, List<Content> partials) {
     super(partials);
   }
 
   public ContentTypeHeader contentType() {
-    if(partials.size() > 1) {
-      return ContentTypeHeader.MULTIPART_BYTE_RANGES;
+    if(partials.size() == 1) {
+      return partials.get(0).contentType();
     }
-    return partials.get(0).contentType();
+    return ContentTypeHeader.MULTIPART_BYTE_RANGES;
   }
 
   public List<Header> additionalHeaders() {
     if(partials.size() == 1) {
-      return asList(partials.get(0).getRange().getHeader());
+      return asList(ranges.get(0).getHeader());
     }
     return asList();
   }
@@ -39,12 +41,15 @@ class MultiPartContent extends ListContent {
     if(partials.size() == 1) {
       partials.get(0).write(out);
     } else {
-      for(RangedContent c : content) {
+      for(int i = 0; i < partials.length; ++i) {
+        Content c = partials.get(i);
+        FixedRange r = ranges.get(i);
         out.print(c.contentType());
-        out.print(c.getRange().getHeader());
+        out.print(r.getHeader());
         out.print(HttpServer.CRLF);
         c.write(out);
         // TODO - boundary
+
       }
     }
   }

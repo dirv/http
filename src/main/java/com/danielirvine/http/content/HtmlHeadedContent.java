@@ -1,20 +1,34 @@
 package com.danielirvine.http.content;
 
 import java.util.*;
-
 import com.danielirvine.http.headers.response.*;
-
 import static java.util.Arrays.*;
 
-public class HtmlHeadedContent extends HeadedContent {
+public class HtmlHeadedContent implements Content {
+
+  private final Content content;
 
   public HtmlHeadedContent(Content content) {
-    super(generateHeaders(content), content);
+    this.content = content;
   }
 
-  private static List<ResponseHeader> generateHeaders(Content content) {
-    return asList(
-        new ContentLengthHeader(content.length()),
-        ContentTypeHeader.TEXT_HTML);
+  public ContentType contentType() {
+    return ContentTypeHeader.TEXT_HTML;
+  }
+
+  public long length() {
+    return content.length();
+  }
+
+  public void write(PrintStream out) {
+    content.write(out);
+  }
+
+  public List<Content> withRanges(List<FixedRange> ranges) {
+    return content.withRanges(ranges); // TODO: needs to apply a content type of text_html
+  }
+
+  public List<Header> additionalHeaders() {
+    return new List<Header>();
   }
 }
