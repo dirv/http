@@ -2,9 +2,7 @@ package com.danielirvine.http;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.function.*;
 
 import com.danielirvine.http.resources.DirectoryResource;
@@ -62,7 +60,7 @@ public class HttpServer {
     new HttpServer(HttpServer::createSocket,
         executor,
         parser.get("p", 5000),
-        parser.get("d", ""),
+        parser.get("d", "."),
         resourceToStrings("/redirects.txt"),
         resourceToStrings("/access.txt"),
         resourceToStrings("/writeable.txt"));

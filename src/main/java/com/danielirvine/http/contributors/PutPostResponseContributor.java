@@ -13,11 +13,13 @@ import com.danielirvine.http.responses.ResponseCode;
 public class PutPostResponseContributor implements ResponseContributor {
 
   private final DirectoryResource root;
+  private final InMemoryResourceCache cache;
   private final List<String> writeablePaths;
 
-  public PutPostResponseContributor(DirectoryResource root, List<String> writeablePaths) {
+  public PutPostResponseContributor(DirectoryResource root, List<String> writeablePaths, InMemoryResourceCache cache) {
     this.root = root;
     this.writeablePaths = writeablePaths;
+    this.cache = cache;
   }
 
   @Override
@@ -33,6 +35,7 @@ public class PutPostResponseContributor implements ResponseContributor {
 
     Resource child = root.findOrCreateResource(request.getPathSegments());
     child.write(request.getDataStream());
+    cache.deleteContent(request.getPath());
 
     return new EmptyResponse(ResponseCode.OK);
   }

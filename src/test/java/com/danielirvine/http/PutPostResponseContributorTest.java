@@ -15,7 +15,7 @@ public class PutPostResponseContributorTest extends RequestTest {
   private final InMemoryFileDescriptor directory = new InMemoryFileDescriptor("/");
   private final DirectoryResource root = new DirectoryResource(directory);
   private final List<String> writeables = Arrays.asList("/a");
-  private final PutPostResponseContributor contributor = new PutPostResponseContributor(root, writeables);
+  private final PutPostResponseContributor contributor = new PutPostResponseContributor(root, writeables, new InMemoryResourceCache());
 
   @Test
 	public void respondToPut() {

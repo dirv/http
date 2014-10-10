@@ -33,4 +33,8 @@ public class InMemoryResourceCache {
   public Content getContent(String path) {
     return contents.get(path);
   }
+  
+  public void deleteContent(String path) {
+    contents.remove(path);
+  }
 }

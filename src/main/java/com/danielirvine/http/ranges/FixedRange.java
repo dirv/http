@@ -1,6 +1,5 @@
 package com.danielirvine.http.ranges;
 
-import com.danielirvine.http.FileDescriptor;
 import com.danielirvine.http.headers.response.*;
 
 public class FixedRange {
@@ -9,10 +8,6 @@ public class FixedRange {
   private final long end;
   private final long previousPosition;
   private final long totalLength;
-
-  public FixedRange(FileDescriptor descriptor) {
-    this(0, 0, descriptor.length(), descriptor.length());
-  }
 
   public FixedRange(long previousPosition, long start, long end, long totalLength) {
     this.previousPosition = previousPosition;
