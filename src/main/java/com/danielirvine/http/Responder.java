@@ -17,7 +17,8 @@ class Responder {
       List<String> writeablePaths,
       DirectoryResource root,
       UrlRedirects redirects,
-      Authorizer authorizer) {
+      Authorizer authorizer,
+      InMemoryResourceCache cache) {
     this.contributors = asList(
           new UnauthorizedResponseContributor(authorizer),
           new RedirectResponseContributor(redirects),
@@ -25,7 +26,8 @@ class Responder {
           new LogsResponseContributor(logger),
           new DeleteResponseContributor(root, writeablePaths),
           new PutPostResponseContributor(root, writeablePaths),
-          new ResourceResponseContributor(root),
+          new InMemoryResourceResponseContributor(cache),
+          new ResourceResponseContributor(root, cache),
           new WriteableResponseContributor(writeablePaths),
           new NotFoundResponseContributor());
   }

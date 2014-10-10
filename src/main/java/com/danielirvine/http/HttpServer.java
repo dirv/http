@@ -36,9 +36,10 @@ public class HttpServer {
     DirectoryResource root = new DirectoryResource(rootFile);
     UrlRedirects redirects = new UrlRedirects(redirectStrings);
     Authorizer authorizer = new Authorizer(authTable);
+    InMemoryResourceCache cache = new InMemoryResourceCache();
     logger = new Logger();
 
-    responder = new Responder(logger, writeablePaths, root, redirects, authorizer);
+    responder = new Responder(logger, writeablePaths, root, redirects, authorizer, cache);
 
     while(socket.hasData()) {
       try(SocketProxy clientSocket = socket.accept()) {

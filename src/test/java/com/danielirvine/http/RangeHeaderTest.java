@@ -18,7 +18,8 @@ public class RangeHeaderTest extends RequestTest {
   private static final String content = "abcdefghijklmnopqrstuvwxyz";
   private final InMemoryFileDescriptor root = new InMemoryFileDescriptor("/");
   private final DirectoryResource publicRoot = new DirectoryResource(root);
-  private final ResourceResponseContributor contributor = new ResourceResponseContributor(publicRoot);
+  private final InMemoryResourceCache cache = new InMemoryResourceCache();
+  private final ResourceResponseContributor contributor = new ResourceResponseContributor(publicRoot, cache);
   private Response response;
 
   @Test

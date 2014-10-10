@@ -4,22 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.danielirvine.http.*;
-import com.danielirvine.http.content.Content;
-import com.danielirvine.http.content.MultiPartContent;
-import com.danielirvine.http.ranges.FixedRange;
-import com.danielirvine.http.ranges.Range;
-import com.danielirvine.http.resources.DirectoryResource;
-import com.danielirvine.http.resources.Resource;
-import com.danielirvine.http.responses.ErrorResponse;
-import com.danielirvine.http.responses.Response;
-import com.danielirvine.http.responses.ResponseCode;
+import com.danielirvine.http.content.*;
+import com.danielirvine.http.ranges.*;
+import com.danielirvine.http.resources.*;
+import com.danielirvine.http.responses.*;
 
 public class ResourceResponseContributor implements ResponseContributor {
 
   private final DirectoryResource root;
+  private final InMemoryResourceCache cache;
 
-  public ResourceResponseContributor(DirectoryResource root) {
+  public ResourceResponseContributor(DirectoryResource root, InMemoryResourceCache cache) {
     this.root = root;
+    this.cache = cache;
   }
 
   @Override
