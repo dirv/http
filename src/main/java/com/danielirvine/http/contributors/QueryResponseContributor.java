@@ -5,6 +5,7 @@ import java.util.*;
 import com.danielirvine.http.*;
 import com.danielirvine.http.content.HtmlHeadedContent;
 import com.danielirvine.http.resources.QueryResource;
+import com.danielirvine.http.responses.ContentResponse;
 import com.danielirvine.http.responses.Response;
 import com.danielirvine.http.responses.ResponseCode;
 
@@ -17,7 +18,7 @@ public class QueryResponseContributor implements ResponseContributor {
 
   @Override
   public Response respond(Request request) {
-    return new Response(ResponseCode.OK,
+    return new ContentResponse(ResponseCode.OK,
         new HtmlHeadedContent(new QueryResource(buildVariables(request)).toContent()));
   }
 

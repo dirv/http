@@ -34,10 +34,10 @@ public class ResourceResponseContributor implements ResponseContributor {
       if(fixedRanges.size() == 0) {
         return new ErrorResponse(ResponseCode.UNSATISFIABLE);
       } else {
-        return new Response(ResponseCode.PARTIAL, new MultiPartContent(content, fixedRanges));
+        return new ContentResponse(ResponseCode.PARTIAL, new MultiPartContent(content, fixedRanges));
       }
     }
-    return new Response(ResponseCode.OK, content);
+    return new ContentResponse(ResponseCode.OK, content);
   }
 
   private Content getContent(Request request) {

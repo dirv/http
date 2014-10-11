@@ -25,16 +25,8 @@ public class Request {
     readHeaders(in);
   }
 
-  public boolean isPut() {
-    return verb.equals("PUT");
-  }
-
-  public boolean isPost() {
-    return verb.equals("POST");
-  }
-
-  public boolean isDelete() {
-    return verb.equals("DELETE");
+  public RequestVerb getVerb() {
+    return RequestVerb.valueOf(verb);
   }
 
   public boolean hasQuery() {

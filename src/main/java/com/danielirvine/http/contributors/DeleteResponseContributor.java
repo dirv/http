@@ -21,12 +21,13 @@ public class DeleteResponseContributor implements ResponseContributor {
 
   @Override
   public boolean canRespond(Request request) {
-    return request.isDelete() && root.hasResource(request.getPathSegments());
+    return request.getVerb().equals(RequestVerb.DELETE) && root.hasResource(request.getPathSegments());
   }
 
   @Override
   public Response respond(Request request) {
     if(!writeables.contains(request.getPath())){
+      // TODO - add in allow header
       return new ErrorResponse(ResponseCode.METHOD_NOT_ALLOWED);
     }
     root.findResource(request.getPathSegments()).delete();

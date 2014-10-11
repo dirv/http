@@ -1,4 +1,10 @@
+* OPTIONS needs to be more tailored depending on whether or not the file exists, and its access right.s
+* The Response model needs work. Currently is always adds a Content-Type and a Content-Length header, and then Content
+  can add its own additional header, which is really only used for ranges.
+   => Might be better to have a Response object which can take headers, and then a subtype of this called ContentResponse. 
+* HEAD support
 * Test for StreamContent and FixedRange stuff
+* Add an Allow header for 405 method options
 * Test for Deleting content
 * Return Last-Modified header
 * HtmlHeadedContent should have text/html content-type for all its children when a range is applied to it. (Possibly same for headed content in general)
