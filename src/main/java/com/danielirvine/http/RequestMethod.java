@@ -1,6 +1,6 @@
 package com.danielirvine.http;
 
-public enum RequestVerb {
+public enum RequestMethod {
   UNKNOWN,
   DELETE,
   HEAD,

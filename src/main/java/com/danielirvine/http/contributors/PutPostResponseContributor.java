@@ -24,7 +24,7 @@ public class PutPostResponseContributor implements ResponseContributor {
 
   @Override
   public boolean canRespond(Request request) {
-    return request.getVerb().equals(RequestVerb.PUT) || request.getVerb().equals(RequestVerb.POST);
+    return request.getMethod().equals(RequestMethod.PUT) || request.getMethod().equals(RequestMethod.POST);
   }
 
   @Override

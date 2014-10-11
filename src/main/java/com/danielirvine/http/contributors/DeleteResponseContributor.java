@@ -21,7 +21,7 @@ public class DeleteResponseContributor implements ResponseContributor {
 
   @Override
   public boolean canRespond(Request request) {
-    return request.getVerb().equals(RequestVerb.DELETE) && root.hasResource(request.getPathSegments());
+    return request.getMethod().equals(RequestMethod.DELETE) && root.hasResource(request.getPathSegments());
   }
 
   @Override

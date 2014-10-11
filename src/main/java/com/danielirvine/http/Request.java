@@ -11,7 +11,7 @@ public class Request {
   private String path;
   private String query;
   private String user;
-  private String verb;
+  private RequestMethod method;
   private String password;
   private String requestLine;
   private final Reader in;
@@ -25,8 +25,8 @@ public class Request {
     readHeaders(in);
   }
 
-  public RequestVerb getVerb() {
-    return RequestVerb.valueOf(verb);
+  public RequestMethod getMethod() {
+    return method; 
   }
 
   public boolean hasQuery() {
@@ -89,7 +89,7 @@ public class Request {
   private void readRequestLine(BufferedReader in) throws IOException {
     requestLine = in.readLine();
     String[] parts = requestLine.split(" ");
-    verb = parts[0];
+    method = RequestMethod.valueOf(parts[0]);
     int queryIndex = parts[1].indexOf("?");
     if(queryIndex == -1) {
       path = parts[1];
