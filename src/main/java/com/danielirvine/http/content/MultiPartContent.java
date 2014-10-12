@@ -13,24 +13,18 @@ public class MultiPartContent extends ListContent {
 
   private final List<FixedRange> ranges;
 
-  public MultiPartContent(Content content, List<FixedRange> ranges) {
-    super(content.withRanges(ranges));
+  public MultiPartContent(List<Content> content, List<FixedRange> ranges) {
+    super(content);
     this.ranges = ranges;
   }
 
   @Override
   public ContentTypeHeader contentType() {
-    if(content.size() == 1) {
-      return content.get(0).contentType();
-    }
     return ContentTypeHeader.MULTIPART_BYTE_RANGES;
   }
 
   @Override
   public List<ResponseHeader> additionalHeaders() {
-    if(content.size() == 1) {
-      return asList(ranges.get(0).getHeader());
-    }
     return asList();
   }
 
@@ -43,9 +37,6 @@ public class MultiPartContent extends ListContent {
 
   @Override
   public void write(OutputStream out) throws IOException {
-    if(content.size() == 1) {
-      content.get(0).write(out);
-    } else {
       for(int i = 0; i < content.size(); ++i) {
         Content c = content.get(i);
         c.contentType().write(out);
@@ -53,8 +44,6 @@ public class MultiPartContent extends ListContent {
         out.write(HttpServer.CRLF.getBytes());
         c.write(out);
         // TODO - boundary
-
       }
     }
-  }
 }

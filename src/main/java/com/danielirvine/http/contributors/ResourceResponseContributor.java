@@ -9,6 +9,8 @@ import com.danielirvine.http.ranges.*;
 import com.danielirvine.http.resources.*;
 import com.danielirvine.http.responses.*;
 
+import static java.util.Arrays.*;
+
 public class ResourceResponseContributor implements ResponseContributor {
 
   private final DirectoryResource root;
@@ -34,10 +36,20 @@ public class ResourceResponseContributor implements ResponseContributor {
       if(fixedRanges.size() == 0) {
         return new ErrorResponse(ResponseCode.UNSATISFIABLE);
       } else {
-        return new ContentResponse(ResponseCode.PARTIAL, new MultiPartContent(content, fixedRanges));
+        Content body = build(content, fixedRanges);
+        return new ContentResponse(ResponseCode.PARTIAL, body);
       }
     }
     return new ContentResponse(ResponseCode.OK, content);
+  }
+
+  public static Content build(Content content, List<FixedRange> ranges) {
+    List<Content> rangedContent = content.withRanges(ranges);
+    if(rangedContent.size() == 1) {
+      return new HeadedContent(asList(ranges.get(0).getHeader()), rangedContent.get(0));
+    } else {
+      return new MultiPartContent(rangedContent, ranges);
+    }
   }
 
   private Content getContent(Request request) {

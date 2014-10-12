@@ -26,6 +26,6 @@ public class ContentResponse extends Response {
 
   public void write(OutputStream out) throws IOException {
     super.write(out);
-    body.write(out);;
+    body.write(out);
   }
 }

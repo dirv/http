@@ -1,3 +1,4 @@
+* Add Allow option to method now allowed response
 * OPTIONS needs to be more tailored depending on whether or not the file exists, and its access right.s
 * The Response model needs work. Currently is always adds a Content-Type and a Content-Length header, and then Content
   can add its own additional header, which is really only used for ranges.
