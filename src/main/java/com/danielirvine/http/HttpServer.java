@@ -6,15 +6,12 @@ import java.util.concurrent.*;
 import java.util.function.*;
 
 import com.danielirvine.http.resources.DirectoryResource;
-import com.danielirvine.http.responses.Response;
 import com.danielirvine.http.sockets.*;
 
 public class HttpServer {
 
   public static final String CRLF = "\r\n";
   public static final String PROTOCOL_VERSION = "HTTP/1.1";
-  private final Responder responder;
-  private final Logger logger;
 
   public HttpServer(Function<Integer, ServerSocketProxy> socketFactory,
       Executor executor,
@@ -37,17 +34,16 @@ public class HttpServer {
       List<String> redirectStrings,
       List<String> authTable,
       List<String> writeablePaths) {
-    DirectoryResource root = new DirectoryResource(rootFile);
-    UrlRedirects redirects = new UrlRedirects(redirectStrings);
-    Authorizer authorizer = new Authorizer(authTable);
-    InMemoryResourceCache cache = new InMemoryResourceCache();
-    this.logger = new Logger();
-
-    responder = new Responder(logger, writeablePaths, root, redirects, authorizer, cache);
+    Logger logger = new Logger();
+    Responder responder = new Responder(logger, writeablePaths,
+        new DirectoryResource(rootFile),
+        new UrlRedirects(redirectStrings),
+        new Authorizer(authTable),
+        new InMemoryResourceCache());
     
     try {
       while(socket.hasData()) {
-        executor.execute(new SocketHandler(socket.accept()));
+        executor.execute(new RequestReceiver(logger, responder, socket.accept()));
       }
     } catch(Exception ex) {
       ex.printStackTrace();
@@ -65,35 +61,6 @@ public class HttpServer {
         resourceToStrings("/access.txt"),
         resourceToStrings("/writeable.txt"));
     executor.shutdown();
-  }
-
-  class SocketHandler implements Runnable {
-    private final SocketProxy socket;
-
-    SocketHandler(SocketProxy socket) { 
-      this.socket = socket;
-    }
-
-    public void run() {
-      try {
-        handleIncomingRequest(socket);
-      } catch(Exception ex) {
-      }
-    }
-
-    private void handleIncomingRequest(SocketProxy socket) throws IOException {
-      try(InputStream in = socket.getInputStream()) {
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-          Request request = new Request(reader);
-          logger.log(request);
-          Response response = responder.response(request);
-          try(BufferedOutputStream output = new BufferedOutputStream(socket.getOutputStream())) {
-            response.write(output);
-          }
-        }
-      }
-      socket.close();
-    }
   }
 
   private static ServerSocketProxy createSocket(int port) {
