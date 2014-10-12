@@ -12,11 +12,11 @@ import com.danielirvine.http.responses.ResponseCode;
 public class DeleteResponseContributor implements ResponseContributor {
 
   private final DirectoryResource root;
-  private final List<String> writeables;
+  private final List<String> writeablePaths;
 
-  public DeleteResponseContributor(DirectoryResource root, List<String> writeables) {
+  public DeleteResponseContributor(DirectoryResource root, List<String> writeablePaths) {
     this.root = root;
-    this.writeables = writeables;
+    this.writeablePaths = writeablePaths;
   }
 
   @Override
@@ -26,7 +26,7 @@ public class DeleteResponseContributor implements ResponseContributor {
 
   @Override
   public Response respond(Request request) {
-    if(!writeables.contains(request.getPath())){
+    if(!writeablePaths.contains(request.getPath())){
       // TODO - add in allow header
       return new ErrorResponse(ResponseCode.METHOD_NOT_ALLOWED);
     }

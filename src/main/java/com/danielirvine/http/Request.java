@@ -18,6 +18,7 @@ public class Request {
   private List<RequestHeader> headers = new ArrayList<RequestHeader>();
   private long contentLength;
   private List<Range> ranges;
+  private String eTag;
 
   public Request(BufferedReader in) throws IOException {
     this.in = in;
@@ -108,5 +109,13 @@ public class Request {
 
   private static boolean isNullOrBlank(String param) {
     return param == null || param.trim().length() == 0;
+  }
+
+  public void setETag(String etag) {
+    this.eTag = etag;
+  }
+
+  public String getETag() {
+    return eTag;
   }
 }

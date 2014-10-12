@@ -9,4 +9,5 @@ public interface Resource {
   void write(Reader in);
   void delete();
   long lastModified();
+  String getETag();
 }

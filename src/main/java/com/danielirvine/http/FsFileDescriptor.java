@@ -1,9 +1,12 @@
 package com.danielirvine.http;
 import java.io.*;
 import java.nio.file.*;
+
 import static java.nio.file.StandardCopyOption.*;
 import static java.util.stream.Stream.*;
+
 import java.util.*;
+
 import static java.util.stream.Collectors.*;
 import static com.danielirvine.http.ExceptionWrapper.*;
 

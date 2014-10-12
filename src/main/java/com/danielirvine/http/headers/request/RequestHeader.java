@@ -16,6 +16,7 @@ public class RequestHeader {
     builders.put("Range", (v, r) -> new RangeHeader(v, r));
     builders.put("Authorization", (v, r) -> new AuthorizationHeader(v, r));
     builders.put("Content-Length", (v, r) -> new RequestContentLengthHeader(v, r));
+    builders.put("If-Match", (v, r) -> new IfMatchHeader(v, r));
     defaultBuilder = (v, r) -> new UnknownRequestHeader();
   }
 

@@ -2,6 +2,7 @@ package com.danielirvine.http;
 
 import java.io.*;
 import java.util.*;
+
 import static com.danielirvine.http.ExceptionWrapper.*;
 
 public class InMemoryFileDescriptor implements FileDescriptor {

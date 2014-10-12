@@ -68,4 +68,10 @@ public class DirectoryResource implements Resource {
   public long lastModified() {
     return descriptor.lastModified();
   }
+
+  @Override
+  public String getETag() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

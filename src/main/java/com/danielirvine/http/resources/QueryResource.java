@@ -39,5 +39,11 @@ public class QueryResource implements Resource {
   public long lastModified() {
     return lastModified;
   }
+
+  @Override
+  public String getETag() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
 
