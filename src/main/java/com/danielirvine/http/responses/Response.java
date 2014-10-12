@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 import com.danielirvine.http.HttpServer;
-import com.danielirvine.http.headers.response.ContentLengthHeader;
 import com.danielirvine.http.headers.response.ResponseHeader;
 
 public class Response {

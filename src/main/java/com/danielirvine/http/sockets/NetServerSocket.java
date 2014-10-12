@@ -3,12 +3,14 @@ package com.danielirvine.http.sockets;
 import java.net.*;
 import java.io.*;
 
+import static com.danielirvine.http.ExceptionWrapper.*;
+
 public class NetServerSocket implements ServerSocketProxy {
 
   private final ServerSocket socket;
 
-  public NetServerSocket(int port) throws IOException {
-    this.socket = new ServerSocket(port);
+  public NetServerSocket(int port) {
+    this.socket = decheck(() -> new ServerSocket(port));
   }
 
   public SocketProxy accept() throws IOException {

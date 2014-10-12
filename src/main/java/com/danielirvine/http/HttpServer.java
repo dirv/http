@@ -19,7 +19,7 @@ public class HttpServer {
       String publicRoot,
       List<String> redirectStrings,
       List<String> authTable,
-      List<String> writeablePaths) {
+      List<String> writeablePaths) throws IOException {
     this(socketFactory.apply(port),
         executor,
         new FsFileDescriptor(new File(publicRoot)),
@@ -33,7 +33,7 @@ public class HttpServer {
       FileDescriptor rootFile,
       List<String> redirectStrings,
       List<String> authTable,
-      List<String> writeablePaths) {
+      List<String> writeablePaths) throws IOException {
     Logger logger = new Logger();
     Responder responder = new Responder(logger, writeablePaths,
         new DirectoryResource(rootFile),
@@ -41,36 +41,30 @@ public class HttpServer {
         new Authorizer(authTable),
         new InMemoryResourceCache());
     
-    try {
-      while(socket.hasData()) {
-        executor.execute(new RequestReceiver(logger, responder, socket.accept()));
-      }
-    } catch(Exception ex) {
-      ex.printStackTrace();
+    while(socket.hasData()) {
+      executor.execute(new RequestReceiver(logger, responder, socket.accept()));
     }
   }
 
   public static void main(String[] args) throws IOException {
     ArgumentParser parser = new ArgumentParser(args);
     ExecutorService executor = Executors.newCachedThreadPool();
-    new HttpServer(HttpServer::createSocket,
-        executor,
-        parser.get("p", 5000),
-        parser.get("d", "."),
-        resourceToStrings("/redirects.txt"),
-        resourceToStrings("/access.txt"),
-        resourceToStrings("/writeable.txt"));
+    try {
+      new HttpServer(HttpServer::createSocket,
+          executor,
+          parser.get("p", 5000),
+          parser.get("d", "."),
+          resourceToStrings("/redirects.txt"),
+          resourceToStrings("/access.txt"),
+          resourceToStrings("/writeable.txt"));
+    } catch(Exception ex) {
+      ex.printStackTrace();
+    }
     executor.shutdown();
   }
 
   private static ServerSocketProxy createSocket(int port) {
-    try {
-      return new NetServerSocket(port);
-    }
-    catch(IOException ex) {
-      ex.printStackTrace();
-    }
-    return null;
+    return new NetServerSocket(port);
   }
 
   private static List<String> resourceToStrings(String resourceName) throws IOException {

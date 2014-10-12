@@ -6,6 +6,7 @@ import com.danielirvine.http.sockets.ServerSocketProxy;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static com.danielirvine.http.ExceptionWrapper.*;
 
 import java.util.function.*;
 import java.util.*;
@@ -124,7 +125,7 @@ public class HttpServerTest {
   }
 
   private void createServer() {
-    new HttpServer(socket, new DirectExecutor(), publicRoot, redirects, authTable, writeablePaths);
+    decheck(()->new HttpServer(socket, new DirectExecutor(), publicRoot, redirects, authTable, writeablePaths));
   }
 
   private List<String> outputByLine() {

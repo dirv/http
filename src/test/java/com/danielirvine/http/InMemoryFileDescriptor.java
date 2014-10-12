@@ -2,6 +2,7 @@ package com.danielirvine.http;
 
 import java.io.*;
 import java.util.*;
+import static com.danielirvine.http.ExceptionWrapper.*;
 
 public class InMemoryFileDescriptor implements FileDescriptor {
   private String name;
@@ -74,14 +75,13 @@ public class InMemoryFileDescriptor implements FileDescriptor {
 
   public void write(Reader in) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    int currentByte;
-    try {
+    decheck(()-> {
+      int currentByte;
       while ((currentByte = in.read()) != -1) {
         out.write(currentByte);
       }
-    } catch(IOException ex) {
-      throw new RuntimeException(ex);
-    }
+      return null;
+    });
     contents = out.toString(); 
     increaseLastModified();
   }

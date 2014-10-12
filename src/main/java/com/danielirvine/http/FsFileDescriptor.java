@@ -5,6 +5,7 @@ import static java.nio.file.StandardCopyOption.*;
 import static java.util.stream.Stream.*;
 import java.util.*;
 import static java.util.stream.Collectors.*;
+import static com.danielirvine.http.ExceptionWrapper.*;
 
 public class FsFileDescriptor implements FileDescriptor {
 
@@ -51,15 +52,11 @@ public class FsFileDescriptor implements FileDescriptor {
   }
 
   public String contentType() {
-    try {
-      return Files.probeContentType(file.toPath());
-    } catch(IOException ex) {
-      return "text/plain";
-    }
+    return decheck(()->Files.probeContentType(file.toPath()));
   }
 
   public void write(Reader in) {
-    try {
+    decheck(()-> {
       File temp = File.createTempFile("http", ".tmp");
       try(BufferedWriter out = new BufferedWriter(new FileWriter(temp))){
         int currentByte;
@@ -67,10 +64,8 @@ public class FsFileDescriptor implements FileDescriptor {
           out.write(currentByte);
         }
       }
-      Files.move(temp.toPath(), file.toPath(), new CopyOption[]{REPLACE_EXISTING, ATOMIC_MOVE});
-    } catch(IOException ex) {
-      throw new RuntimeException(ex);
-    }
+      return Files.move(temp.toPath(), file.toPath(), new CopyOption[]{REPLACE_EXISTING, ATOMIC_MOVE});
+    });
   }
 
   public void delete() {
