@@ -42,6 +42,16 @@ public class PatchResponseContributorTest extends RequestTest {
   }
   
   @Test
+  public void sha1MatchesExpectedSha1() {
+    FileDescriptor file = directory.addFile("a", "default content\n");
+    String eTag = new FileResource(file).getETag();
+    assertEquals("60bb224c68b1ed765a0f84d910de58d0beea91c4", eTag);
+    file = directory.addFile("b", "patched content\n");
+    eTag = new FileResource(file).getETag();
+    assertEquals("69bc18dc1edc9e1316348b2eaaca9df83898249f", eTag);
+  }
+  
+  @Test
   public void savesAResource() {
     FileDescriptor file = directory.addFile("a", "Hello, world!");
     String eTag = new FileResource(file).getETag();

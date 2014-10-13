@@ -25,6 +25,7 @@ class Responder {
           new QueryResponseContributor(),
           new LogsResponseContributor(logger),
           new DeleteResponseContributor(root, writeablePaths),
+          new PatchResponseContributor(root, writeablePaths, cache),
           new PutPostResponseContributor(root, writeablePaths, cache),
           new OptionsResponseContributor(writeablePaths),
           new ResourceResponseContributor(root, cache),

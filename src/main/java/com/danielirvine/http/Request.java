@@ -111,8 +111,8 @@ public class Request {
     return param == null || param.trim().length() == 0;
   }
 
-  public void setETag(String etag) {
-    this.eTag = etag;
+  public void setETag(String eTag) {
+    this.eTag = eTag;
   }
 
   public String getETag() {

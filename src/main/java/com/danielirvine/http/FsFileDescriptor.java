@@ -66,6 +66,7 @@ public class FsFileDescriptor implements FileDescriptor {
         while((currentByte = in.read()) != -1) {
           out.write(currentByte);
         }
+        out.write('\n');
       }
       return Files.move(temp.toPath(), file.toPath(), new CopyOption[]{REPLACE_EXISTING, ATOMIC_MOVE});
     });
