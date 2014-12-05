@@ -7,7 +7,6 @@ import com.danielirvine.http.Request;
 import com.danielirvine.http.RequestMethod;
 import com.danielirvine.http.headers.response.ResponseHeader;
 import com.danielirvine.http.resources.DirectoryResource;
-import com.danielirvine.http.resources.FileResource;
 import com.danielirvine.http.resources.Resource;
 import com.danielirvine.http.responses.ErrorResponse;
 import com.danielirvine.http.responses.Response;
